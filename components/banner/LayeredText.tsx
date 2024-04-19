@@ -21,7 +21,7 @@ const LayeredText: React.FC = () => {
       <div className='text-banner z-[1] text-wrap text-absoluteBlack'>
         {text}
       </div>
-      <div className='text-banner text-blur z-[3] text-wrap'>{text}</div>
+      <div className=':text-banner md:text-banner md:text-blur z-[3] text-wrap'>{text}</div>
       <div className='text-banner text-front z-[3] text-wrap'>{text}</div>
     </>
   );

@@ -47,7 +47,7 @@ const Footer = () => {
   });
 
   return (
-    <footer className='z-[3] flex items-center justify-evenly border-t p-2 uppercase'>
+    <footer className='z-[3] flex items-center justify-evenly border-t p-2 text-xs uppercase md:text-base'>
       <OwnerFooter />
       <CreatorsFooter />
     </footer>

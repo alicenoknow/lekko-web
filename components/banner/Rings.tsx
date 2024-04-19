@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useMemo, useCallback } from 'react';
 import * as THREE from 'three';
 
-// TODO zoom out rings on window resizing down
+// TODO maybe add something on small screen instead of rings
 
 // Scene settings
 const clearColor = 0xffffff;
@@ -175,7 +175,7 @@ const Rings: React.FC = () => {
   }, [rings, recalculateCameraPosition]);
   return (
     <div
-      className='absolute left-2/4 top-2/4 z-[2] -translate-x-2/4 -translate-y-2/4'
+      className='absolute left-2/4 top-2/4 z-[2] hidden -translate-x-2/4 -translate-y-2/4 md:block'
       ref={containerRef}
     />
   );
