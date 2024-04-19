@@ -1,25 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --stroke-color: #000;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+  @apply bg-primaryLight text-primaryDark;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .text-blur {
+    @apply z-0 text-absoluteBlack blur-[8px];
+    -webkit-filter: blur(8px);
+  }
+
+  .text-front {
+    @apply z-[3] text-transparent;
+    /*  Set text-color to transparent to only show the outline  */
+    text-stroke: 3px var(--stroke-color);
+    -webkit-text-stroke: 3px var(--stroke-color);
+  }
+}
+
+@layer components {
+  .text-banner {
+    @apply absolute select-none text-center text-[clamp(84px,15vw,220px)] font-extrabold uppercase leading-[0.8] tracking-[10px];
+    font-family: 'Roboto', sans-serif;
   }
 }

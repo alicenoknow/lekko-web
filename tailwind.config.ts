@@ -7,10 +7,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      colors: {
+        primaryLight: '#edf4f8',
+        primaryDark: '#223239',
+        accentLight: '#e1ff1c',
+        accentDark: '#2a2b68',
+        absoluteBlack: '#000',
       },
     },
   },
