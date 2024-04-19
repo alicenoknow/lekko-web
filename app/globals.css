@@ -6,35 +6,35 @@
 @tailwind utilities;
 
 :root {
-  --stroke-color: #000;
+    --stroke-color: #000;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  font-family: 'Open Sans', sans-serif;
-  text-align: center;
-  @apply bg-primaryLight text-primaryDark;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+    @apply bg-primaryLight text-primaryDark;
 }
 
 @layer utilities {
-  .text-blur {
-    @apply z-0 text-absoluteBlack blur-[8px];
-    -webkit-filter: blur(8px);
-  }
+    .text-blur {
+        @apply z-0 text-absoluteBlack blur-[8px];
+        -webkit-filter: blur(8px);
+    }
 
-  .text-front {
-    @apply z-[3] text-transparent;
-    /*  Set text-color to transparent to only show the outline  */
-    text-stroke: 3px var(--stroke-color);
-    -webkit-text-stroke: 3px var(--stroke-color);
-  }
+    .text-front {
+        @apply z-[3] text-transparent;
+        /*  Set text-color to transparent to only show the outline  */
+        text-stroke: 3px var(--stroke-color);
+        -webkit-text-stroke: 3px var(--stroke-color);
+    }
 }
 
 @layer components {
-  .text-banner {
-    @apply absolute select-none text-center text-[clamp(84px,15vw,220px)] font-extrabold uppercase leading-[0.8] tracking-[10px];
-    font-family: 'Roboto', sans-serif;
-  }
+    .text-banner {
+        @apply absolute select-none text-center text-[clamp(84px,15vw,220px)] font-extrabold uppercase leading-[0.8] tracking-[10px];
+        font-family: 'Roboto', sans-serif;
+    }
 }
