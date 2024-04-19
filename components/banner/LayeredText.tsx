@@ -18,7 +18,7 @@ const LayeredText: React.FC = () => {
 
   return (
     <>
-      <div className='text-banner text-absoluteBlack z-[1] text-wrap'>
+      <div className='text-banner z-[1] text-wrap text-absoluteBlack'>
         {text}
       </div>
       <div className='text-banner text-blur z-[3] text-wrap'>{text}</div>
