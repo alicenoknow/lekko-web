@@ -19,7 +19,7 @@ const cameraOffsetLimit = 5;
 const parallaxSpeed = 0.00001;
 
 const fogColor = 0x000;
-const fogDensity = 0.1;
+const fogDensity = 0.14;
 
 // Rings settings
 const metalness = 0.7;

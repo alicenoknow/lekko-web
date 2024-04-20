@@ -27,7 +27,7 @@ const Footer = () => {
 
     const CreatorsFooter = React.memo(function CreatorsFooter() {
         return (
-            <div className='ml-8 flex items-center '>
+            <div className='ml-8 flex '>
                 <ul>
                     {creators.map((creator, index) => (
                         <li key={index}>
