@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Footer from '@/components/Footer';
 import NavBar from '@/components/navbar/NavBar';
+import { TextProvider } from '@/contexts/TextContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,9 +22,13 @@ export default function RootLayout({
         <html lang='en'>
             <body className={inter.className}>
                 <div className='flex min-h-screen flex-col justify-between'>
-                    <NavBar />
-                    {children}
-                    <Footer />
+                    <AuthProvider>
+                        <TextProvider>
+                            <NavBar />
+                            {children}
+                            <Footer />
+                        </TextProvider>
+                    </AuthProvider>
                 </div>
             </body>
         </html>

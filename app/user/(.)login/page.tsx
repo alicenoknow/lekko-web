@@ -66,6 +66,9 @@ function LoginForm() {
     return (
         <div className='m-auto flex flex-col p-4'>
             <p className='mb-12 text-2xl font-bold uppercase tracking-tight text-primaryDark'>
+                REGISTER
+            </p>
+            <p className='mb-12 text-2xl font-bold uppercase tracking-tight text-primaryDark'>
                 {loginHeader}
             </p>
             <div className='mb-4 flex items-center justify-between'>

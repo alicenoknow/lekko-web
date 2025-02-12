@@ -20,7 +20,7 @@ const BaseButton: React.FC<BaseButtonProps> = ({
     return (
         <button
             disabled={disabled}
-            className={`select-none border-2 border-black bg-primaryLight p-4 text-xl font-extrabold uppercase hover:cursor-pointer md:px-10 ${disabled ? 'cursor-not-allowed opacity-50' : ' hover:bg-accentLight'}`}
+            className={`select-none border-2 border-black bg-primaryLight p-4 text-xl font-extrabold uppercase hover:cursor-pointer md:px-10 ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-accentLight'}`}
             onClick={onClick}
         >
             {link ? (

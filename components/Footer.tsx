@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { FaGithub } from 'react-icons/fa';
 
 // TODO extract from code
-const currentYear = '2024';
+const currentYear = '2025';
 const founder = {
     name: 'Krystian Wieteska',
 };
@@ -11,13 +11,13 @@ const creators = [
     { name: 'Filip Juza', github: 'https://github.com/filipio' },
 ];
 // TODO read how it works
-const license = 'All rights reserved.';
+const license = '\t\t Wszystkie prawa zastrzeżone';
 
 const Footer = () => {
-    const OwnerFooter = React.memo(function OwnerFooter() {
+    const OwnerFooter = memo(function OwnerFooter() {
         return (
             <div>
-                <p>Founded by: {founder.name}</p>
+                <p>{founder.name}</p>
                 <p>
                     © {currentYear} {license}
                 </p>
@@ -25,9 +25,9 @@ const Footer = () => {
         );
     });
 
-    const CreatorsFooter = React.memo(function CreatorsFooter() {
+    const CreatorsFooter = memo(function CreatorsFooter() {
         return (
-            <div className='ml-8 flex '>
+            <div className='ml-8 flex'>
                 <ul>
                     {creators.map((creator, index) => (
                         <li key={index}>
