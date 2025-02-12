@@ -54,7 +54,7 @@ function RegisterForm() {
         if (errorMessage != '') {
             setErrorMessage(errorMessage);
         } else {
-            router.replace('/login');
+            redirectToLogin();
         }
     };
 
