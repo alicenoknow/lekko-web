@@ -38,6 +38,8 @@ interface ApiError {
     details: string;
 }
 
+export type ApiErrorType = ApiError | ValidationApiError;
+
 const GENERIC_ERROR_MESSAGE =
     'Wewnętrzny błąd serwera. Spróbuj ponownie później.';
 const GENERIC_VALIDATION_ERROR_MESSAGE = 'Wprowadzono niepoprawne dane.';

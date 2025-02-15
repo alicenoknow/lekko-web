@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
         if (token) {
             try {
                 setToken(token);
+                localStorage.setItem('token', token);
                 const decodedToken: JwtPayload = jwtDecode<JwtPayload>(token);
                 setRoles(decodedToken.roles);
             } catch (error) {

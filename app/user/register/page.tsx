@@ -1,13 +1,14 @@
 'use client';
 
-import { registerUser } from '@/api/auth';
+import { RegisterData, registerUser } from '@/api/auth';
+import { ApiErrorType, handleError } from '@/api/errors';
+import { isSuccess } from '@/api/common';
 import BaseButton from '@/components/buttons/BaseButton';
 import { ErrorMessage } from '@/components/error/error';
-import { AuthContext } from '@/contexts/AuthContext';
 import { TextContext } from '@/contexts/TextContext';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useContext, useState } from 'react';
+import { AxiosResponse } from 'axios';
 
 function RegisterForm() {
     const [username, setUsername] = useState('');
@@ -26,7 +27,6 @@ function RegisterForm() {
         sendText,
         hasAccountText,
     } = useContext(TextContext);
-    const { setToken } = useContext(AuthContext);
 
     const router = useRouter();
 
@@ -49,14 +49,20 @@ function RegisterForm() {
         }
     };
 
-    const handleSubmit = async () => {
-        const errorMessage = await registerUser(email, password);
-        if (errorMessage != '') {
-            setErrorMessage(errorMessage);
-        } else {
-            redirectToLogin();
+    const handleSubmit = useCallback(async () => {
+        setErrorMessage('');
+        try {
+            const response = await registerUser(email, password);
+            if (isSuccess<RegisterData>(response)) {
+                redirectToLogin();
+            } else {
+                const error = (response as AxiosResponse<ApiErrorType>).data;
+                setErrorMessage(handleError(error));
+            }
+        } catch (err) {
+            setErrorMessage(handleError());
         }
-    };
+    }, [email, password]);
 
     const redirectToLogin = useCallback(
         () => router.replace('login'),
@@ -103,7 +109,7 @@ function RegisterForm() {
             <div className='mb-4 flex items-center justify-between'>
                 <label
                     className='mr-4 text-sm font-bold uppercase text-primaryDark md:mr-12 md:text-xl'
-                    htmlFor='email'
+                    htmlFor='password'
                 >
                     {passwordText}:
                 </label>
@@ -119,14 +125,14 @@ function RegisterForm() {
             <div className='mb-16 flex items-center justify-between'>
                 <label
                     className='mr-4 text-wrap text-sm font-bold uppercase text-primaryDark md:mr-12 md:text-xl'
-                    htmlFor='email'
+                    htmlFor='passwordRepeat'
                 >
                     {repeatPassword}:
                 </label>
                 <input
                     className='p-2 text-sm text-primaryDark md:p-4 md:text-xl'
                     type='password'
-                    id='password'
+                    id='passwordRepeat'
                     value={passwordRepeat}
                     onChange={(e) => setPasswordRepeat(e.target.value)}
                     required
