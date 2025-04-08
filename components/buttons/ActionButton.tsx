@@ -1,30 +1,27 @@
 import React from 'react';
+import Spinner from '../Spinner';
 
-type ActionProps =
-    | { link: string; onClick?: never }
-    | { link?: never; onClick: () => void };
-
-interface OwnProps {
+interface ActionButtonProps {
     label: string;
     disabled?: boolean;
+    loading?: boolean;
+    onClick: () => void;
 }
 
-type BaseButtonProps = OwnProps & ActionProps;
-
-const BaseButton: React.FC<BaseButtonProps> = ({
+const ActionButton: React.FC<ActionButtonProps> = ({
     disabled,
+    loading,
     label,
-    link,
     onClick,
 }) => {
     return (
         <button
-            disabled={disabled}
+            disabled={disabled || loading}
             className={`select-none border-2 border-black bg-primaryLight p-4 text-xl font-extrabold uppercase hover:cursor-pointer md:px-10 ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-accentLight'}`}
             onClick={onClick}
         >
-            {link ? (
-                <a href={link}>{label}</a>
+            {loading ? (
+                <Spinner isInline />
             ) : (
                 <p className='text-wrap'>{label}</p>
             )}
@@ -32,4 +29,4 @@ const BaseButton: React.FC<BaseButtonProps> = ({
     );
 };
 
-export default BaseButton;
+export default ActionButton;

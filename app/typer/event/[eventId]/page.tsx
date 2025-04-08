@@ -1,27 +1,21 @@
 'use client';
 
-import BaseButton from '@/components/buttons/BaseButton';
-import { ErrorMessage } from '@/components/error/error';
-import { Spinner } from '@/components/Spinner';
+import { ActionButton } from '@/components/buttons';
 import { AuthContext } from '@/contexts/AuthContext';
-import { TextContext } from '@/contexts/TextContext';
-import { Answer, Question } from '@/types';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
-import { stringify } from 'querystring';
 import { useContext, useState, useEffect } from 'react';
 
 const EventDetail = () => {
     const { eventId } = useParams();
 
     const { token } = useContext(AuthContext);
-    const { fetchErrorText, editAnswer, addAnswer } = useContext(TextContext);
 
     const router = useRouter();
 
     const [isLoading, setLoading] = useState<boolean>(true);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [questions, setQuestions] = useState<readonly Question[]>([
+    const [questions, setQuestions] = useState([
         {
             questionId: 'q1',
             questionType: 'RANK',
@@ -155,7 +149,7 @@ const EventDetail = () => {
                                 <p>Answer: Missing</p>
                             )}
 
-                            <BaseButton
+                            <ActionButton
                                 label={answer ? editAnswer : addAnswer}
                                 onClick={() =>
                                     redirectToQuestion(question.questionId)

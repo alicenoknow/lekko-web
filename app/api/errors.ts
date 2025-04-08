@@ -40,8 +40,7 @@ interface ApiError {
 
 export type ApiErrorType = ApiError | ValidationApiError;
 
-const GENERIC_ERROR_MESSAGE =
-    'Wewnętrzny błąd serwera. Spróbuj ponownie później.';
+const GENERIC_ERROR_MESSAGE = 'Błąd. Spróbuj ponownie później.';
 const GENERIC_VALIDATION_ERROR_MESSAGE = 'Wprowadzono niepoprawne dane.';
 const EMAIL_ERROR_MESSAGE = 'Podany email jest niepoprawny.';
 const REQUIRED_FIELDS_ERROR_MESSAGE = 'Wszystkie pola są wymagane.';

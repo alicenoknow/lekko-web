@@ -1,14 +1,13 @@
 'use client';
 
-import React, { useState, useCallback, useContext, memo } from 'react';
+import React, { useState, useCallback, useContext, memo, useMemo } from 'react';
 import Link from 'next/link';
-import { TextContext } from '@/contexts/TextContext';
 import MenuLogo from './MenuLogo';
+import { txt as txtData } from '@/nls/texts';
 
 export function NavBarMenu() {
+    const txt = useMemo(() => txtData, []);
     const [isOpen, setIsOpen] = useState(false);
-    const { rulesText, accountText, mainPageText, typerText, resultsText } =
-        useContext(TextContext);
 
     const NavButton = useCallback(
         ({ title, link }: { title: string; link: string }) => {
@@ -41,11 +40,11 @@ export function NavBarMenu() {
                 className={`z-[4] ${isOpen ? 'block' : 'hidden'} block w-full flex-grow md:flex md:w-auto md:items-center`}
             >
                 <div className='text-lg font-semibold uppercase text-primaryDark md:flex-grow'>
-                    <NavButton title={mainPageText} link='/' />
-                    <NavButton title={rulesText} link='/rules' />
-                    <NavButton title={typerText} link='/typer' />
-                    <NavButton title={resultsText} link='/results' />
-                    <NavButton title={accountText} link='/user' />
+                    <NavButton title={txt.mainPage} link='/' />
+                    <NavButton title={txt.rules} link='/rules' />
+                    <NavButton title={txt.typer} link='/typer' />
+                    <NavButton title={txt.results} link='/results' />
+                    <NavButton title={txt.account} link='/user' />
                 </div>
             </div>
         </>

@@ -1,0 +1,38 @@
+{
+    "title": "Lekkoatletawka",
+    "mainPage": "Strona główna",
+    "rules": "Zasady",
+    "typer": "Typer",
+    "account": "Konto",
+    "results": "Wyniki",
+    "login": {
+        "header": "Logowanie",
+        "noAccountText": "Nie masz konta?"
+    },
+    "register": {
+        "header": "Rejestracja",
+        "hasAccountText": "Masz już konto?",
+        "success": "Zarejestrowano pomyślnie."
+    },
+    "forms": {
+        "fillAllInfo": "Wypełnij wszystkie pola",
+        "username": "Nazwa",
+        "email": "Email",
+        "password": "Hasło",
+        "repeatPassword": "Powtórz hasło",
+        "send": "Wyślij"
+    },
+    "home": {
+        "joinFb": "Dołącz do Lekkoatletawki"
+    },
+    "user": {
+        "logOut": "Wyloguj się"
+    },
+    "fetchErrorText": "Nie udało się wczytać danych. Spórbuj ponownie.",
+    "goToEvent": "Otwórz",
+    "overdueText": "(Typowanie zakończone)",
+    "typerTitleText": "Wydarzenia",
+    "editAnswer": "Edytuj",
+    "addAnswer": "Wypełnij",
+    "searchText": "Szukaj"
+}

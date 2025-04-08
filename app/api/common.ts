@@ -9,3 +9,15 @@ export function isSuccess<T>(
     }
     return true;
 }
+
+export type AuthConfig = {
+    headers: {
+        Authorization: string;
+    };
+};
+
+export function getAuthConfig(token: string): AuthConfig {
+    return {
+        headers: { Authorization: `Bearer ${token}` },
+    };
+}

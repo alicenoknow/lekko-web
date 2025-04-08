@@ -1,110 +1,95 @@
 'use client';
 
-import BaseButton from '@/components/buttons/BaseButton';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AuthContext } from '@/contexts/AuthContext';
-import { TextContext } from '@/contexts/TextContext';
 import { ErrorMessage } from '@/components/error/error';
-import { loginUser, LoginData } from '@/api/auth';
-import { isSuccess } from '@/api/common';
-
-import { ApiErrorType, handleError } from '@/api/errors';
+import { signIn } from 'next-auth/react';
+import { txt as txtData } from '@/nls/texts';
+import { ActionButton } from '@/components/buttons';
+import FormField from './FormField';
 
 function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState<string>('');
-
-    const {
-        fillAllInfo,
-        loginHeader,
-        passwordText,
-        emailText,
-        sendText,
-        noAccountText,
-    } = useContext(TextContext);
-    const { setToken } = useContext(AuthContext);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isRedirecting, setIsRedirecting] = useState(false);
+    const txt = useMemo(() => txtData, []);
     const router = useRouter();
 
     const handleSubmit = useCallback(async () => {
+        if (!email || !password) return;
+
         setErrorMessage('');
-        try {
-            const response = await loginUser(email, password);
-            if (isSuccess<LoginData>(response)) {
-                setToken(response.data.token);
-                router.replace('/user');
-            } else {
-                const error = response.data as ApiErrorType;
-                setErrorMessage(handleError(error));
-            }
-        } catch (err) {
-            setErrorMessage(handleError());
+        setIsSubmitting(true);
+
+        const result = await signIn('credentials', {
+            redirect: false,
+            email,
+            password,
+        });
+
+        setIsSubmitting(false);
+
+        if (result?.error) {
+            setErrorMessage('Nie udało się zalogować. Spróbuj ponownie.');
+        } else if (result?.ok) {
+            router.replace('/user');
         }
-    }, [email, password]);
+    }, [email, password, router]);
 
     const checkIfFormInvalid = useCallback(
         () => !email || !password || password.length < 6,
         [email, password]
     );
-    const redirectToRegister = useCallback(
-        () => router.replace('register'),
-        [router]
-    );
+
+    const redirectToRegister = useCallback(() => {
+        setIsRedirecting(true);
+        router.replace('register');
+    }, [router]);
 
     const maybeRenderError = useCallback(() => {
         if (checkIfFormInvalid()) {
-            return <ErrorMessage errorMessage={fillAllInfo} />;
+            return <ErrorMessage errorMessage={txt.forms.fillAllInfo} />;
         } else if (errorMessage) {
             return <ErrorMessage errorMessage={errorMessage} />;
         }
-    }, [errorMessage, fillAllInfo, checkIfFormInvalid]);
+    }, [errorMessage, checkIfFormInvalid, txt.forms.fillAllInfo]);
 
     return (
         <div className='m-auto flex flex-col p-4'>
             <p className='mb-12 text-2xl font-bold uppercase tracking-tight text-primaryDark'>
-                {loginHeader}
+                {txt.login.header}
             </p>
-            <div className='mb-4 flex items-center justify-between'>
-                <label
-                    className='mr-4 text-sm font-bold uppercase text-primaryDark md:mr-12 md:text-xl'
-                    htmlFor='email'
-                >
-                    {emailText}:
-                </label>
-                <input
-                    className='p-2 text-sm text-primaryDark md:p-4 md:text-xl'
-                    type='email'
-                    id='email'
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-            </div>
-            <div className='mb-16 flex items-center justify-between'>
-                <label
-                    className='mr-4 text-sm font-bold uppercase text-primaryDark md:mr-12 md:text-xl'
-                    htmlFor='password'
-                >
-                    {passwordText}:
-                </label>
-                <input
-                    className='p-2 text-sm text-primaryDark md:p-4 md:text-xl'
-                    type='password'
-                    id='password'
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-            </div>
+            <FormField
+                label={txt.forms.email}
+                id='email'
+                type='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+            />
+            <FormField
+                label={txt.forms.password}
+                id='password'
+                type='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+            />
             {maybeRenderError()}
-            <BaseButton
-                label={sendText}
+            <ActionButton
+                label={txt.forms.send}
                 onClick={handleSubmit}
+                loading={isSubmitting}
                 disabled={checkIfFormInvalid()}
             />
             <div className='mt-6' />
-            <BaseButton label={noAccountText} onClick={redirectToRegister} />
+            <ActionButton
+                label={txt.login.noAccountText}
+                loading={isRedirecting}
+                onClick={redirectToRegister}
+            />
         </div>
     );
 }
