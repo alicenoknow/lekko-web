@@ -12,6 +12,7 @@
     "register": {
         "header": "Rejestracja",
         "hasAccountText": "Masz już konto?",
+        "passwordMismatch": "Podane hasła nie są takie same.",
         "success": "Zarejestrowano pomyślnie."
     },
     "forms": {

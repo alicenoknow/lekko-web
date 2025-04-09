@@ -15,6 +15,7 @@ export type Translations = {
     register: {
         header: string;
         hasAccountText: string;
+        passwordMismatch: string;
     };
     forms: {
         fillAllInfo: string;

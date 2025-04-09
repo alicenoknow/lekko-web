@@ -5,7 +5,7 @@ import { TextContext } from '@/contexts/TextContext';
 import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { ErrorMessage } from '@/components/error/error';
+import { ErrorMessage } from '@/components/error/ErrorMessage';
 import Spinner from '@/components/Spinner';
 import { Answer, Athlete, Question } from '@/types';
 

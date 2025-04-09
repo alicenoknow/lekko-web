@@ -34,19 +34,22 @@ export async function loginUser(
     password: string
 ): Promise<AxiosResponse<LoginResponse>> {
     try {
-        return await axios.post(
+        const response = await axios.post<LoginResponse>(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/login`,
-            {
-                email,
-                password,
-            }
+            { email, password }
         );
+
+        return response;
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
-            console.error('Axios error:', error);
+            console.error(
+                'Axios error:',
+                error.response?.data || error.message
+            );
+            return Promise.reject(error.response || error);
         } else {
-            console.error('Unknown error:', error);
+            console.error('Unexpected error:', error);
+            return Promise.reject(error);
         }
-        return Promise.reject(error);
     }
 }
