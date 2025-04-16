@@ -167,7 +167,7 @@ export default function QuestionPage({
 const fetchAthletesByDiscipline = (disciplineId: string): Promise<Athlete[]> =>
     new Promise((resolve) => resolve([]));
 
-const saveRankAnswer = (ranking: ReadonlyArray<Athlete>): void => {};
+const saveRankAnswer = (ranking: readonly Athlete[]): void => {};
 
 const saveValueAnswer = (value: string): void => {};
 

@@ -1,11 +1,15 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { useUserStore } from '@/store/user';
-import { EventDetail, getEventById, getQuestionsFromEvent, Question, Questions } from '@/app/api/typer';
-import { isSuccess } from '@/app/api/common';
-import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useParams, useRouter } from 'next/navigation';
+import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import {
+    fetchEventById,
+    fetchQuestionsFromEvent,
+    fetchUserAnswers,
+    Question,
+} from '@/app/api/typer';
 import { AdminOnly } from '@/components/auth/AdminOnly';
 import { PrivateContent } from '@/components/auth/PrivateContent';
 import ActionIcon from '@/components/buttons/ActionIcon';
@@ -14,92 +18,95 @@ import { txt } from '@/nls/texts';
 import { FaEdit } from 'react-icons/fa';
 import QuestionRenderer from '@/components/questions/QuestionRenderer';
 
+function EventDetailPage() {
+    const { eventId } = useParams<{ eventId: string }>();
+    const { token } = usePrivateUserContext();
+    const router = useRouter();
 
-export default function EventDetailPage() {
-  const { eventId } = useParams<{ eventId: string }>();
-  const { token } = useUserStore();
-  const router = useRouter();
+    const {
+        data: eventData,
+        isLoading: isEventLoading,
+        isError: isEventError,
+    } = useQuery({
+        queryKey: ['event', eventId],
+        queryFn: () => fetchEventById(token, eventId),
+        enabled: !!token && !!eventId,
+    });
 
-  const [eventData, setEventData] = useState<EventDetail | null>(null);
-  const [questionsData, setQuestionsData] = useState<Question[] | null>(null);
-  const [answersData, setAnswersData] = useState<[] | null>(null); // TODO
-  const [loading, setLoading] = useState(true);
+    const {
+        data: questionsData,
+        isLoading: isQuestionsLoading,
+        isError: isQuestionsError,
+    } = useQuery({
+        queryKey: ['questions', eventId],
+        queryFn: () => fetchQuestionsFromEvent(token, eventId),
+        enabled: !!token && !!eventId,
+    });
 
-  useEffect(() => {
-    const fetchEvent = async () => {
-      if (!token) return;
-      try {
-        const response = await getEventById(token, eventId);
-        if (isSuccess<EventDetail>(response)) {
-          setEventData(response.data);
-        }
-      } catch (err) {
-        console.error('Failed to fetch event:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    const fetchQuestions = async () => {
-      if (!token) return;
-      try {
-        const response = await getQuestionsFromEvent(token, eventId);
-        if (isSuccess<Questions>(response)) {
-          setQuestionsData(response.data.data);
-        }
-      } catch (err) {
-        console.error('Failed to fetch event:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    const fetchAnswers = async () => {
-      if (!token) return;
-      try {
-        const response = await getQuestionsFromEvent(token, eventId);
-        if (isSuccess<Questions>(response)) {
-          setQuestionsData(response.data.data);
-        }
-      } catch (err) {
-        console.error('Failed to fetch event:', err);
-      } finally {
-        setLoading(false);
-      }
+    const {
+        data: answersData,
+        isLoading: isAnswersLoading,
+        isError: isAnswersError,
+    } = useQuery({
+        queryKey: ['answers', eventId],
+        queryFn: () => fetchUserAnswers(eventId, token),
+        enabled: !!token && !!eventId,
+    });
+
+    const isFormEmpty = useCallback(
+        (questions: Question[] | undefined | null): boolean =>
+            !questions || questions.length === 0,
+        []
+    );
+
+    const handleOpenAdminPanel = () => {
+        router.push(`/typer/event/${eventId}/admin`);
     };
 
-    fetchEvent();
-    fetchQuestions();
-    fetchAnswers();
-  }, [eventId]);
+    const submitAnswer = useCallback(() => {
+        // TODO: implement answer submission
+    }, []);
 
-  const isFormEmpty = useCallback((questions: Question[] | null): questions is null | [] => !questions || questions.length === 0, []);
+    if (isEventLoading || isQuestionsLoading || isAnswersLoading)
+        return <Spinner />;
 
-  const handleOpenAdminPanel = () => {
-    router.push(`/typer/event/${eventId}/admin`);
-  }
+    if (!eventData) return <p className='p-6'>{txt.events.notFound}</p>;
 
-  const submitAnswer = useCallback(() => {
+    return (
+        <div className='space-y-6 p-6'>
+            <h1 className='text-3xl font-bold'>{eventData.name}</h1>
+            {eventData.description && <p>{eventData.description}</p>}
+            <p className='text-sm text-gray-600'>
+                {txt.events.deadline}:{' '}
+                {new Date(eventData.deadline).toLocaleString()}
+            </p>
 
-  }, [])
+            <AdminOnly>
+                <ActionIcon
+                    label={<FaEdit size={24} />}
+                    onClick={handleOpenAdminPanel}
+                />
+            </AdminOnly>
 
-  if (loading) return <Spinner />;
+            {!questionsData || !questionsData.data ? (
+                <p>{txt.events.noQuestions}</p>
+            ) : (
+                questionsData.data.map((q) => (
+                    <QuestionRenderer
+                        key={q.id}
+                        question={q}
+                        onSubmit={submitAnswer}
+                    />
+                ))
+            )}
+        </div>
+    );
+}
 
-  if (!eventData) return <p className="p-6">{txt.events.notFound}</p>;
-
-  return (
-    <PrivateContent redirect>
-      <div className="p-6 space-y-6">
-        <h1 className="text-3xl font-bold">{eventData.name}</h1>
-        {eventData.description && <p>{eventData.description}</p>}
-        <p className="text-sm text-gray-600">
-          {txt.events.deadline}: {new Date(eventData.deadline).toLocaleString()}
-        </p>
-        <AdminOnly>
-          <ActionIcon label={<FaEdit size={24} />} onClick={handleOpenAdminPanel} />
-        </AdminOnly>
-        {isFormEmpty(questionsData)
-          ? <p>{txt.events.noQuestions}</p>
-          : questionsData.map((q) => <QuestionRenderer key={q.id} question={q} onSubmit={submitAnswer} />)}
-      </div>
-    </PrivateContent>
-  );
+export default function PrivateEventDetailPage() {
+    return (
+        <PrivateContent redirect>
+            <EventDetailPage />
+        </PrivateContent>
+    );
 }

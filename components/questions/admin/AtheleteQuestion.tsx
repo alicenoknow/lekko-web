@@ -6,106 +6,113 @@ import { ActionButton } from '@/components/buttons';
 import Spinner from '@/components/Spinner';
 
 type Athlete = {
-  id: number;
-  first_name: string | null;
-  last_name: string | null;
-  country: string | null;
+    id: number;
+    first_name: string | null;
+    last_name: string | null;
+    country: string | null;
 };
 
 interface AthleteQuestionProps {
-  questionId: number;
-  onSubmit: (answer: { athlete_id: number }) => void;
+    questionId: number;
+    onSubmit: (answer: { athlete_id: number }) => void;
 }
 
-export default function AthleteQuestion({ questionId, onSubmit }: AthleteQuestionProps) {
-  const [search, setSearch] = useState('');
-  const [athletes, setAthletes] = useState<Athlete[]>([]);
-  const [selected, setSelected] = useState<Athlete | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export default function AthleteQuestion({
+    questionId,
+    onSubmit,
+}: AthleteQuestionProps) {
+    const [search, setSearch] = useState('');
+    const [athletes, setAthletes] = useState<Athlete[]>([]);
+    const [selected, setSelected] = useState<Athlete | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (!search) {
-      setAthletes([]);
-      return;
-    }
+    useEffect(() => {
+        if (!search) {
+            setAthletes([]);
+            return;
+        }
 
-    const fetchAthletes = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/athlete?search=${search}`);
-        setAthletes(res.data);
-      } catch (err) {
-        console.error('Failed to fetch athletes', err);
-      } finally {
-        setLoading(false);
-      }
+        const fetchAthletes = async () => {
+            setLoading(true);
+            try {
+                const res = await axios.get(
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/athlete?search=${search}`
+                );
+                setAthletes(res.data);
+            } catch (err) {
+                console.error('Failed to fetch athletes', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const debounce = setTimeout(fetchAthletes, 300);
+        return () => clearTimeout(debounce);
+    }, [search]);
+
+    const handleSelect = (athlete: Athlete) => {
+        setSelected(athlete);
+        setSearch('');
+        setAthletes([]);
     };
 
-    const debounce = setTimeout(fetchAthletes, 300);
-    return () => clearTimeout(debounce);
-  }, [search]);
+    const handleSubmit = useCallback(() => {
+        if (!selected) return;
+        setIsSubmitting(true);
+        onSubmit({ athlete_id: selected.id });
+        setIsSubmitting(false);
+    }, [selected, onSubmit]);
 
-  const handleSelect = (athlete: Athlete) => {
-    setSelected(athlete);
-    setSearch('');
-    setAthletes([]);
-  };
+    return (
+        <div className='flex flex-col gap-4'>
+            {!selected && (
+                <input
+                    className='border p-2'
+                    placeholder='Search athlete...'
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+            )}
 
-  const handleSubmit = useCallback(() => {
-    if (!selected) return;
-    setIsSubmitting(true);
-    onSubmit({ athlete_id: selected.id });
-    setIsSubmitting(false);
-  }, [selected, onSubmit]);
+            {loading && <Spinner />}
 
-  return (
-    <div className="flex flex-col gap-4">
-      {!selected && (
-        <input
-          className="border p-2"
-          placeholder="Search athlete..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      )}
+            {!selected && athletes.length > 0 && (
+                <ul className='rounded border'>
+                    {athletes.map((athlete) => (
+                        <li
+                            key={athlete.id}
+                            className='cursor-pointer p-2 hover:bg-gray-100'
+                            onClick={() => handleSelect(athlete)}
+                        >
+                            {athlete.first_name} {athlete.last_name} (
+                            {athlete.country})
+                        </li>
+                    ))}
+                </ul>
+            )}
 
-      {loading && <Spinner />}
+            {selected && (
+                <div className='flex items-center justify-between rounded border p-2'>
+                    <span>
+                        Selected: {selected.first_name} {selected.last_name} (
+                        {selected.country})
+                    </span>
+                    <button
+                        className='text-sm text-red-500'
+                        onClick={() => setSelected(null)}
+                    >
+                        Change
+                    </button>
+                </div>
+            )}
 
-      {!selected && athletes.length > 0 && (
-        <ul className="border rounded">
-          {athletes.map((athlete) => (
-            <li
-              key={athlete.id}
-              className="cursor-pointer hover:bg-gray-100 p-2"
-              onClick={() => handleSelect(athlete)}
-            >
-              {athlete.first_name} {athlete.last_name} ({athlete.country})
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {selected && (
-        <div className="flex justify-between items-center border p-2 rounded">
-          <span>
-            Selected: {selected.first_name} {selected.last_name} ({selected.country})
-          </span>
-          <button
-            className="text-red-500 text-sm"
-            onClick={() => setSelected(null)}
-          >
-            Change
-          </button>
+            <ActionButton
+                label='Submit'
+                disabled={!selected}
+                onClick={handleSubmit}
+                loading={isSubmitting}
+            />
         </div>
-      )}
-
-      <ActionButton
-        label="Submit"
-        disabled={!selected}
-        onClick={handleSubmit}
-        loading={isSubmitting}
-      />
-    </div>
-  );
+    );
 }

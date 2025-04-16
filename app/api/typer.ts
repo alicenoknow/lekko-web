@@ -1,9 +1,11 @@
-import axios, { AxiosResponse } from 'axios';
-import { ApiErrorType } from './errors';
-import { AuthConfig, getAuthConfig } from './common';
+import axios from 'axios';
+import { ApiErrorType, handleError, isApiError } from './errors';
+import { getAuthConfig } from './common';
+
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 export interface EventsData {
-    data: ReadonlyArray<TyperEvent>;
+    data: readonly TyperEvent[];
     pagination_info: PaginationInfo;
 }
 
@@ -30,23 +32,15 @@ export interface PaginationInfo {
 
 export type EventsResponse = EventsData | ApiErrorType;
 
-export async function getEvents(
+export async function fetchEvents(
     token: string,
-    page: number = 1
-): Promise<AxiosResponse<EventsResponse, AuthConfig>> {
-    try {
-        return await axios.get(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/events?page=${page}`,
-            getAuthConfig(token)
-        );
-    } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-            console.error('Axios error:', error);
-        } else {
-            console.error('Unknown error:', error);
-        }
-        return Promise.reject(error);
-    }
+    page = 1
+): Promise<EventsData> {
+    const res = await axios.get(
+        `${API_URL}/api/v1/events?page=${page}`,
+        getAuthConfig(token)
+    );
+    return res.data;
 }
 
 export type EventDetailResponse = EventDetail | ApiErrorType;
@@ -58,24 +52,19 @@ export interface EventDetail {
     deadline: string;
 }
 
-export async function getEventById(
+export async function fetchEventById(
     token: string,
     id: string | number
-): Promise<AxiosResponse<EventDetailResponse, AuthConfig>> {
-    try {
-        return await axios.get(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/events/${id}`,
-            getAuthConfig(token)
-        );
-    } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-            console.error('Axios error:', error);
-            return Promise.reject(error.response || error);
-        } else {
-            console.error('Unknown error:', error);
-            return Promise.reject(error);
-        }
+): Promise<EventDetail> {
+    const res = await axios.get(
+        `${API_URL}/api/v1/events/${id}`,
+        getAuthConfig(token)
+    );
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
     }
+    return res.data;
 }
 
 export interface Questions {
@@ -94,24 +83,19 @@ export interface Question {
     answers?: any[];
 }
 
-export async function getQuestionsFromEvent(
+export async function fetchQuestionsFromEvent(
     token: string,
     id: string | number
-): Promise<AxiosResponse<QuestionsResponse, AuthConfig>> {
-    try {
-        return await axios.get(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/questions?event_id=${id}`,
-            getAuthConfig(token)
-        );
-    } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-            console.error('Axios error:', error);
-            return Promise.reject(error.response || error);
-        } else {
-            console.error('Unknown error:', error);
-            return Promise.reject(error);
-        }
+): Promise<Questions> {
+    const res = await axios.get(
+        `${API_URL}/api/v1/questions?event_id=${id}`,
+        getAuthConfig(token)
+    );
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
     }
+    return res.data;
 }
 
 export type CreateEventData = {
@@ -122,6 +106,7 @@ export type CreateEventData = {
     name: string;
     updated_at: string;
 };
+
 export type CreateEventResponse = CreateEventData | ApiErrorType;
 
 export async function createEvent(
@@ -129,25 +114,17 @@ export async function createEvent(
     deadline: string,
     description: string | null,
     token: string
-): Promise<AxiosResponse<CreateEventResponse, AuthConfig>> {
-    try {
-        return await axios.post(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/events`,
-            {
-                name,
-                deadline,
-                description,
-            },
-            getAuthConfig(token)
-        );
-    } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-            console.error('Axios error:', error);
-        } else {
-            console.error('Unknown error:', error);
-        }
-        return Promise.reject(error);
+): Promise<CreateEventData> {
+    const res = await axios.post(
+        `${API_URL}/api/v1/events`,
+        { name, deadline, description },
+        getAuthConfig(token)
+    );
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
     }
+    return res.data;
 }
 
 type DeleteEventResponse = {};
@@ -155,49 +132,33 @@ type DeleteEventResponse = {};
 export async function deleteEvent(
     eventId: number,
     token: string
-): Promise<AxiosResponse<DeleteEventResponse, AuthConfig>> {
-    try {
-        return await axios.delete(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/events/${eventId}`,
-            getAuthConfig(token)
-        );
-    } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-            console.error(
-                'Axios error:',
-                error.response?.data || error.message
-            );
-            return Promise.reject(error.response || error);
-        } else {
-            console.error('Unknown error:', error);
-            return Promise.reject(error);
-        }
+): Promise<DeleteEventResponse> {
+    const res = await axios.delete(
+        `${API_URL}/api/v1/events/${eventId}`,
+        getAuthConfig(token)
+    );
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
     }
+    return res.data;
 }
 
 type AnswersResponse = {};
 
-export async function getUserAnswers(
-    eventId: number,
+export async function fetchUserAnswers(
+    eventId: string,
     token: string
-): Promise<AxiosResponse<DeleteEventResponse, AuthConfig>> {
-    try {
-        return await axios.delete(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/events/${eventId}`,
-            getAuthConfig(token)
-        );
-    } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-            console.error(
-                'Axios error:',
-                error.response?.data || error.message
-            );
-            return Promise.reject(error.response || error);
-        } else {
-            console.error('Unknown error:', error);
-            return Promise.reject(error);
-        }
+): Promise<AnswersResponse> {
+    const res = await axios.get(
+        `${API_URL}/api/v1/answers?event_id=${eventId}`,
+        getAuthConfig(token)
+    );
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
     }
+    return res.data;
 }
 
 export type Athlete = {
@@ -214,21 +175,18 @@ export interface Athletes {
 
 export type AthletesResponse = Athletes | ApiErrorType;
 
-export async function getAthletes(
+export async function fetchAthletes(
     search: string,
-    token: string
-): Promise<AxiosResponse<AthletesResponse>> {
-    try {
-        return await axios.get(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/athletes?search=${search}`,
-            getAuthConfig(token)
-        );
-    } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-            console.error('Axios error:', error);
-        } else {
-            console.error('Unknown error:', error);
-        }
-        return Promise.reject(error);
+    token: string,
+    page = 1
+): Promise<Athletes> {
+    const res = await axios.get(`${API_URL}/api/v1/athletes`, {
+        ...getAuthConfig(token),
+        params: { search, page },
+    });
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
     }
+    return res.data;
 }

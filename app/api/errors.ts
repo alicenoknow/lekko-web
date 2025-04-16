@@ -25,12 +25,12 @@ enum ValidationErrorDetailsType {
 interface ValidationErrorDetails {
     error_type: ValidationErrorDetailsType;
     details: string;
-    path: ReadonlyArray<string>;
+    path: readonly string[];
 }
 
 interface ValidationApiError {
     error_type: ValidationErrorType;
-    details: ReadonlyArray<ValidationErrorDetails>;
+    details: readonly ValidationErrorDetails[];
 }
 
 interface ApiError {
@@ -81,4 +81,8 @@ export function handleValidationApiError(error: ValidationApiError): string {
         }
     }
     return GENERIC_VALIDATION_ERROR_MESSAGE;
+}
+
+export function isApiError(error: unknown): error is ApiErrorType {
+    return typeof error === 'object' && error !== null && 'error_type' in error;
 }
