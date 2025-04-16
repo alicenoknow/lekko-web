@@ -1,4 +1,5 @@
 import { PrivateContent } from '@/components/auth/PrivateContent';
+import Spinner from '@/components/Spinner';
 import QueryProvider from '@/lib/QueryProvider';
 
 export default function TyperLayout({
@@ -7,8 +8,10 @@ export default function TyperLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <PrivateContent>
-            <QueryProvider>{children}</QueryProvider>
-        </PrivateContent>
+        <QueryProvider>
+            <PrivateContent redirect fallback={<Spinner />}>
+                {children}
+            </PrivateContent>
+        </QueryProvider>
     );
 }

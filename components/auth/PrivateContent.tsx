@@ -1,3 +1,5 @@
+'use client';
+
 import { PrivateUserContext } from '@/context/PrivateUserContext';
 import { useUserStore } from '@/store/user';
 import { useRouter } from 'next/navigation';
