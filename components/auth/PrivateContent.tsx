@@ -1,41 +1,31 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { PrivateUserContext } from '@/context/PrivateUserContext';
 import { useUserStore } from '@/store/user';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
-interface PrivateContentProps {
+export function PrivateContent({
+    children,
+    fallback = null,
+    redirect = false,
+}: {
     children: React.ReactNode;
     fallback?: React.ReactNode;
     redirect?: boolean;
-}
-
-export const PrivateContent = ({
-    children,
-    fallback = null,
-    redirect = true,
-}: PrivateContentProps) => {
-    const { user, hydrated } = useUserStore();
-    const [isReady, setIsReady] = useState(false);
+}) {
     const router = useRouter();
+    const { user, token, hydrated } = useUserStore();
 
     useEffect(() => {
-        if (hydrated) {
-            if (!user && redirect) {
-                router.replace('/user/login');
-            } else {
-                setIsReady(true);
-            }
+        if (hydrated && (!user || !token) && redirect) {
+            router.replace('/user/login');
         }
-    }, [hydrated, user, redirect, router]);
+    }, [hydrated, user, token, redirect, router]);
 
-    if (!hydrated || (!user && redirect)) {
-        return fallback;
-    }
+    if (!hydrated || !user || !token) return fallback;
 
-    if (!user && !redirect) {
-        return fallback;
-    }
-
-    return <>{children}</>;
-};
+    return (
+        <PrivateUserContext.Provider value={{ user, token }}>
+            {children}
+        </PrivateUserContext.Provider>
+    );
+}

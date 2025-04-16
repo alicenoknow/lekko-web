@@ -7,9 +7,10 @@ import { txt } from '@/nls/texts';
 import { ActionButton } from '@/components/buttons';
 import FormField from './FormField';
 import { useUserStore } from '@/store/user';
-import { loginUser } from '@/app/api/auth';
+import { LoginData, loginUser } from '@/app/api/auth';
 import { AxiosResponse } from 'axios';
 import { ApiErrorType, handleError } from '@/app/api/errors';
+import { isSuccess } from '@/app/api/common';
 
 function LoginForm() {
     const [email, setEmail] = useState('');
@@ -28,9 +29,8 @@ function LoginForm() {
         try {
             const response = await loginUser(email, password);
 
-            if (response.status === 200 && 'token' in response.data) {
+            if (isSuccess<LoginData>(response)) {
                 const { token } = response.data;
-                localStorage.setItem('token', token);
                 setUserFromToken(token);
                 router.replace('/user');
             } else {

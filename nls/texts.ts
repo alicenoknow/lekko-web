@@ -24,6 +24,18 @@ export type Translations = {
         password: string;
         repeatPassword: string;
         send: string;
+        name: string;
+        description: string;
+        deadline: string;
+    };
+    events: {
+        title: string;
+        page: string;
+        from: string;
+        deadline: string;
+        notFound: string;
+        newEvent: string;
+        createHeader: string;
     };
     fetchErrorText: string;
     goToEvent: string;

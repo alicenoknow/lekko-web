@@ -20,7 +20,7 @@ export default function UserPage() {
         <PrivateContent redirect fallback={<Spinner />}>
             <main className='items-center p-24'>
                 <p className='mb-12 text-2xl font-bold uppercase tracking-tight text-primaryDark'>
-                    Hej {user?.roles?.[0] ?? 'user'}!
+                    Hej {user?.username ?? ''}!
                 </p>
                 <ActionButton label={txt.user.logOut} onClick={handleLogout} />
             </main>

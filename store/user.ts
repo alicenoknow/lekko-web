@@ -1,14 +1,10 @@
 import { create } from 'zustand';
 import { jwtDecode } from 'jwt-decode';
-
-interface User {
-  sub: number;
-  roles: string[];
-  exp: number;
-}
+import { User } from '@/types/User';
 
 interface UserStore {
   user: User | null;
+  token: string | null;
   hydrated: boolean;
   setUserFromToken: (token: string) => void;
   setHydrated: () => void;
@@ -18,21 +14,19 @@ interface UserStore {
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
   hydrated: false,
-
+  token: null,
   setUserFromToken: (token: string) => {
     try {
       const payload = jwtDecode<User>(token);
-      set({ user: payload });
+      set({ user: payload, token: token });
     } catch (err) {
       console.error('Invalid JWT token');
       set({ user: null });
     }
   },
-
   setHydrated: () => set({ hydrated: true }),
-
   logout: () => {
     localStorage.removeItem('token');
-    set({ user: null, hydrated: true });
+    set({ user: null, hydrated: true, token: null });
   },
 }));

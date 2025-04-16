@@ -21,13 +21,28 @@
         "email": "Email",
         "password": "Hasło",
         "repeatPassword": "Powtórz hasło",
-        "send": "Wyślij"
+        "send": "Wyślij",
+        "name": "Nazwa",
+        "description": "Opis",
+        "deadline": "Koniec"
     },
     "home": {
         "joinFb": "Dołącz do Lekkoatletawki"
     },
     "user": {
         "logOut": "Wyloguj się"
+    },
+    "events": {
+        "title": "Wydarzenia",
+        "page": "Strona",
+        "from": "z",
+        "deadline": "Koniec",
+        "notFound": "Brak wydarzeń",
+        "newEvent": "Dodaj wydarzenie",
+        "createHeader": "Nowe wydarzenie",
+        "noQuestions": "Aktualnie nie ma pytań w tym wydarzeniu",
+        "submitAnswer": "Zatwierdź odpowiedź",
+        "submitCorrectAnswer": "Ustaw poprawną odpowiedź"
     },
     "fetchErrorText": "Nie udało się wczytać danych. Spórbuj ponownie.",
     "goToEvent": "Otwórz",

@@ -59,7 +59,7 @@ function RegisterForm() {
 
     startSubmitTransition(async () => {
       try {
-        const response = await registerUser(email, password);
+        const response = await registerUser(email, username, password);
 
         if (isSuccess<RegisterData>(response)) {
           setRegistered(true);

@@ -6,6 +6,7 @@ export type RegisterResponse = {} | ApiErrorType;
 
 export async function registerUser(
     email: string,
+    username: string,
     password: string
 ): Promise<AxiosResponse<RegisterResponse>> {
     try {
@@ -13,6 +14,7 @@ export async function registerUser(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/register`,
             {
                 email,
+                username,
                 password,
             }
         );

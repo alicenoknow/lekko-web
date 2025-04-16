@@ -1,166 +1,105 @@
 'use client';
 
-import { ActionButton } from '@/components/buttons';
-import { AuthContext } from '@/contexts/AuthContext';
-import axios from 'axios';
-import { useParams, useRouter } from 'next/navigation';
-import { useContext, useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { useUserStore } from '@/store/user';
+import { EventDetail, getEventById, getQuestionsFromEvent, Question, Questions } from '@/app/api/typer';
+import { isSuccess } from '@/app/api/common';
+import { useRouter } from 'next/navigation';
+import { AdminOnly } from '@/components/auth/AdminOnly';
+import { PrivateContent } from '@/components/auth/PrivateContent';
+import ActionIcon from '@/components/buttons/ActionIcon';
+import Spinner from '@/components/Spinner';
+import { txt } from '@/nls/texts';
+import { FaEdit } from 'react-icons/fa';
+import QuestionRenderer from '@/components/questions/QuestionRenderer';
 
-const EventDetail = () => {
-    const { eventId } = useParams();
 
-    const { token } = useContext(AuthContext);
+export default function EventDetailPage() {
+  const { eventId } = useParams<{ eventId: string }>();
+  const { token } = useUserStore();
+  const router = useRouter();
 
-    const router = useRouter();
+  const [eventData, setEventData] = useState<EventDetail | null>(null);
+  const [questionsData, setQuestionsData] = useState<Question[] | null>(null);
+  const [answersData, setAnswersData] = useState<[] | null>(null); // TODO
+  const [loading, setLoading] = useState(true);
 
-    const [isLoading, setLoading] = useState<boolean>(true);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [questions, setQuestions] = useState([
-        {
-            questionId: 'q1',
-            questionType: 'RANK',
-            eventId: 'e1',
-            question: 'Rank the athletes based on their performance',
-            answer: {
-                type: 'RANK',
-                answer: [
-                    { athleteId: 'a1', name: 'Athlete 1' },
-                    { athleteId: 'a2', name: 'Athlete 2' },
-                    { athleteId: 'a3', name: 'Athlete 3' },
-                ],
-            },
-            maxPoints: 10,
-            disciplineId: 'd1',
-        },
-        {
-            questionId: 'q2',
-            questionType: 'VALUE',
-            eventId: 'e1',
-            question:
-                'Enter the time taken by the athlete to complete the race',
-            answer: {
-                type: 'VALUE',
-                answer: '00:01:23.45',
-            },
-            maxPoints: 5,
-            disciplineId: 'd2',
-        },
-    ]);
-    const [answers, setAnswers] = useState<readonly Answer[]>([
-        {
-            answerId: 'a1',
-            questionId: 'q1',
-            userId: 'u1',
-            points: 8,
-            answer: {
-                type: 'RANK',
-                answer: [
-                    { athleteId: 'a1', name: 'Athlete 1' },
-                    { athleteId: 'a3', name: 'Athlete 3' },
-                    { athleteId: 'a2', name: 'Athlete 2' },
-                ],
-            },
-        },
-        {
-            answerId: 'a2',
-            questionId: 'q2',
-            userId: 'u1',
-            points: 5,
-            answer: {
-                type: 'VALUE',
-                answer: '00:01:23.45',
-            },
-        },
-    ]);
-
-    useEffect(() => {
-        if (!token) {
-            console.log('No token, redirected to login');
-            router.push('/user/login');
-        } else {
-            const fetchQuestions = async () => {
-                setLoading(true);
-                try {
-                    const questionsResponse = await axios.post(
-                        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/questions`,
-                        {
-                            eventId,
-                        }
-                    );
-                    const answersResponse = await axios.post(
-                        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/answers`,
-                        {
-                            eventId, // TODO user data
-                        }
-                    );
-                    setQuestions(questionsResponse.data.questions);
-                    setAnswers(answersResponse.data.questions);
-                } catch (error: unknown) {
-                    // TODO: handle error type
-                    if (axios.isAxiosError(error)) {
-                        console.error('Axios error:', error.response?.data);
-                    } else {
-                        console.error('Unknown error:', error);
-                    }
-                    setErrorMessage(fetchErrorText);
-                } finally {
-                    setLoading(false);
-                }
-            };
-
-            fetchQuestions();
+  useEffect(() => {
+    const fetchEvent = async () => {
+      if (!token) return;
+      try {
+        const response = await getEventById(token, eventId);
+        if (isSuccess<EventDetail>(response)) {
+          setEventData(response.data);
         }
-    }, [token, router, fetchErrorText, eventId]);
-
-    const redirectToQuestion = (questionId: string) => {
-        return null;
+      } catch (err) {
+        console.error('Failed to fetch event:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    const fetchQuestions = async () => {
+      if (!token) return;
+      try {
+        const response = await getQuestionsFromEvent(token, eventId);
+        if (isSuccess<Questions>(response)) {
+          setQuestionsData(response.data.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch event:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    const fetchAnswers = async () => {
+      if (!token) return;
+      try {
+        const response = await getQuestionsFromEvent(token, eventId);
+        if (isSuccess<Questions>(response)) {
+          setQuestionsData(response.data.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch event:', err);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    // if (errorMessage) {
-    //     return <ErrorMessage errorMessage={errorMessage} />;
-    // }
+    fetchEvent();
+    fetchQuestions();
+    fetchAnswers();
+  }, [eventId]);
 
-    // if (isLoading) {
-    //     return (
-    //         <main className='flex items-center justify-center  p-24'>
-    //             <Spinner />
-    //         </main>
-    //     );
-    // }
+  const isFormEmpty = useCallback((questions: Question[] | null): questions is null | [] => !questions || questions.length === 0, []);
 
-    return (
-        <main className='items-center p-24'>
-            <ul>
-                {questions.map((question) => {
-                    const answer = answers.find(
-                        (a) => a.questionId === question.questionId
-                    );
-                    return (
-                        <li key={question.questionId}>
-                            <h2>{question.question}</h2>
-                            {answer ? (
-                                <>
-                                    <p>Answer: {answer.answerJSON}</p>
-                                    {answer.points !== null && (
-                                        <p>{answer.points}</p>
-                                    )}
-                                </>
-                            ) : (
-                                <p>Answer: Missing</p>
-                            )}
+  const handleOpenAdminPanel = () => {
+    router.push(`/typer/event/${eventId}/admin`);
+  }
 
-                            <ActionButton
-                                label={answer ? editAnswer : addAnswer}
-                                onClick={() =>
-                                    redirectToQuestion(question.questionId)
-                                }
-                            />
-                        </li>
-                    );
-                })}
-            </ul>
-        </main>
-    );
-};
+  const submitAnswer = useCallback(() => {
 
-export default EventDetail;
+  }, [])
+
+  if (loading) return <Spinner />;
+
+  if (!eventData) return <p className="p-6">{txt.events.notFound}</p>;
+
+  return (
+    <PrivateContent redirect>
+      <div className="p-6 space-y-6">
+        <h1 className="text-3xl font-bold">{eventData.name}</h1>
+        {eventData.description && <p>{eventData.description}</p>}
+        <p className="text-sm text-gray-600">
+          {txt.events.deadline}: {new Date(eventData.deadline).toLocaleString()}
+        </p>
+        <AdminOnly>
+          <ActionIcon label={<FaEdit size={24} />} onClick={handleOpenAdminPanel} />
+        </AdminOnly>
+        {isFormEmpty(questionsData)
+          ? <p>{txt.events.noQuestions}</p>
+          : questionsData.map((q) => <QuestionRenderer key={q.id} question={q} onSubmit={submitAnswer} />)}
+      </div>
+    </PrivateContent>
+  );
+}
