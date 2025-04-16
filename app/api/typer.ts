@@ -40,6 +40,10 @@ export async function fetchEvents(
         `${API_URL}/api/v1/events?page=${page}`,
         getAuthConfig(token)
     );
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
+    }
     return res.data;
 }
 
@@ -85,10 +89,11 @@ export interface Question {
 
 export async function fetchQuestionsFromEvent(
     token: string,
-    id: string | number
+    id: string | number,
+    page: number = 1
 ): Promise<Questions> {
     const res = await axios.get(
-        `${API_URL}/api/v1/questions?event_id=${id}`,
+        `${API_URL}/api/v1/questions?event_id=${id}&page=${page}`,
         getAuthConfig(token)
     );
     if (isApiError(res.data)) {
@@ -118,6 +123,31 @@ export async function createEvent(
     const res = await axios.post(
         `${API_URL}/api/v1/events`,
         { name, deadline, description },
+        getAuthConfig(token)
+    );
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
+    }
+    return res.data;
+}
+
+type UpdateEventResponse = {};
+
+export async function updateEvent(
+    eventId: string,
+    token: string,
+    name?: string,
+    description?: string,
+    deadline?: string
+): Promise<UpdateEventResponse> {
+    const res = await axios.put(
+        `${API_URL}/api/v1/events/${eventId}`,
+        {
+            name,
+            description,
+            deadline,
+        },
         getAuthConfig(token)
     );
     if (isApiError(res.data)) {

@@ -1,3 +1,4 @@
+import { PrivateContent } from '@/components/auth/PrivateContent';
 import QueryProvider from '@/lib/QueryProvider';
 
 export default function TyperLayout({
@@ -5,5 +6,9 @@ export default function TyperLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return <QueryProvider>{children}</QueryProvider>;
+    return (
+        <PrivateContent>
+            <QueryProvider>{children}</QueryProvider>
+        </PrivateContent>
+    );
 }

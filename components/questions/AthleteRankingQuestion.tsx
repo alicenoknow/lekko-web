@@ -1,16 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { ActionButton } from '@/components/buttons';
 import Spinner from '@/components/Spinner';
-
-type Athlete = {
-    id: number;
-    first_name: string | null;
-    last_name: string | null;
-    country: string | null;
-};
+import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { Athlete, fetchAthletes } from '@/app/api/typer';
 
 interface Props {
     questionId: number;
@@ -25,44 +20,25 @@ export default function AthleteRankingQuestion({
     questionId,
     onSubmit,
 }: Props) {
+    const { token } = usePrivateUserContext();
     const [search, setSearch] = useState('');
-    const [athletes, setAthletes] = useState<Athlete[]>([]);
     const [selected, setSelected] = useState<Athlete[]>([]);
-    const [loading, setLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const canSubmit = selected.length === 3;
 
-    useEffect(() => {
-        if (!search) {
-            setAthletes([]);
-            return;
-        }
-
-        const fetchAthletes = async () => {
-            setLoading(true);
-            try {
-                const res = await axios.get(
-                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/athlete?search=${search}`
-                );
-                setAthletes(res.data);
-            } catch (err) {
-                console.error('Failed to fetch athletes', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        const debounce = setTimeout(fetchAthletes, 300);
-        return () => clearTimeout(debounce);
-    }, [search]);
+    const { data: athleteResult, isFetching } = useQuery({
+        queryKey: ['athletes', search],
+        queryFn: () => fetchAthletes(search, token),
+        enabled: !!search && selected.length < 3 && !!token,
+        staleTime: 30 * 1000,
+    });
 
     const handleSelect = (athlete: Athlete) => {
         if (selected.find((a) => a.id === athlete.id)) return;
         if (selected.length >= 3) return;
         setSelected((prev) => [...prev, athlete]);
         setSearch('');
-        setAthletes([]);
     };
 
     const handleRemove = (id: number) => {
@@ -91,22 +67,24 @@ export default function AthleteRankingQuestion({
                 />
             )}
 
-            {loading && <Spinner />}
+            {isFetching && <Spinner />}
 
-            {athletes.length > 0 && selected.length < 3 && (
-                <ul className='rounded border'>
-                    {athletes.map((athlete) => (
-                        <li
-                            key={athlete.id}
-                            className='cursor-pointer p-2 hover:bg-gray-100'
-                            onClick={() => handleSelect(athlete)}
-                        >
-                            {athlete.first_name} {athlete.last_name} (
-                            {athlete.country})
-                        </li>
-                    ))}
-                </ul>
-            )}
+            {athleteResult?.data &&
+                athleteResult.data.length > 0 &&
+                selected.length < 3 && (
+                    <ul className='rounded border'>
+                        {athleteResult.data.map((athlete) => (
+                            <li
+                                key={athlete.id}
+                                className='cursor-pointer p-2 hover:bg-gray-100'
+                                onClick={() => handleSelect(athlete)}
+                            >
+                                {athlete.first_name} {athlete.last_name} (
+                                {athlete.country})
+                            </li>
+                        ))}
+                    </ul>
+                )}
 
             {selected.length > 0 && (
                 <div className='space-y-2'>

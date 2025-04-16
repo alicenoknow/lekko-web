@@ -1,18 +1,17 @@
 'use client';
 
-import { useState, useCallback, useTransition } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 import { txt } from '@/nls/texts';
 import FormField from '@/components/forms/FormField';
 import { ActionButton } from '@/components/buttons';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
-import { AxiosResponse } from 'axios';
-import { isSuccess } from '@/app/api/common';
-import { createEvent, CreateEventData } from '@/app/api/typer';
-import { ApiErrorType, handleError } from '@/app/api/errors';
+import { createEvent } from '@/app/api/typer';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { AdminOnly } from '@/components/auth/AdminOnly';
 
-export default function CreateEventPage() {
+function CreateEventPage() {
     const router = useRouter();
     const { token } = usePrivateUserContext();
 
@@ -21,49 +20,24 @@ export default function CreateEventPage() {
     const [deadline, setDeadline] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const [isSubmitting, startSubmitTransition] = useTransition();
+    const isFormInvalid = !name || !deadline;
 
-    const checkIfFormInvalid = useCallback(() => {
-        return !name || !deadline;
-    }, [name, deadline]);
-
-    const maybeRenderError = () => {
-        if (checkIfFormInvalid()) {
-            return <ErrorMessage errorMessage={txt.forms.fillAllInfo} />;
-        }
-        if (errorMessage) {
-            return <ErrorMessage errorMessage={errorMessage} />;
-        }
-        return null;
-    };
+    const mutation = useMutation({
+        mutationFn: () =>
+            createEvent(name, deadline, description || null, token!),
+        onSuccess: (data) => {
+            router.replace(`/event/${data.id}`);
+        },
+        onError: (err) => {
+            console.warn('Create event error:', err.message);
+            setErrorMessage(txt.events.createError);
+        },
+    });
 
     const handleSubmit = useCallback(() => {
         setErrorMessage('');
-
-        startSubmitTransition(async () => {
-            if (!token) return;
-            try {
-                const response = await createEvent(
-                    name,
-                    deadline,
-                    description || null,
-                    token
-                );
-                if (isSuccess<CreateEventData>(response)) {
-                    router.replace('/events');
-                } else {
-                    const error = (response as AxiosResponse<ApiErrorType>)
-                        .data;
-                    setErrorMessage(handleError(error));
-                }
-            } catch (err: any) {
-                console.error(err);
-                setErrorMessage(
-                    err?.response?.data?.message || 'Something went wrong'
-                );
-            }
-        });
-    }, [name, description, deadline, router]);
+        mutation.mutate();
+    }, [name, description, deadline, token]);
 
     return (
         <div className='mx-auto max-w-xl p-6'>
@@ -93,15 +67,28 @@ export default function CreateEventPage() {
                 onChange={(e) => setDeadline(e.target.value)}
                 required
             />
-            {maybeRenderError()}
+
+            {isFormInvalid && (
+                <ErrorMessage errorMessage={txt.forms.fillAllInfo} />
+            )}
+            {!isFormInvalid && errorMessage && (
+                <ErrorMessage errorMessage={errorMessage} />
+            )}
+
             <ActionButton
                 label={txt.forms.send}
                 onClick={handleSubmit}
-                loading={isSubmitting}
-                disabled={checkIfFormInvalid()}
+                loading={mutation.isPending}
+                disabled={isFormInvalid}
             />
         </div>
     );
 }
 
-// TODO handle all like events page
+export default function AdminCreateEventPage() {
+    return (
+        <AdminOnly>
+            <CreateEventPage />
+        </AdminOnly>
+    );
+}

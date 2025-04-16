@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ActionButton } from '@/components/buttons';
 import Spinner from '@/components/Spinner';
@@ -21,12 +21,13 @@ export default function AthleteQuestion({
     const [selected, setSelected] = useState<Athlete | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { data: athletes, isFetching } = useQuery({
+    const { data: athletesData, isLoading: loading } = useQuery({
         queryKey: ['athletes', search],
         queryFn: () => fetchAthletes(search, token),
-        enabled: !!search && !!token,
-        staleTime: 60 * 1000,
+        enabled: !!token && !!search,
     });
+
+    const athletes = athletesData?.data ?? [];
 
     const handleSubmit = useCallback(() => {
         if (!selected) return;
@@ -45,11 +46,10 @@ export default function AthleteQuestion({
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                    {isFetching && <Spinner />}
-
-                    {athletes?.data && athletes.data.length > 0 && (
+                    {loading && <Spinner />}
+                    {athletes.length > 0 && (
                         <ul className='rounded border'>
-                            {athletes.data.map((athlete) => (
+                            {athletes.map((athlete) => (
                                 <li
                                     key={athlete.id}
                                     className='cursor-pointer p-2 hover:bg-gray-100'
@@ -81,7 +81,6 @@ export default function AthleteQuestion({
                             Change
                         </button>
                     </div>
-
                     <ActionButton
                         label='Confirm Answer'
                         onClick={handleSubmit}

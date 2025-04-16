@@ -42,7 +42,8 @@
         "createHeader": "Nowe wydarzenie",
         "noQuestions": "Aktualnie nie ma pytań w tym wydarzeniu",
         "submitAnswer": "Zatwierdź odpowiedź",
-        "submitCorrectAnswer": "Ustaw poprawną odpowiedź"
+        "submitCorrectAnswer": "Ustaw poprawną odpowiedź",
+        "createError": "Nie udało się stworzyć wydarzenia."
     },
     "fetchErrorText": "Nie udało się wczytać danych. Spórbuj ponownie.",
     "goToEvent": "Otwórz",

@@ -4,13 +4,12 @@ import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { registerUser } from '@/app/api/auth';
-import { txt as txtData } from '@/nls/texts';
+import { txt } from '@/nls/texts';
 import { ActionButton } from '@/components/buttons';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
 import FormField from '@/components/forms/FormField';
 
 function RegisterForm() {
-    const txt = useMemo(() => txtData, []);
     const router = useRouter();
 
     const [username, setUsername] = useState('');

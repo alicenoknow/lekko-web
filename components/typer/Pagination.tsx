@@ -6,19 +6,19 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 interface PaginationProps {
     pagination: PaginationInfo;
-    fetchEvents: (page: number) => void;
+    changePage: (page: number) => void;
 }
 
 export default function Pagination({
     pagination,
-    fetchEvents,
+    changePage,
 }: PaginationProps) {
     return (
         <div className='mt-6 flex items-center justify-center gap-4'>
             {pagination.prev_page && (
                 <button
                     className='rounded border px-4 py-2 disabled:opacity-50'
-                    onClick={() => fetchEvents(pagination.prev_page || 1)}
+                    onClick={() => changePage(pagination.prev_page || 1)}
                     disabled={pagination.is_first_page}
                 >
                     <FaArrowLeft />
@@ -31,7 +31,7 @@ export default function Pagination({
             {pagination.next_page && (
                 <button
                     className='rounded border px-4 py-2 disabled:opacity-50'
-                    onClick={() => fetchEvents(pagination.next_page || 1)}
+                    onClick={() => changePage(pagination.next_page || 1)}
                     disabled={pagination.is_last_page}
                 >
                     <FaArrowRight />

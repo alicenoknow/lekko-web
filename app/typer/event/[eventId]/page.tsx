@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
@@ -11,17 +11,19 @@ import {
     Question,
 } from '@/app/api/typer';
 import { AdminOnly } from '@/components/auth/AdminOnly';
-import { PrivateContent } from '@/components/auth/PrivateContent';
 import ActionIcon from '@/components/buttons/ActionIcon';
 import Spinner from '@/components/Spinner';
 import { txt } from '@/nls/texts';
 import { FaEdit } from 'react-icons/fa';
 import QuestionRenderer from '@/components/questions/QuestionRenderer';
+import { ErrorMessage } from '@/components/error/ErrorMessage';
+import Pagination from '@/components/typer/Pagination';
 
-function EventDetailPage() {
+export default function EventDetailPage() {
     const { eventId } = useParams<{ eventId: string }>();
     const { token } = usePrivateUserContext();
     const router = useRouter();
+    const [page, setPage] = useState(1);
 
     const {
         data: eventData,
@@ -38,8 +40,8 @@ function EventDetailPage() {
         isLoading: isQuestionsLoading,
         isError: isQuestionsError,
     } = useQuery({
-        queryKey: ['questions', eventId],
-        queryFn: () => fetchQuestionsFromEvent(token, eventId),
+        queryKey: ['questions', eventId, page],
+        queryFn: () => fetchQuestionsFromEvent(token, eventId, page),
         enabled: !!token && !!eventId,
     });
 
@@ -53,14 +55,8 @@ function EventDetailPage() {
         enabled: !!token && !!eventId,
     });
 
-    const isFormEmpty = useCallback(
-        (questions: Question[] | undefined | null): boolean =>
-            !questions || questions.length === 0,
-        []
-    );
-
     const handleOpenAdminPanel = () => {
-        router.push(`/typer/event/${eventId}/admin`);
+        router.replace(`/event/${eventId}/admin`);
     };
 
     const submitAnswer = useCallback(() => {
@@ -70,15 +66,22 @@ function EventDetailPage() {
     if (isEventLoading || isQuestionsLoading || isAnswersLoading)
         return <Spinner />;
 
-    if (!eventData) return <p className='p-6'>{txt.events.notFound}</p>;
+    if (
+        isEventError ||
+        isQuestionsError ||
+        isAnswersError ||
+        !eventData ||
+        !questionsData
+    ) {
+        return <ErrorMessage errorMessage={txt.events.notFound} />;
+    }
 
     return (
         <div className='space-y-6 p-6'>
             <h1 className='text-3xl font-bold'>{eventData.name}</h1>
             {eventData.description && <p>{eventData.description}</p>}
             <p className='text-sm text-gray-600'>
-                {txt.events.deadline}:{' '}
-                {new Date(eventData.deadline).toLocaleString()}
+                {txt.events.deadline}: {eventData.deadline}
             </p>
 
             <AdminOnly>
@@ -88,25 +91,28 @@ function EventDetailPage() {
                 />
             </AdminOnly>
 
-            {!questionsData || !questionsData.data ? (
+            {!questionsData || questionsData.data.length === 0 ? (
                 <p>{txt.events.noQuestions}</p>
             ) : (
-                questionsData.data.map((q) => (
-                    <QuestionRenderer
-                        key={q.id}
-                        question={q}
-                        onSubmit={submitAnswer}
-                    />
-                ))
+                <>
+                    {questionsData.data.map((q: Question) => (
+                        <QuestionRenderer
+                            key={q.id}
+                            question={q}
+                            onSubmit={submitAnswer}
+                        />
+                    ))}
+                    {questionsData?.pagination_info && (
+                        <Pagination
+                            pagination={questionsData.pagination_info}
+                            changePage={(newPage) => {
+                                setPage(newPage);
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                        />
+                    )}
+                </>
             )}
         </div>
-    );
-}
-
-export default function PrivateEventDetailPage() {
-    return (
-        <PrivateContent redirect>
-            <EventDetailPage />
-        </PrivateContent>
     );
 }
