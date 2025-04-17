@@ -1,27 +1,28 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ActionButton } from '@/components/buttons';
 import Spinner from '@/components/Spinner';
 import { fetchAthletes, Athlete, Question } from '@/app/api/typer';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import DeleteQuestion from '@/components/questions/admin/DeleteQuestion';
 
-interface AthleteQuestionProps {
+interface Props {
     question: Question;
-    onSubmit: (answer: { athlete_id: number }) => void;
+    onSubmit: (question: Question) => void;
+    onDelete: (questionId: number) => void;
 }
 
-export default function AthleteQuestion({
-    question,
-    onSubmit,
-}: AthleteQuestionProps) {
+export default function AdminAthleteQuestion({ question, onSubmit, onDelete }: Props) {
     const { token } = usePrivateUserContext();
+    const [content, setContent] = useState(question.content);
+    const [points, setPoints] = useState(question.points);
     const [search, setSearch] = useState('');
-    const [selected, setSelected] = useState<Athlete | null>(null);
+    const [selected, setSelected] = useState<Athlete | null>(question.correct_answer || null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { data: athletesData, isLoading: loading } = useQuery({
+    const { data: athletesData, isLoading } = useQuery({
         queryKey: ['athletes', search],
         queryFn: () => fetchAthletes(search, token),
         enabled: !!token && !!search,
@@ -29,24 +30,51 @@ export default function AthleteQuestion({
 
     const athletes = athletesData?.data ?? [];
 
-    const handleSubmit = useCallback(() => {
-        if (!selected) return;
+    const isFormInvalid = !content.trim() || points < 1 || !selected;
+
+    const handleSubmit = () => {
+        if (isFormInvalid) return;
         setIsSubmitting(true);
-        onSubmit({ athlete_id: selected.id });
+        onSubmit({
+            ...question,
+            content: content.trim(),
+            points,
+            correct_answer: selected,
+        });
         setIsSubmitting(false);
-    }, [selected, onSubmit]);
+    };
 
     return (
-        <div className='flex flex-col gap-4'>
+        <div className='relative flex flex-col gap-4 rounded border bg-gray-50 p-4'>
+            <div className="flex items-center justify-between">
+                <label className='text-sm font-bold'>Question Text</label>
+                <DeleteQuestion questionId={question.id} onDelete={onDelete} />
+            </div>
+            <input
+                className='border p-2'
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+            />
+
+            <label className='text-sm font-bold'>Points</label>
+            <input
+                type='number'
+                min={1}
+                className='border p-2'
+                value={points}
+                onChange={(e) => setPoints(Number(e.target.value))}
+            />
+
             {!selected && (
                 <>
+                    <label className='text-sm font-bold'>Search Athlete</label>
                     <input
                         className='border p-2'
                         placeholder='Search athlete...'
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                    {loading && <Spinner />}
+                    {isLoading && <Spinner />}
                     {athletes.length > 0 && (
                         <ul className='rounded border'>
                             {athletes.map((athlete) => (
@@ -55,8 +83,7 @@ export default function AthleteQuestion({
                                     className='cursor-pointer p-2 hover:bg-gray-100'
                                     onClick={() => setSelected(athlete)}
                                 >
-                                    {athlete.first_name} {athlete.last_name} (
-                                    {athlete.country})
+                                    {athlete.first_name} {athlete.last_name} ({athlete.country})
                                 </li>
                             ))}
                         </ul>
@@ -65,40 +92,25 @@ export default function AthleteQuestion({
             )}
 
             {selected && (
-                <div className='flex flex-col gap-2 rounded border bg-gray-50 p-4'>
-                    <div className='flex items-center justify-between'>
-                        <span>
-                            Selected Athlete:{' '}
-                            <strong>
-                                {selected.first_name} {selected.last_name}
-                            </strong>{' '}
-                            ({selected.country})
-                        </span>
-                        <button
-                            className='text-sm text-red-500'
-                            onClick={() => setSelected(null)}
-                        >
-                            Change
-                        </button>
-                    </div>
-                    <ActionButton
-                        label='Confirm Answer'
-                        onClick={handleSubmit}
-                        loading={isSubmitting}
-                    />
+                <div className='flex items-center justify-between rounded border p-2'>
+                    <span>
+                        Selected: <strong>{selected.first_name} {selected.last_name}</strong> ({selected.country})
+                    </span>
+                    <button
+                        className='text-sm text-red-500'
+                        onClick={() => setSelected(null)}
+                    >
+                        Change
+                    </button>
                 </div>
             )}
 
-            {question.correct_answer && (
-                <div className='mt-4 rounded border bg-green-50 p-4 text-sm'>
-                    Correct Answer:{' '}
-                    <strong>
-                        {question.correct_answer.first_name}{' '}
-                        {question.correct_answer.last_name}
-                    </strong>{' '}
-                    ({question.correct_answer.country})
-                </div>
-            )}
+            <ActionButton
+                label='Save Changes'
+                onClick={handleSubmit}
+                loading={isSubmitting}
+                disabled={isFormInvalid}
+            />
         </div>
     );
 }

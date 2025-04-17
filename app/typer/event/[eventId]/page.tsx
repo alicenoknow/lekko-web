@@ -56,7 +56,7 @@ export default function EventDetailPage() {
     });
 
     const handleOpenAdminPanel = () => {
-        router.replace(`/event/${eventId}/admin`);
+        router.replace(`/typer/event/${eventId}/admin`);
     };
 
     const submitAnswer = useCallback(() => {

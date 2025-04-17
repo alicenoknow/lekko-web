@@ -23,10 +23,12 @@ function CreateEventPage() {
     const isFormInvalid = !name || !deadline;
 
     const mutation = useMutation({
-        mutationFn: () =>
-            createEvent(name, deadline, description || null, token!),
+        mutationFn: () =>{
+            const formattedDeadline = new Date(deadline).toISOString();
+            return createEvent(name, formattedDeadline, description || null, token!)
+        },
         onSuccess: (data) => {
-            router.replace(`/event/${data.id}`);
+            router.replace(`/typer/event/${data.id}`);
         },
         onError: (err) => {
             console.warn('Create event error:', err.message);

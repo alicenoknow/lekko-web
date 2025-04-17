@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { ApiErrorType, handleError, isApiError } from './errors';
 import { getAuthConfig } from './common';
+import { type } from 'os';
 
 const API_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
@@ -214,6 +215,66 @@ export async function fetchAthletes(
         ...getAuthConfig(token),
         params: { search, page },
     });
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
+    }
+    return res.data;
+}
+
+type CreateQuestiontData = {};
+
+export async function createQuestion(
+    token: string,
+    event_id?: string,
+    type?: string,
+    content?: string,
+    points?: number,
+    correct_answer?: any
+): Promise<CreateQuestiontData> {
+    const res = await axios.post(
+        `${API_URL}/api/v1/questions`,
+        { event_id, type, content, points, correct_answer },
+        getAuthConfig(token)
+    );
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
+    }
+    return res.data;
+}
+
+type ModifyQuestionData = {};
+
+export async function updateQuestion(
+    token: string,
+    id: number,
+    content?: string,
+    points?: number,
+    correct_answer?: any
+): Promise<ModifyQuestionData> {
+    const res = await axios.put(
+        `${API_URL}/api/v1/questions/${id}`,
+        { content, points, correct_answer },
+        getAuthConfig(token)
+    );
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
+    }
+    return res.data;
+}
+
+type DeleteQuestionData = {};
+
+export async function deleteQuestion(
+    token: string,
+    id: number
+): Promise<DeleteQuestionData> {
+    const res = await axios.delete(
+        `${API_URL}/api/v1/questions/${id}`,
+        getAuthConfig(token)
+    );
     if (isApiError(res.data)) {
         const err = handleError(res.data);
         throw err;

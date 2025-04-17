@@ -6,15 +6,8 @@ import { Question } from '@/app/api/typer';
 
 interface Props {
     question: Question;
-    onSubmit: (data: {
-        content: string;
-        points: number;
-        correct_answer: {
-            country_one: string;
-            country_two: string;
-            country_three: string;
-        };
-    }) => void;
+    onSubmit: (question: Question) => void;
+    onDelete: (questionId: number) => void;
 }
 
 export default function AdminCountryRankingQuestion({

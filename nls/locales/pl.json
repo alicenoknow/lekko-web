@@ -27,7 +27,8 @@
         "deadline": "Koniec"
     },
     "home": {
-        "joinFb": "Dołącz do Lekkoatletawki"
+        "title": "Lekkoatletawka",
+        "joinFb": "Dołącz"
     },
     "user": {
         "logOut": "Wyloguj się"
@@ -43,7 +44,19 @@
         "noQuestions": "Aktualnie nie ma pytań w tym wydarzeniu",
         "submitAnswer": "Zatwierdź odpowiedź",
         "submitCorrectAnswer": "Ustaw poprawną odpowiedź",
-        "createError": "Nie udało się stworzyć wydarzenia."
+        "createError": "Nie udało się stworzyć wydarzenia.",
+        "save": "Zapisz",
+        "edit": "Edytuj wydarzenie",
+        "questions": "Pytania"
+    },
+    "questions": {
+        "add": "Dodaj",
+        "types": {
+            "athlete": "Sportowiec",
+            "athleteRank": "Sportowiec: ranking",
+            "country": "Kraj",
+            "countryRank": "Kraj: ranking"
+        }
     },
     "fetchErrorText": "Nie udało się wczytać danych. Spórbuj ponownie.",
     "goToEvent": "Otwórz",

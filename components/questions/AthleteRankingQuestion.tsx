@@ -8,7 +8,7 @@ import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { Athlete, fetchAthletes } from '@/app/api/typer';
 
 interface Props {
-    questionId: number;
+    question: number;
     onSubmit: (answer: {
         athlete_id_one: number;
         athlete_id_two: number;
@@ -16,10 +16,7 @@ interface Props {
     }) => void;
 }
 
-export default function AthleteRankingQuestion({
-    questionId,
-    onSubmit,
-}: Props) {
+export default function AthleteRankingQuestion({ question, onSubmit }: Props) {
     const { token } = usePrivateUserContext();
     const [search, setSearch] = useState('');
     const [selected, setSelected] = useState<Athlete[]>([]);

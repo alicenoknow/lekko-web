@@ -13,7 +13,7 @@ import ActionIcon from '@/components/buttons/ActionIcon';
 import { FaEdit, FaPlus } from 'react-icons/fa';
 import { TiDelete } from 'react-icons/ti';
 import { ActionButton } from '@/components/buttons';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { queryClient } from '@/lib/QueryProvider';
 
 export default function EventsPage() {

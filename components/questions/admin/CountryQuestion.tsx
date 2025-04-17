@@ -6,11 +6,8 @@ import { Question } from '@/app/api/typer';
 
 interface Props {
     question: Question;
-    onSubmit: (data: {
-        content: string;
-        points: number;
-        correct_answer: { country: string };
-    }) => void;
+    onSubmit: (question: Question) => void;
+    onDelete: (questionId: number) => void;
 }
 
 export default function AdminCountryQuestion({ question, onSubmit }: Props) {
@@ -27,6 +24,7 @@ export default function AdminCountryQuestion({ question, onSubmit }: Props) {
         if (isFormInvalid) return;
         setIsSubmitting(true);
         onSubmit({
+            ...question,
             content: content.trim(),
             points,
             correct_answer: { country: country.trim() },

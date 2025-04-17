@@ -19,6 +19,7 @@ export const useUserStore = create<UserStore>((set) => ({
     try {
       const payload = jwtDecode<User>(token);
       set({ user: payload, token: token });
+      localStorage.setItem('token', token);
     } catch (err) {
       console.error('Invalid JWT token');
       set({ user: null });

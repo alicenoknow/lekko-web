@@ -6,10 +6,11 @@ const LEKKO_FB = 'https://www.facebook.com/groups/715213372162917/';
 
 const Banner: React.FC = () => {
     return (
-        <div className='flex flex-col items-center justify-center'>
-            <div className='z-[3] mb-32 mt-auto md:mb-24'>
-                <LinkButton label={txt.home.joinFb} link={LEKKO_FB} />
-            </div>
+        <div className='flex flex-col items-center justify-center space-y-24 px-4 py-12 text-center'>
+            <span className='max-w-4xl text-5xl font-bold uppercase tracking-tight'>
+                {txt.home.title}
+            </span>
+            <LinkButton label={txt.home.joinFb} link={LEKKO_FB} />
         </div>
     );
 };

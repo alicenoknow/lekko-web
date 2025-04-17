@@ -9,11 +9,8 @@ import { Athlete, fetchAthletes, Question } from '@/app/api/typer';
 
 interface Props {
     question: Question;
-    onSubmit: (answer: {
-        athlete_id_one: number;
-        athlete_id_two: number;
-        athlete_id_three: number;
-    }) => void;
+    onSubmit: (question: Question) => void;
+    onDelete: (questionId: number) => void;
 }
 
 export default function AdminAthleteRankingQuestion({
