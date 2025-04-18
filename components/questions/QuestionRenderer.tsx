@@ -17,7 +17,7 @@ export default function QuestionRenderer({ question, onSubmit }: Props) {
         case 'athletes_three':
             return (
                 <AthleteRankingQuestion
-                    questionId={question.id}
+                    question={question}
                     onSubmit={onSubmit}
                 />
             );

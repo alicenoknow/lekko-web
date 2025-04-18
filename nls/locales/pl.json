@@ -24,7 +24,19 @@
         "send": "Wyślij",
         "name": "Nazwa",
         "description": "Opis",
-        "deadline": "Koniec"
+        "deadline": "Koniec",
+        "selected": "Wybrano",
+        "change": "Zmień",
+        "correctAnswer": "Poprawna odpowiedź",
+        "yourAnswer": "Twoja odpowiedź",
+        "gender": "Płeć",
+        "female": "K",
+        "male": "M",
+        "discipline": "Dyscyplina",
+        "country": "Kraj",
+        "all": "Wszystkie",
+        "select": "Wybierz",
+        "save": "Zapisz"
     },
     "home": {
         "title": "Lekkoatletawka",
@@ -46,17 +58,23 @@
         "submitCorrectAnswer": "Ustaw poprawną odpowiedź",
         "createError": "Nie udało się stworzyć wydarzenia.",
         "save": "Zapisz",
-        "edit": "Edytuj wydarzenie",
+        "edit": "Szczegóły wydarzenia",
         "questions": "Pytania"
     },
     "questions": {
+        "modalTitle": "Edytuj pytanie",
+        "type": "Typ pytania",
         "add": "Dodaj",
+        "confirm": "Zatwierdź",
+        "delete": "Usuń",
         "types": {
             "athlete": "Sportowiec",
             "athleteRank": "Sportowiec: ranking",
             "country": "Kraj",
             "countryRank": "Kraj: ranking"
-        }
+        },
+        "content": "Pytanie",
+        "points": "Punkty"
     },
     "fetchErrorText": "Nie udało się wczytać danych. Spórbuj ponownie.",
     "goToEvent": "Otwórz",

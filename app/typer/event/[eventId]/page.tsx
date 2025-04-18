@@ -20,7 +20,8 @@ import { ErrorMessage } from '@/components/error/ErrorMessage';
 import Pagination from '@/components/typer/Pagination';
 
 export default function EventDetailPage() {
-    const { eventId } = useParams<{ eventId: string }>();
+    const { eventId: eventIdParam } = useParams<{ eventId: string }>();
+    const eventId = parseInt(eventIdParam, 10);
     const { token } = usePrivateUserContext();
     const router = useRouter();
     const [page, setPage] = useState(1);
@@ -45,15 +46,15 @@ export default function EventDetailPage() {
         enabled: !!token && !!eventId,
     });
 
-    const {
-        data: answersData,
-        isLoading: isAnswersLoading,
-        isError: isAnswersError,
-    } = useQuery({
-        queryKey: ['answers', eventId],
-        queryFn: () => fetchUserAnswers(eventId, token),
-        enabled: !!token && !!eventId,
-    });
+    // const {
+    //     data: answersData,
+    //     isLoading: isAnswersLoading,
+    //     isError: isAnswersError,
+    // } = useQuery({
+    //     queryKey: ['answers', eventId],
+    //     queryFn: () => fetchUserAnswers(eventId, token),
+    //     enabled: !!token && !!eventId,
+    // });
 
     const handleOpenAdminPanel = () => {
         router.replace(`/typer/event/${eventId}/admin`);
@@ -63,16 +64,9 @@ export default function EventDetailPage() {
         // TODO: implement answer submission
     }, []);
 
-    if (isEventLoading || isQuestionsLoading || isAnswersLoading)
-        return <Spinner />;
+    if (isEventLoading || isQuestionsLoading) return <Spinner />;
 
-    if (
-        isEventError ||
-        isQuestionsError ||
-        isAnswersError ||
-        !eventData ||
-        !questionsData
-    ) {
+    if (isEventError || isQuestionsError || !eventData || !questionsData) {
         return <ErrorMessage errorMessage={txt.events.notFound} />;
     }
 

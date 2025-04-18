@@ -1,116 +1,130 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { ActionButton } from '@/components/buttons';
-import Spinner from '@/components/Spinner';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
-import { Athlete, fetchAthletes } from '@/app/api/typer';
+import { Question, Answer } from '@/app/api/typer';
+import { txt } from '@/nls/texts';
+import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
+import AthleteLabel from '../forms/AthleteLabel';
+import Points from './Points';
+import { ActionButton } from '../buttons';
 
 interface Props {
-    question: number;
-    onSubmit: (answer: {
-        athlete_id_one: number;
-        athlete_id_two: number;
-        athlete_id_three: number;
-    }) => void;
+    question: Question;
+    onSubmit: (answer: Answer) => void;
 }
 
-export default function AthleteRankingQuestion({ question, onSubmit }: Props) {
-    const { token } = usePrivateUserContext();
-    const [search, setSearch] = useState('');
-    const [selected, setSelected] = useState<Athlete[]>([]);
+export default function AthleteQuestion({ question, onSubmit }: Props) {
+    const answer: Answer = {
+        id: 1,
+        question_id: 2,
+        content: {},
+    };
+    const [selectedAthleteId1, setSelectedAthleteId1] = useState<number | null>(
+        answer?.content?.athletes_three?.athlete_id_one || null
+    );
+    const [selectedAthleteId2, setSelectedAthleteId2] = useState<number | null>(
+        answer?.content?.athletes_three?.athlete_id_two || null
+    );
+    const [selectedAthleteId3, setSelectedAthleteId3] = useState<number | null>(
+        answer?.content?.athletes_three?.athlete_id_three || null
+    );
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const canSubmit = selected.length === 3;
-
-    const { data: athleteResult, isFetching } = useQuery({
-        queryKey: ['athletes', search],
-        queryFn: () => fetchAthletes(search, token),
-        enabled: !!search && selected.length < 3 && !!token,
-        staleTime: 30 * 1000,
-    });
-
-    const handleSelect = (athlete: Athlete) => {
-        if (selected.find((a) => a.id === athlete.id)) return;
-        if (selected.length >= 3) return;
-        setSelected((prev) => [...prev, athlete]);
-        setSearch('');
-    };
-
-    const handleRemove = (id: number) => {
-        setSelected((prev) => prev.filter((a) => a.id !== id));
-    };
+    const isFormInvalid =
+        !selectedAthleteId1 || !selectedAthleteId2 || !selectedAthleteId3;
 
     const handleSubmit = () => {
-        if (!canSubmit) return;
+        if (isFormInvalid) return;
         setIsSubmitting(true);
         onSubmit({
-            athlete_id_one: selected[0].id,
-            athlete_id_two: selected[1].id,
-            athlete_id_three: selected[2].id,
+            user_id: 0, // TODO
+            question_id: question.id,
+            content: {
+                athletes_three: {
+                    athlete_id_one: selectedAthleteId1,
+                    athlete_id_two: selectedAthleteId2,
+                    athlete_id_three: selectedAthleteId3,
+                },
+            },
         });
         setIsSubmitting(false);
     };
 
+    // TODO block answering after deadline
     return (
-        <div className='flex flex-col gap-4'>
-            {selected.length < 3 && (
-                <input
-                    className='border p-2'
-                    placeholder='Search athlete...'
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+        <div className='flex w-full flex-col bg-white p-8'>
+            <div className='flex flex-row justify-between'>
+                <div className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
+                    {question.content}
+                </div>
+                <Points
+                    maxPoints={question.points}
+                    grantedPoints={answer.points}
+                />
+            </div>
+            <>
+                <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
+                    {txt.forms.yourAnswer}:
+                </p>
+                <div className='flex flex-row justify-between'>
+                    <span className='mr-4 text-4xl'>🥇</span>
+                    <AthleteSearchBar
+                        selected={selectedAthleteId1}
+                        onSelect={setSelectedAthleteId1}
+                    />
+                </div>
+                <div className='flex flex-row justify-between'>
+                    <span className='mr-4 text-4xl'>🥈</span>
+                    <AthleteSearchBar
+                        selected={selectedAthleteId2}
+                        onSelect={setSelectedAthleteId2}
+                    />
+                </div>
+                <div className='flex flex-row justify-between'>
+                    <span className='mr-4 text-4xl'>🥉</span>
+                    <AthleteSearchBar
+                        selected={selectedAthleteId3}
+                        onSelect={setSelectedAthleteId3}
+                    />
+                </div>
+            </>
+            {question.correct_answer ? (
+                <>
+                    <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
+                        {txt.forms.yourAnswer}:
+                    </p>
+                    <div className='flex flex-row justify-between'>
+                        <span className='mr-4 text-4xl'>🥇</span>
+                        <AthleteLabel
+                            selected={
+                                answer.content.athlete_three.athlete_id_one
+                            }
+                        />
+                    </div>
+                    <div className='flex flex-row justify-between'>
+                        <span className='mr-4 text-4xl'>🥈</span>
+                        <AthleteLabel
+                            selected={
+                                answer.content.athlete_three.athlete_id_two
+                            }
+                        />
+                    </div>
+                    <div className='flex flex-row justify-between'>
+                        <span className='mr-4 text-4xl'>🥉</span>
+                        <AthleteLabel
+                            selected={
+                                answer.content.athlete_three.athlete_id_three
+                            }
+                        />
+                    </div>
+                </>
+            ) : (
+                <ActionButton
+                    loading={isSubmitting}
+                    label={txt.forms.save}
+                    onClick={handleSubmit}
                 />
             )}
-
-            {isFetching && <Spinner />}
-
-            {athleteResult?.data &&
-                athleteResult.data.length > 0 &&
-                selected.length < 3 && (
-                    <ul className='rounded border'>
-                        {athleteResult.data.map((athlete) => (
-                            <li
-                                key={athlete.id}
-                                className='cursor-pointer p-2 hover:bg-gray-100'
-                                onClick={() => handleSelect(athlete)}
-                            >
-                                {athlete.first_name} {athlete.last_name} (
-                                {athlete.country})
-                            </li>
-                        ))}
-                    </ul>
-                )}
-
-            {selected.length > 0 && (
-                <div className='space-y-2'>
-                    {selected.map((athlete, idx) => (
-                        <div
-                            key={athlete.id}
-                            className='flex items-center justify-between rounded border p-2'
-                        >
-                            <span>
-                                {idx + 1}. {athlete.first_name}{' '}
-                                {athlete.last_name} ({athlete.country})
-                            </span>
-                            <button
-                                className='text-sm text-red-500'
-                                onClick={() => handleRemove(athlete.id)}
-                            >
-                                Remove
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            )}
-
-            <ActionButton
-                label='Submit Ranking'
-                disabled={!canSubmit}
-                onClick={handleSubmit}
-                loading={isSubmitting}
-            />
         </div>
     );
 }

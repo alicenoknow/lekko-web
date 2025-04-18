@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { ApiErrorType, handleError, isApiError } from './errors';
+import { handleError, isApiError } from './errors';
 import { getAuthConfig } from './common';
-import { type } from 'os';
+import qs from 'qs';
 
 const API_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
@@ -31,8 +31,6 @@ export interface PaginationInfo {
     total_pages: number;
 }
 
-export type EventsResponse = EventsData | ApiErrorType;
-
 export async function fetchEvents(
     token: string,
     page = 1
@@ -47,8 +45,6 @@ export async function fetchEvents(
     }
     return res.data;
 }
-
-export type EventDetailResponse = EventDetail | ApiErrorType;
 
 export interface EventDetail {
     id: number;
@@ -77,15 +73,16 @@ export interface Questions {
     pagination_info: PaginationInfo;
 }
 
-export type QuestionsResponse = Questions | ApiErrorType;
-
 export interface Question {
     id: number;
     content: string;
     type: string;
     points: number;
+    event_id?: number;
     correct_answer?: any;
     answers?: any[];
+    created_at?: string;
+    updated_at?: string;
 }
 
 export async function fetchQuestionsFromEvent(
@@ -113,8 +110,6 @@ export type CreateEventData = {
     updated_at: string;
 };
 
-export type CreateEventResponse = CreateEventData | ApiErrorType;
-
 export async function createEvent(
     name: string,
     deadline: string,
@@ -136,7 +131,7 @@ export async function createEvent(
 type UpdateEventResponse = {};
 
 export async function updateEvent(
-    eventId: string,
+    eventId: number,
     token: string,
     name?: string,
     description?: string,
@@ -178,7 +173,7 @@ export async function deleteEvent(
 type AnswersResponse = {};
 
 export async function fetchUserAnswers(
-    eventId: string,
+    eventId: number,
     token: string
 ): Promise<AnswersResponse> {
     const res = await axios.get(
@@ -204,37 +199,12 @@ export interface Athletes {
     pagination_info: PaginationInfo;
 }
 
-export type AthletesResponse = Athletes | ApiErrorType;
-
-export async function fetchAthletes(
-    search: string,
-    token: string,
-    page = 1
-): Promise<Athletes> {
-    const res = await axios.get(`${API_URL}/api/v1/athletes`, {
-        ...getAuthConfig(token),
-        params: { search, page },
-    });
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
-    return res.data;
-}
-
-type CreateQuestiontData = {};
-
-export async function createQuestion(
-    token: string,
-    event_id?: string,
-    type?: string,
-    content?: string,
-    points?: number,
-    correct_answer?: any
-): Promise<CreateQuestiontData> {
-    const res = await axios.post(
-        `${API_URL}/api/v1/questions`,
-        { event_id, type, content, points, correct_answer },
+export async function fetchAthleteById(
+    id: number,
+    token: string
+): Promise<Athlete> {
+    const res = await axios.get(
+        `${API_URL}/api/v1/athletes/${id}`,
         getAuthConfig(token)
     );
     if (isApiError(res.data)) {
@@ -244,7 +214,62 @@ export async function createQuestion(
     return res.data;
 }
 
-type ModifyQuestionData = {};
+export async function fetchAthletes(
+    search: string,
+    token: string,
+    discipline_ids?: string[],
+    country?: string | null,
+    gender?: string | null,
+    page = 1
+): Promise<Athletes> {
+    const params: Record<string, any> = {
+        search,
+        page,
+    };
+
+    if (discipline_ids && discipline_ids.length > 0) {
+        params['discipline_ids'] = discipline_ids;
+    }
+
+    if (country) params.country = country;
+    if (gender) params.gender = gender;
+
+    const res = await axios.get(`${API_URL}/api/v1/athletes`, {
+        ...getAuthConfig(token),
+        params,
+        paramsSerializer: (params) =>
+            qs.stringify(params, { arrayFormat: 'repeat' }),
+    });
+
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
+    }
+    return res.data;
+}
+
+type CreateQuestiontData = Question;
+
+export async function createQuestion(
+    token: string,
+    event_id: number,
+    type: string,
+    content: string,
+    points: number
+): Promise<CreateQuestiontData> {
+    const res = await axios.post(
+        `${API_URL}/api/v1/questions`,
+        { event_id, type, content, points },
+        getAuthConfig(token)
+    );
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
+    }
+    return res.data;
+}
+
+type ModifyQuestionData = Question;
 
 export async function updateQuestion(
     token: string,
@@ -280,4 +305,36 @@ export async function deleteQuestion(
         throw err;
     }
     return res.data;
+}
+
+export interface Discipline {
+    id: number;
+    name: string;
+    type: string;
+}
+
+export interface Disciplines {
+    data: Discipline[];
+    pagination_info: PaginationInfo;
+}
+
+export async function fetchDisciplines(token: string): Promise<Disciplines> {
+    const res = await axios.get(`${API_URL}/api/v1/disciplines?per_page=1000`, {
+        ...getAuthConfig(token),
+    });
+    if (isApiError(res.data)) {
+        const err = handleError(res.data);
+        throw err;
+    }
+    return res.data;
+}
+
+export interface Answer {
+    id?: number;
+    question_id: number;
+    user_id?: number;
+    content: { [key: string]: any };
+    points?: number;
+    created_at?: string;
+    updated_at?: string;
 }

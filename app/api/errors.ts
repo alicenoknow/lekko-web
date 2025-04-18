@@ -52,7 +52,7 @@ export function handleError(
     data?: ValidationApiError | ApiError | null
 ): string {
     if (!data) {
-        console.warn('Empty error data.');
+        console.error('Empty error data.');
         return GENERIC_ERROR_MESSAGE;
     }
     switch (data?.error_type) {
@@ -71,7 +71,7 @@ export function handleError(
 }
 
 export function handleValidationApiError(error: ValidationApiError): string {
-    console.warn('Validation error:', error.error_type, error.details);
+    console.error('Validation error:', error.error_type, error.details);
     for (const errorDetail of error.details) {
         switch (errorDetail.error_type) {
             case ValidationErrorDetailsType.Required:

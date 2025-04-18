@@ -23,15 +23,20 @@ function CreateEventPage() {
     const isFormInvalid = !name || !deadline;
 
     const mutation = useMutation({
-        mutationFn: () =>{
+        mutationFn: () => {
             const formattedDeadline = new Date(deadline).toISOString();
-            return createEvent(name, formattedDeadline, description || null, token!)
+            return createEvent(
+                name,
+                formattedDeadline,
+                description || null,
+                token!
+            );
         },
         onSuccess: (data) => {
             router.replace(`/typer/event/${data.id}`);
         },
         onError: (err) => {
-            console.warn('Create event error:', err.message);
+            console.error('Create event error:', err.message);
             setErrorMessage(txt.events.createError);
         },
     });
@@ -42,7 +47,7 @@ function CreateEventPage() {
     }, [name, description, deadline, token]);
 
     return (
-        <div className='mx-auto max-w-xl p-6'>
+        <div className='mx-auto w-full max-w-2xl p-6'>
             <h1 className='mb-6 text-2xl font-bold uppercase'>
                 {txt.events.createHeader}
             </h1>
@@ -58,6 +63,7 @@ function CreateEventPage() {
                 label={txt.forms.description}
                 id='event-description'
                 type='text'
+                multiline
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
             />

@@ -14,7 +14,7 @@ export function NavBarMenu() {
             return (
                 <Link
                     href={link}
-                    className='ml-10 mt-4 block hover:text-primaryLight md:mt-0 md:inline-block'
+                    className='ml-3 mt-4 block hover:text-primaryLight md:mt-0 md:inline-block lg:ml-10'
                 >
                     {title}
                 </Link>
@@ -31,7 +31,7 @@ export function NavBarMenu() {
                         event.stopPropagation();
                         setIsOpen(!isOpen);
                     }}
-                    className='z-[4] flex items-center rounded border-2 border-primaryDark px-3 py-2 text-primaryDark hover:border-primaryLight hover:text-primaryLight'
+                    className='z-[4] flex items-center rounded border-2 border-primaryDark px-2 py-2 text-primaryDark hover:border-primaryLight hover:text-primaryLight'
                 >
                     <MenuLogo />
                 </button>

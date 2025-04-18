@@ -17,7 +17,7 @@ const ActionIcon: React.FC<ActionIconProps> = ({
     return (
         <button
             disabled={disabled || loading}
-            className={`border-1 border-grey select-none bg-primaryLight p-4 text-xl font-extrabold uppercase hover:cursor-pointer ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-accentLight'}`}
+            className={`border-1 border-grey select-none bg-primaryLight p-2 text-xl font-extrabold uppercase hover:cursor-pointer ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-accentLight'}`}
             onClick={onClick}
         >
             {loading ? (
