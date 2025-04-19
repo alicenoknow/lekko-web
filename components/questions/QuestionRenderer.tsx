@@ -6,35 +6,54 @@ import { Question } from '@/app/api/typer';
 
 interface Props {
     question: Question;
+    isPastDeadline: boolean;
     onSubmit: (answer: any) => void;
+    onEdit?: () => void;
 }
 
-export default function QuestionRenderer({ question, onSubmit }: Props) {
+export default function QuestionRenderer({
+    question,
+    isPastDeadline,
+    onSubmit,
+    onEdit,
+}: Props) {
     switch (question.type) {
         case 'athlete':
-            return <AthleteQuestion question={question} onSubmit={onSubmit} />;
-
+            return (
+                <AthleteQuestion
+                    question={question}
+                    onSubmit={onSubmit}
+                    isPastDeadline={isPastDeadline}
+                    onEdit={onEdit}
+                />
+            );
         case 'athletes_three':
             return (
                 <AthleteRankingQuestion
                     question={question}
                     onSubmit={onSubmit}
+                    isPastDeadline={isPastDeadline}
+                    onEdit={onEdit}
                 />
             );
-
         case 'country':
             return (
-                <CountryQuestion questionId={question.id} onSubmit={onSubmit} />
+                <CountryQuestion
+                    question={question}
+                    onSubmit={onSubmit}
+                    isPastDeadline={isPastDeadline}
+                    onEdit={onEdit}
+                />
             );
-
         case 'countries_three':
             return (
                 <CountryRankingQuestion
-                    questionId={question.id}
+                    question={question}
                     onSubmit={onSubmit}
+                    isPastDeadline={isPastDeadline}
+                    onEdit={onEdit}
                 />
             );
-
         default:
             return null;
     }

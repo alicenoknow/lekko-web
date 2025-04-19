@@ -13,7 +13,7 @@ import EditQuestionRenderer from './EditQuestionRenderer';
 import { txt } from '@/nls/texts';
 
 interface Props {
-    type: QuestionType;
+    question: Question;
     isOpen: boolean;
     setOpen: (isOpen: boolean) => void;
     onSubmit: (question: Question) => void;
@@ -21,22 +21,12 @@ interface Props {
 }
 
 export default function QuestionModal({
-    type,
+    question,
     isOpen,
     setOpen,
     onSubmit,
     onDelete,
 }: Props) {
-    const question = useMemo<Question>(
-        () => ({
-            id: Date.now() * -1,
-            type,
-            content: '',
-            points: 0,
-        }),
-        [type]
-    );
-
     const handleSubmit = (question: Question) => {
         onSubmit(question);
         setOpen(false);

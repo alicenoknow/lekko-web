@@ -34,7 +34,13 @@ export default function EventDetailPage() {
     const [isOpenModal, setOpenModal] = useState(false);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [selectedType, setSelectedType] = useState<QuestionType>('athlete');
-    const [eventChanged, setEventChanged] = useState(false);
+    const [currentQuestion, setCurrentQuestion] = useState<Question>({
+        id: Date.now() * -1,
+        type: selectedType,
+        content: '',
+        points: 0,
+    });
+    const [isEventModified, setEventModified] = useState(false);
     const [form, setForm] = useState({
         name: '',
         description: '',
@@ -73,7 +79,7 @@ export default function EventDetailPage() {
                     deadline
                 );
             },
-            onSuccess: () => setEventChanged(false),
+            onSuccess: () => setEventModified(false),
         });
 
     const { mutate: addQuestionQuery, isPending: isUpdatingNewQuestion } =
@@ -98,28 +104,33 @@ export default function EventDetailPage() {
         useMutation({
             mutationFn: ({
                 id,
+                type,
                 content,
                 points,
+                event_id,
                 correct_answer,
             }: {
                 id: number;
+                type: string;
                 content: string;
                 points: number;
+                event_id: number;
                 correct_answer?: any;
             }) => {
                 return updateQuestion(
                     token,
                     id,
+                    event_id,
+                    type,
                     content,
                     points,
                     correct_answer
                 );
             },
             onSuccess: (data: Question) => {
-                setQuestions((prev) => [
-                    ...prev.filter((q) => q.id !== data.id),
-                    data,
-                ]);
+                setQuestions((prev) =>
+                    prev.map((q) => (q.id === data.id ? data : q))
+                );
             },
         });
 
@@ -146,13 +157,21 @@ export default function EventDetailPage() {
         }
     }, [questionsData]);
 
+    const isPastDeadline = (deadline: string) => new Date(deadline) < new Date();
+
     const onNewQuestion = useCallback(() => {
+        setCurrentQuestion({
+                id: Date.now() * -1,
+                type: selectedType,
+                content: '',
+                points: 0,
+            })
         setOpenModal(true);
-    }, [setOpenModal]);
+    }, [selectedType, setOpenModal]);
 
     const onQuestionSubmit = useCallback(
         (question: Question) => {
-            if (!question.content || !question.points || !question.type) return;
+            if (!question.content || !question.points || !question.type || !eventData) return;
 
             if (question.id < 0) {
                 addQuestionQuery({
@@ -164,26 +183,28 @@ export default function EventDetailPage() {
                 modifyQuestionQuery({
                     id: question.id,
                     content: question.content,
+                    type: question.type,
+                    event_id: eventData.id,
                     points: question.points,
                     correct_answer: question.correct_answer,
                 });
             }
         },
-        [addQuestionQuery, modifyQuestionQuery]
+        [eventData, addQuestionQuery, modifyQuestionQuery]
     );
 
     const onQuestionDelete = useCallback((id: number) => {
         if (id > 0) {
             deleteQuestionQuery({ id });
         }
-        setQuestions(questions.filter((q) => q.id !== id));
-    }, []);
-
-    if (isEventLoading || isQuestionsLoading) return <Spinner />;
-
+        setQuestions((prev) => prev.filter((q) => q.id !== id));
+    }, [deleteQuestionQuery, setQuestions]);
+    
     if (isEventError || isQuestionsError || !eventData || !questionsData) {
         return <ErrorMessage errorMessage={txt.events.notFound} />;
     }
+
+    if (isEventLoading || isQuestionsLoading) return <Spinner />;
 
     return (
         <div className='flex min-h-screen justify-center'>
@@ -198,7 +219,7 @@ export default function EventDetailPage() {
                     value={form.name}
                     onChange={(e) => {
                         setForm({ ...form, name: e.target.value });
-                        setEventChanged(true);
+                        setEventModified(true);
                     }}
                 />
                 <FormField
@@ -209,7 +230,7 @@ export default function EventDetailPage() {
                     value={form.description}
                     onChange={(e) => {
                         setForm({ ...form, description: e.target.value });
-                        setEventChanged(true);
+                        setEventModified(true);
                     }}
                 />
                 <FormField
@@ -219,25 +240,18 @@ export default function EventDetailPage() {
                     value={form.deadline}
                     onChange={(e) => {
                         setForm({ ...form, deadline: e.target.value });
-                        setEventChanged(true);
+                        setEventModified(true);
                     }}
                 />
                 <ActionButton
-                    label={txt.events.save}
+                    label={isEventModified ? txt.forms.save : txt.forms.saved}
                     onClick={updateEventQuery}
                     loading={isUpdatingEvent}
-                    disabled={!eventChanged}
+                    disabled={!isEventModified}
                 />
                 <p className='pt-8 text-xl font-bold md:text-3xl'>
                     {txt.events.questions}
                 </p>
-                {questions.map((q: Question) => (
-                    <QuestionRenderer
-                        key={q.id}
-                        question={q}
-                        onSubmit={() => {}}
-                    />
-                ))}
                 {(isDeletingQuestion ||
                     isUpdatingNewQuestion ||
                     isUpdatingQuestion) && <Spinner isInline />}
@@ -246,6 +260,18 @@ export default function EventDetailPage() {
                     setSelected={setSelectedType}
                     onAdd={onNewQuestion}
                 />
+                {questions.map((q: Question) => (
+                    <QuestionRenderer
+                        key={q.id}
+                        question={q}
+                        onEdit={() => { 
+                            setCurrentQuestion(q);
+                            setOpenModal(true)
+                        }}
+                        onSubmit={() => {}}
+                        isPastDeadline={isPastDeadline(eventData.deadline)}
+                    />
+                ))}
                 {questionsData?.pagination_info && (
                     <Pagination
                         pagination={questionsData.pagination_info}
@@ -259,7 +285,7 @@ export default function EventDetailPage() {
             <QuestionModal
                 isOpen={isOpenModal}
                 setOpen={setOpenModal}
-                type={selectedType}
+                question={currentQuestion}
                 onSubmit={onQuestionSubmit}
                 onDelete={onQuestionDelete}
             />

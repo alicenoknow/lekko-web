@@ -21,7 +21,7 @@ export default function EditAthleteQuestion({
     const [content, setContent] = useState(question.content);
     const [points, setPoints] = useState(question.points);
     const [selectedAthleteId, setSelectedAthleteId] = useState<number | null>(
-        question?.correct_answer?.athlete || null
+        question?.correct_answer?.athlete_id || null
     );
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -34,8 +34,10 @@ export default function EditAthleteQuestion({
             ...question,
             content: content.trim(),
             points,
-            correct_answer: { athlete: { athlete_id: selectedAthleteId } },
-        });
+            ...(selectedAthleteId !== null && {
+                correct_answer: { athlete_id: selectedAthleteId },
+            }),
+        });        
         setIsSubmitting(false);
     };
 

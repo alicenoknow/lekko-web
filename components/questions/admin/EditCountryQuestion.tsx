@@ -5,9 +5,7 @@ import { Question } from '@/app/api/typer';
 import QuestionFooterButtons from './QuestionFooterButtons';
 import FormField from '@/components/forms/FormField';
 import { txt } from '@/nls/texts';
-import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
 import CountryLabel from '@/components/forms/CountryLabel';
-import DropdownPillFilter from '@/components/forms/DropdownPillFilter';
 import { COUNTRIES } from '@/lib/Countries';
 import DropdownField from '@/components/forms/DropdownField';
 
@@ -38,7 +36,7 @@ export default function EditCountryQuestion({
             ...question,
             content: content.trim(),
             points,
-            correct_answer: { country: selectedCountry },
+            ...(selectedCountry !== null && { correct_answer: { country: selectedCountry }}),
         });
         setIsSubmitting(false);
     };

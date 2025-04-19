@@ -38,13 +38,8 @@ export default function EventsPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['events'] });
         },
-        onError: () => {
-            console.error('Cannot remove event.');
-        },
+        onError: () => console.error('Cannot remove event.'),
     });
-
-    const isPastDeadline = (deadline: string) =>
-        new Date(deadline) < new Date();
 
     const handleOpen = (id: number) => {
         setIsRedirecting(true);
@@ -111,10 +106,7 @@ export default function EventsPage() {
                                 label={<FaEdit size={24} />}
                                 onClick={() => handleOpen(event.id)}
                                 loading={isRedirecting}
-                                disabled={
-                                    isRedirecting ||
-                                    isPastDeadline(event.deadline)
-                                }
+                                disabled={isRedirecting}
                             />
                             <AdminOnly>
                                 <ActionIcon

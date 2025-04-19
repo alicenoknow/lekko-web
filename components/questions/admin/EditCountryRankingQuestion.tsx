@@ -25,13 +25,13 @@ export default function EditCountryRankingQuestion({
     const [content, setContent] = useState(question.content);
     const [points, setPoints] = useState(question.points);
     const [selectedCountry1, setSelectedCountry1] = useState<string | null>(
-        question?.correct_answer?.countries_three?.country_one || null
+        question?.correct_answer?.country_one || null
     );
     const [selectedCountry2, setSelectedCountry2] = useState<string | null>(
-        question?.correct_answer?.countries_three?.country_two || null
+        question?.correct_answer?.country_two || null
     );
     const [selectedCountry3, setSelectedCountry3] = useState<string | null>(
-        question?.correct_answer?.countries_three?.country_three || null
+        question?.correct_answer?.country_three || null
     );
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -44,13 +44,13 @@ export default function EditCountryRankingQuestion({
             ...question,
             content: content.trim(),
             points,
+            ...((selectedCountry1 !== null && selectedCountry2 !== null && selectedCountry3 !== null) && {
             correct_answer: {
-                countries_three: {
                     country_one: selectedCountry1,
                     country_two: selectedCountry2,
                     country_three: selectedCountry3,
-                },
-            },
+            }
+        }),
         });
         setIsSubmitting(false);
     };

@@ -7,22 +7,38 @@ import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
 import AthleteLabel from '../forms/AthleteLabel';
 import Points from './Points';
 import { ActionButton } from '../buttons';
+import { FaEdit } from 'react-icons/fa';
+import { AdminOnly } from '../auth/AdminOnly';
+import ActionIcon from '../buttons/ActionIcon';
+import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { isAdmin } from '@/lib/Admin';
 
 interface Props {
     question: Question;
+    isPastDeadline: boolean;
     onSubmit: (answer: Answer) => void;
+    onEdit?: () => void;
 }
 
-export default function AthleteQuestion({ question, onSubmit }: Props) {
+export default function AthleteQuestion({
+    question,
+    isPastDeadline,
+    onSubmit,
+    onEdit,
+}: Props) {
+    const { user } = usePrivateUserContext();
+
     const answer: Answer = {
+        // TODO
         id: 1,
         question_id: 2,
         content: {},
     };
     const [selectedAthleteId, setSelectedAthleteId] = useState<number | null>(
-        answer?.content?.athlete?.athlete_id || null
+        answer?.content?.athlete_id || null
     );
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isModified, setModified] = useState(false);
 
     const isFormInvalid = !selectedAthleteId;
 
@@ -30,18 +46,21 @@ export default function AthleteQuestion({ question, onSubmit }: Props) {
         if (isFormInvalid) return;
         setIsSubmitting(true);
         onSubmit({
-            user_id: 0, // TODO
+            user_id: user.sub,
             question_id: question.id,
             content: {
-                athlete: {
-                    athlete_id: selectedAthleteId,
-                },
+                athlete_id: selectedAthleteId,
             },
         });
+        setModified(false);
         setIsSubmitting(false);
     };
 
-    // TODO block answering after deadline
+    const handleSelectAthlete = (athleteId: number | null) => {
+        setSelectedAthleteId(athleteId);
+        setModified(true);
+    };
+
     return (
         <div className='flex w-full flex-col bg-white p-8'>
             <div className='flex flex-row justify-between'>
@@ -53,31 +72,47 @@ export default function AthleteQuestion({ question, onSubmit }: Props) {
                     grantedPoints={answer.points}
                 />
             </div>
-            <>
-                <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                    {txt.forms.yourAnswer}:
-                </p>
-                <AthleteSearchBar
-                    selected={selectedAthleteId}
-                    onSelect={setSelectedAthleteId}
-                />
-            </>
-            {question.correct_answer ? (
-                <div>
+
+            <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
+                {txt.forms.yourAnswer}:
+            </p>
+            {isPastDeadline ? (
+                <AthleteLabel selected={selectedAthleteId} />
+            ) : (
+                <>
+                    <AthleteSearchBar
+                        selected={selectedAthleteId}
+                        onSelect={handleSelectAthlete}
+                    />
+                </>
+            )}
+            {question.correct_answer && (isPastDeadline || isAdmin(user)) && (
+                <div className='bg-lightGreen'>
                     <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
                         {txt.forms.correctAnswer}:
                     </p>
                     <AthleteLabel
-                        selected={question.correct_answer.athlete.athlete_id}
+                        selected={question.correct_answer.athlete_id}
                     />
                 </div>
-            ) : (
+            )}
+            <div className='flex flex-row justify-between'>
                 <ActionButton
                     loading={isSubmitting}
-                    label={txt.forms.save}
+                    label={
+                        isModified && !isPastDeadline
+                            ? txt.forms.save
+                            : txt.forms.saved
+                    }
                     onClick={handleSubmit}
+                    disabled={!isModified || isPastDeadline}
                 />
-            )}
+                <AdminOnly>
+                    {onEdit && (
+                        <ActionButton label={txt.forms.edit} onClick={onEdit} />
+                    )}
+                </AdminOnly>
+            </div>
         </div>
     );
 }

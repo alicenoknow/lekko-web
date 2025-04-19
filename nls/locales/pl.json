@@ -36,7 +36,9 @@
         "country": "Kraj",
         "all": "Wszystkie",
         "select": "Wybierz",
-        "save": "Zapisz"
+        "save": "Zapisz",
+        "saved": "Zapisano",
+        "edit": "Edytuj"
     },
     "home": {
         "title": "Lekkoatletawka",

@@ -21,13 +21,13 @@ export default function EditAthleteRankingQuestion({
     const [content, setContent] = useState(question.content);
     const [points, setPoints] = useState(question.points);
     const [selectedAthleteId1, setSelectedAthleteId1] = useState<number | null>(
-        question.correct_answer?.athletes_three?.athlete_id_one || null
+        question.correct_answer?.athlete_id_one || null
     );
     const [selectedAthleteId2, setSelectedAthleteId2] = useState<number | null>(
-        question.correct_answer?.athletes_three?.athlete_id_two || null
+        question.correct_answer?.athlete_id_two || null
     );
     const [selectedAthleteId3, setSelectedAthleteId3] = useState<number | null>(
-        question.correct_answer?.athletes_three?.athlete_id_three || null
+        question.correct_answer?.athlete_id_three || null
     );
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,13 +40,13 @@ export default function EditAthleteRankingQuestion({
             ...question,
             content: content.trim(),
             points,
-            correct_answer: {
-                athlete_three: {
-                    athlete_id_one: selectedAthleteId1,
-                    athlete_id_two: selectedAthleteId1,
-                    athlete_id_three: selectedAthleteId1,
-                },
-            },
+            ...((selectedAthleteId1 !== null && selectedAthleteId2 !== null && selectedAthleteId3 !== null) && {
+                correct_answer: {
+                        athlete_id_one: selectedAthleteId1,
+                        athlete_id_two: selectedAthleteId1,
+                        athlete_id_three: selectedAthleteId1,
+                    },
+            }),
         });
         setIsSubmitting(false);
     };

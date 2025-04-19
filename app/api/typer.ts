@@ -274,13 +274,17 @@ type ModifyQuestionData = Question;
 export async function updateQuestion(
     token: string,
     id: number,
+    event_id: number,
+    type: string,
     content?: string,
     points?: number,
     correct_answer?: any
 ): Promise<ModifyQuestionData> {
+    console.warn(content, type, event_id, points, correct_answer);
+
     const res = await axios.put(
         `${API_URL}/api/v1/questions/${id}`,
-        { content, points, correct_answer },
+        { content, type, event_id, points, correct_answer },
         getAuthConfig(token)
     );
     if (isApiError(res.data)) {
@@ -320,6 +324,7 @@ export interface Disciplines {
 
 export async function fetchDisciplines(token: string): Promise<Disciplines> {
     const res = await axios.get(`${API_URL}/api/v1/disciplines?per_page=1000`, {
+        // fetch all no paging
         ...getAuthConfig(token),
     });
     if (isApiError(res.data)) {

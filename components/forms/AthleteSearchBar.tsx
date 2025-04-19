@@ -11,6 +11,15 @@ import CountryLabel from './CountryLabel';
 import { COUNTRIES } from '@/lib/Countries';
 import AthleteLabel from './AthleteLabel';
 
+// TODO open edit mode for question for admin
+// TODO jumping forms
+// TODO country user questions
+// TODO answers fetching
+// TODO athletes paging
+// TODO disable modyfying after deadline
+// TODO verify everything
+// TODO user id from where
+
 interface Props {
     selected: number | null;
     onSelect: (athleteId: number | null) => void;

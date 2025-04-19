@@ -20,6 +20,7 @@ interface DropdownFieldProps {
     options: Option[];
     selected: string | string[] | null;
     multiple?: boolean;
+    disabled?: boolean;
     onSelect: ((value: string | null) => void) | ((value: string[]) => void);
 }
 
@@ -28,6 +29,7 @@ export default function DropdownField({
     options,
     selected,
     multiple = false,
+    disabled = false,
     onSelect,
 }: DropdownFieldProps) {
     const selectedLabel = Array.isArray(selected)
@@ -44,7 +46,12 @@ export default function DropdownField({
                     {label}
                 </span>
             )}
-            <Listbox value={selected} onChange={onSelect} multiple={multiple}>
+            <Listbox
+                value={selected}
+                onChange={onSelect}
+                multiple={multiple}
+                disabled={disabled}
+            >
                 <div className='relative inline-block text-left'>
                     <ListboxButton className='flex w-full items-center justify-between border bg-white px-4 py-2 text-sm text-primaryDark shadow-sm focus:outline-none md:p-4 md:text-lg'>
                         {selectedLabel}

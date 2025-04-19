@@ -46,15 +46,10 @@ export default function EventDetailPage() {
         enabled: !!token && !!eventId,
     });
 
-    // const {
-    //     data: answersData,
-    //     isLoading: isAnswersLoading,
-    //     isError: isAnswersError,
-    // } = useQuery({
-    //     queryKey: ['answers', eventId],
-    //     queryFn: () => fetchUserAnswers(eventId, token),
-    //     enabled: !!token && !!eventId,
-    // });
+    const isPastDeadline = (deadline: string) => {
+        console.warn("AAA", new Date(deadline), new Date(deadline) < new Date(), )
+        return new Date(deadline) < new Date();
+    }
 
     const handleOpenAdminPanel = () => {
         router.replace(`/typer/event/${eventId}/admin`);
@@ -94,6 +89,7 @@ export default function EventDetailPage() {
                             key={q.id}
                             question={q}
                             onSubmit={submitAnswer}
+                            isPastDeadline={isPastDeadline(eventData.deadline)}
                         />
                     ))}
                     {questionsData?.pagination_info && (
