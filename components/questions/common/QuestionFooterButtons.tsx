@@ -1,6 +1,6 @@
-import { txt } from "@/nls/texts";
-import { AdminOnly } from "../../auth/AdminOnly";
-import { ActionButton } from "../../buttons";
+import { txt } from '@/nls/texts';
+import { AdminOnly } from '../../auth/AdminOnly';
+import { ActionButton } from '../../buttons';
 
 interface Props {
     isSubmitting: boolean;
@@ -20,22 +20,22 @@ export default function QuestionFooterButtons({
     onEdit,
 }: Props) {
     return (
-        <div className='flex flex-row justify-between mt-4'>
-                <ActionButton
-                    loading={isSubmitting}
-                    label={
-                        isModified && !isPastDeadline
-                            ? txt.forms.save
-                            : txt.forms.saved
-                    }
-                    onClick={onSubmit}
-                    disabled={!isModified || isFormInvalid || isPastDeadline}
-                />
-                <AdminOnly>
-                    {onEdit && (
-                        <ActionButton label={txt.forms.edit} onClick={onEdit} />
-                    )}
-                </AdminOnly>
-            </div>
+        <div className='mt-4 flex flex-row justify-between'>
+            <ActionButton
+                loading={isSubmitting}
+                label={
+                    isModified && !isPastDeadline
+                        ? txt.forms.save
+                        : txt.forms.saved
+                }
+                onClick={onSubmit}
+                disabled={!isModified || isFormInvalid || isPastDeadline}
+            />
+            <AdminOnly>
+                {onEdit && (
+                    <ActionButton label={txt.forms.edit} onClick={onEdit} />
+                )}
+            </AdminOnly>
+        </div>
     );
 }

@@ -51,18 +51,18 @@ export default function EditCountryQuestion({
         <div className='relative flex w-full flex-col pr-4 pt-4'>
             <EditQuestionHeader
                 content={content}
-                points={points} 
-                onContentChange={setContent} 
+                points={points}
+                onContentChange={setContent}
                 onPointsChange={setPoints}
             />
-            {question.id > 0 &&
+            {question.id > 0 && (
                 <CorrectAnswer>
                     <CountryDropdown
                         selected={selectedCountry}
                         onSelect={setSelectedCountry}
                     />
                 </CorrectAnswer>
-            }
+            )}
             <QuestionFooterButtons
                 disableSubmit={isFormInvalid}
                 isLoading={isSubmitting}

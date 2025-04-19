@@ -2,7 +2,6 @@
 
 import { useCallback, useState } from 'react';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
-import { isAdmin } from '@/lib/Admin';
 import { Question, Answer } from '@/app/api/typer';
 import QuestionHeader from './common/QuestionHeader';
 import QuestionFooterButtons from './common/QuestionFooterButtons';

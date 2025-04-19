@@ -3,8 +3,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Question } from '@/app/api/typer';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
-import FormField from '@/components/forms/FormField';
-import { txt } from '@/nls/texts';
 import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
 import EditQuestionHeader from './common/EditQuestionHeader';
 import CorrectAnswer from '../common/CorrectAnswer';
@@ -27,25 +25,30 @@ export default function EditAthleteQuestion({
     );
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const isFormInvalid = useMemo(() => !content.trim() || points < 1, [content, points]);
+    const isFormInvalid = useMemo(
+        () => !content.trim() || points < 1,
+        [content, points]
+    );
 
     const handleSubmit = useCallback(() => {
         if (isFormInvalid) return;
         setIsSubmitting(true);
         onSubmit({
-          ...question,
-          content: content.trim(),
-          points,
-          ...(selectedAthleteId !== null && { correct_answer: { athlete_id: selectedAthleteId } })
+            ...question,
+            content: content.trim(),
+            points,
+            ...(selectedAthleteId !== null && {
+                correct_answer: { athlete_id: selectedAthleteId },
+            }),
         });
         setIsSubmitting(false);
-      }, [content, points, question, onSubmit, selectedAthleteId]);
-      
-      const handleDelete = useCallback(() => {
+    }, [isFormInvalid, content, points, selectedAthleteId, question, onSubmit]);
+
+    const handleDelete = useCallback(() => {
         setIsSubmitting(true);
         onDelete(question.id);
         setIsSubmitting(false);
-      }, [onDelete, question.id]);
+    }, [onDelete, question.id]);
 
     return (
         <div className='relative flex w-full flex-col pr-4 pt-4'>

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Question } from '@/app/api/typer';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
-import { txt } from '@/nls/texts';
 import EditQuestionHeader from './common/EditQuestionHeader';
 import CountryDropdown from '@/components/forms/CountryDropdown';
 import CorrectAnswer from '../common/CorrectAnswer';
@@ -71,17 +70,17 @@ export default function EditCountryRankingQuestion({
             {question.id > 0 && (
                 <CorrectAnswer>
                     <CountryDropdown
-                        emoji="🥇"
+                        emoji='🥇'
                         selected={selectedCountry1}
                         onSelect={setSelectedCountry1}
                     />
                     <CountryDropdown
-                        emoji="🥈"
+                        emoji='🥈'
                         selected={selectedCountry2}
                         onSelect={setSelectedCountry2}
                     />
                     <CountryDropdown
-                        emoji="🥉"
+                        emoji='🥉'
                         selected={selectedCountry3}
                         onSelect={setSelectedCountry3}
                     />

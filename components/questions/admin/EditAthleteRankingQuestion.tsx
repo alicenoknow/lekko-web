@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { Question } from '@/app/api/typer';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
-import FormField from '@/components/forms/FormField';
-import { txt } from '@/nls/texts';
 import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
 import EditQuestionHeader from './common/EditQuestionHeader';
 import CorrectAnswer from '../common/CorrectAnswer';
@@ -63,27 +61,32 @@ export default function EditAthleteRankingQuestion({
 
     return (
         <div className='relative flex w-full flex-col pr-4 pt-4'>
-            <EditQuestionHeader content={content} points={points} onContentChange={setContent} onPointsChange={setPoints} />
+            <EditQuestionHeader
+                content={content}
+                points={points}
+                onContentChange={setContent}
+                onPointsChange={setPoints}
+            />
 
-            {question.id > 0 && 
+            {question.id > 0 && (
                 <CorrectAnswer>
                     <AthleteSearchBar
-                        emoji="🥇"
+                        emoji='🥇'
                         selected={selectedAthleteId1}
                         onSelect={setSelectedAthleteId1}
                     />
                     <AthleteSearchBar
-                    emoji="🥈"
+                        emoji='🥈'
                         selected={selectedAthleteId2}
                         onSelect={setSelectedAthleteId2}
                     />
                     <AthleteSearchBar
-                    emoji="🥉"
+                        emoji='🥉'
                         selected={selectedAthleteId3}
                         onSelect={setSelectedAthleteId3}
                     />
                 </CorrectAnswer>
-            }
+            )}
             <QuestionFooterButtons
                 disableSubmit={isFormInvalid}
                 isLoading={isSubmitting}

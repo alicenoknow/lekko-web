@@ -1,5 +1,5 @@
-import { txt } from "@/nls/texts";
-import React, { ReactNode } from "react";
+import { txt } from '@/nls/texts';
+import React, { ReactNode } from 'react';
 
 interface Props {
     children: ReactNode;
@@ -7,7 +7,7 @@ interface Props {
 
 export default function CorrectAnswer({ children }: Props) {
     return (
-        <div className='mb-4 p-4 bg-lightGreen'>
+        <div className='mb-4 bg-lightGreen p-4'>
             <p className='mb-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
                 {txt.forms.correctAnswer}:
             </p>
