@@ -1,42 +1,40 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAthletes, fetchDisciplines } from '@/app/api/typer';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import FormField from '@/components/forms/FormField';
-import { txt } from '@/nls/texts';
 import DropdownPillFilter from './DropdownPillFilter';
 import CountryLabel from './CountryLabel';
 import { COUNTRIES } from '@/lib/Countries';
+import { txt } from '@/nls/texts';
 import AthleteLabel from './AthleteLabel';
-
-// TODO jumping forms
-// TODO answers fetching
-// TODO athletes paging
-// TODO verify everything
+import AthleteSearchFilter from './AthleteSearchFilter';
 
 interface Props {
     selected: number | null;
     label?: string;
+    emoji?: string;
+    disciplines?: string[];
+    country?: string | null;
+    gender?: string | null;
     onSelect: (athleteId: number | null) => void;
 }
 
-export default function AthleteSearchBar({ selected, label, onSelect }: Props) {
+export default function AthleteSearchBar({
+    selected,
+    label,
+    emoji,
+    onSelect,
+}: Props) {
     const { token } = usePrivateUserContext();
     const [search, setSearch] = useState('');
-    const [debouncedSearch, setDebouncedSearch] = useState('');
     const [disciplines, setDisciplines] = useState<string[]>([]);
     const [country, setCountry] = useState<string | null>(null);
     const [gender, setGender] = useState<string | null>(null);
 
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedSearch(search);
-        }, 500);
-
-        return () => clearTimeout(handler);
-    }, [search]);
+    const debouncedSearch = useDebouncedValue(search, 500);
 
     const { data: athletesData } = useQuery({
         queryKey: ['athletes', debouncedSearch, disciplines, country, gender],
@@ -45,67 +43,41 @@ export default function AthleteSearchBar({ selected, label, onSelect }: Props) {
         enabled: !!token && !!debouncedSearch,
     });
 
-    const { data: allDisciplines } = useQuery({
-        queryKey: ['disciplines'],
-        queryFn: () => fetchDisciplines(token),
-        enabled: !!token,
-    });
-
-    // TODO athletes paging aa
-    const athletes = athletesData?.data ?? [];
+    const athleteOptions = useMemo(
+        () => athletesData?.data ?? [],
+        [athletesData]
+    );
 
     return (
-        <div className='relative w-full'>
-            {label && (
-                <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                    {label}:
-                </p>
-            )}
-            {selected ? (
-                <div className='mb-4 flex items-center justify-between border bg-white p-2 text-sm text-primaryDark md:p-4 md:text-lg'>
-                    <AthleteLabel selected={selected} />
-                    <button
-                        onClick={() => onSelect(null)}
-                        className='text-md font-semibold uppercase text-accentDark'
-                    >
-                        {txt.forms.change}
-                    </button>
-                </div>
-            ) : (
-                <>
-                    <div className='mb-4 flex flex-row gap-4'>
-                        {allDisciplines?.data && (
-                            <DropdownPillFilter
-                                label={txt.forms.discipline}
-                                options={allDisciplines.data.map((d) => ({
-                                    value: d.id.toString(),
-                                    label: d.name,
-                                }))}
-                                selected={disciplines}
-                                onSelect={setDisciplines}
-                                multiple
-                            />
-                        )}
-                        <DropdownPillFilter
-                            label={txt.forms.country}
-                            options={Object.keys(COUNTRIES).map((code) => ({
-                                value: code,
-                                label: <CountryLabel code={code} />,
-                            }))}
-                            selected={country}
-                            onSelect={setCountry}
-                        />
-                        <DropdownPillFilter
-                            label={txt.forms.gender}
-                            options={[
-                                { value: 'man', label: txt.forms.male },
-                                { value: 'woman', label: txt.forms.female },
-                            ]}
-                            selected={gender}
-                            onSelect={setGender}
-                        />
+        <div className='relative flex w-full flex-row justify-center gap-2'>
+            <div className='w-full'>
+                {label && (
+                    <p className='mb-2 text-sm font-bold uppercase text-primaryDark md:text-lg'>
+                        {label}:
+                    </p>
+                )}
+
+                {selected ? (
+                    <div className='mb-4 flex items-center justify-between border bg-white px-2 text-sm text-primaryDark md:px-4 md:py-2 md:text-lg'>
+                        <AthleteLabel emoji={emoji} selected={selected} />
+                        <button
+                            onClick={() => onSelect(null)}
+                            className='text-md font-semibold uppercase text-accentDark'
+                        >
+                            {txt.forms.change}
+                        </button>
                     </div>
-                    <div className='relative'>
+                ) : (
+                    <div className='w-full'>
+                        <AthleteSearchFilter
+                            disciplines={disciplines}
+                            country={country}
+                            gender={gender}
+                            onDisciplinesChanged={setDisciplines}
+                            onCountryChanged={setCountry}
+                            onGenderChanged={setGender}
+                        />
+
                         <FormField
                             id='search-athlete'
                             type='text'
@@ -113,10 +85,12 @@ export default function AthleteSearchBar({ selected, label, onSelect }: Props) {
                             onChange={(e) => setSearch(e.target.value)}
                             required={false}
                             placeholder={txt.searchText}
+                            emoji={emoji}
                         />
-                        {athletes.length > 0 && (
-                            <div className='absolute left-0 top-full z-[999] mt-1 max-h-48 w-full overflow-y-auto rounded border bg-white shadow-lg'>
-                                {athletes.map((athlete) => (
+
+                        {athleteOptions.length > 0 && (
+                            <div className='absolute left-0 top-full z-[999] mt-1 max-h-48 w-full overflow-y-auto border bg-white shadow-lg'>
+                                {athleteOptions.map((athlete) => (
                                     <div
                                         key={athlete.id}
                                         onClick={() => {
@@ -132,8 +106,19 @@ export default function AthleteSearchBar({ selected, label, onSelect }: Props) {
                             </div>
                         )}
                     </div>
-                </>
-            )}
+                )}
+            </div>
         </div>
     );
+}
+
+function useDebouncedValue<T>(value: T, delay: number): T {
+    const [debounced, setDebounced] = useState(value);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => setDebounced(value), delay);
+        return () => clearTimeout(timeout);
+    }, [value, delay]);
+
+    return debounced;
 }

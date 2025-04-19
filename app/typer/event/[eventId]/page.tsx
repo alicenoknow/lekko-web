@@ -60,6 +60,7 @@ export default function EventDetailPage() {
 
     const submitAnswer = useCallback(() => {
         // TODO: implement answer submission
+        // TODO entring points why zero first
     }, []);
 
     if (isEventLoading || isQuestionsLoading) return <Spinner />;

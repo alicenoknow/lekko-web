@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 import { Question } from '@/app/api/typer';
-import QuestionFooterButtons from './QuestionFooterButtons';
+import QuestionFooterButtons from './common/QuestionFooterButtons';
 import FormField from '@/components/forms/FormField';
 import { txt } from '@/nls/texts';
 import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
-import EditQuestionHeader from '../QuestionHeader';
+import EditQuestionHeader from './common/EditQuestionHeader';
+import CorrectAnswer from '../common/CorrectAnswer';
 
 interface Props {
     question: Question;
@@ -46,8 +47,8 @@ export default function EditAthleteRankingQuestion({
                 selectedAthleteId3 !== null && {
                     correct_answer: {
                         athlete_id_one: selectedAthleteId1,
-                        athlete_id_two: selectedAthleteId1,
-                        athlete_id_three: selectedAthleteId1,
+                        athlete_id_two: selectedAthleteId2,
+                        athlete_id_three: selectedAthleteId3,
                     },
                 }),
         });
@@ -64,34 +65,25 @@ export default function EditAthleteRankingQuestion({
         <div className='relative flex w-full flex-col pr-4 pt-4'>
             <EditQuestionHeader content={content} points={points} onContentChange={setContent} onPointsChange={setPoints} />
 
-            {question.id > 0 && (
-                <>
-                    <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                        {txt.forms.correctAnswer}:
-                    </p>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥇</span>
-                        <AthleteSearchBar
-                            selected={selectedAthleteId1}
-                            onSelect={setSelectedAthleteId1}
-                        />
-                    </div>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥈</span>
-                        <AthleteSearchBar
-                            selected={selectedAthleteId2}
-                            onSelect={setSelectedAthleteId2}
-                        />
-                    </div>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥉</span>
-                        <AthleteSearchBar
-                            selected={selectedAthleteId3}
-                            onSelect={setSelectedAthleteId3}
-                        />
-                    </div>
-                </>
-            )}
+            {question.id > 0 && 
+                <CorrectAnswer>
+                    <AthleteSearchBar
+                        emoji="🥇"
+                        selected={selectedAthleteId1}
+                        onSelect={setSelectedAthleteId1}
+                    />
+                    <AthleteSearchBar
+                    emoji="🥈"
+                        selected={selectedAthleteId2}
+                        onSelect={setSelectedAthleteId2}
+                    />
+                    <AthleteSearchBar
+                    emoji="🥉"
+                        selected={selectedAthleteId3}
+                        onSelect={setSelectedAthleteId3}
+                    />
+                </CorrectAnswer>
+            }
             <QuestionFooterButtons
                 disableSubmit={isFormInvalid}
                 isLoading={isSubmitting}

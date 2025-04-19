@@ -13,7 +13,7 @@ const config: Config = {
         accentLight: '#e1ff1c',
         accentDark: '#2a2b68',
         absoluteBlack: '#000',
-        lightGreen: '#77ff70'
+        lightGreen: '#93fc8d'
       },
     },
   },

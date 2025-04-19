@@ -20,6 +20,7 @@ interface DropdownPillFilterProps {
     options: Option[];
     selected: string | string[] | null;
     multiple?: boolean;
+    disabled?: boolean;
     onSelect: ((value: string | null) => void) | ((value: string[]) => void);
 }
 
@@ -41,7 +42,7 @@ export default function DropdownPillFilter({
             {label && <span className='text-sm font-semibold'>{label}</span>}
             <Listbox value={selected} onChange={onSelect} multiple={multiple}>
                 <div className='relative inline-block text-left'>
-                    <ListboxButton className='flex w-full items-center justify-between border px-4 py-2 text-sm shadow-sm focus:outline-none'>
+                    <ListboxButton className='flex w-full items-center justify-between border bg-white px-4 py-2 text-sm shadow-sm focus:outline-none'>
                         {selectedLabel}
                         <FaChevronDown className='ml-2 h-4 w-4' />
                     </ListboxButton>

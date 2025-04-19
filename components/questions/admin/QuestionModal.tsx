@@ -45,7 +45,7 @@ export default function QuestionModal({
                 <div className='flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0'>
                     <DialogPanel
                         transition
-                        className='data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in data-closed:sm:translate-y-0 data-closed:sm:scale-95 relative max-w-3xl transform rounded-lg bg-primaryLight text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl'
+                        className='data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in data-closed:sm:translate-y-0 data-closed:sm:scale-95 relative max-w-3xl transform bg-primaryLight text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl'
                     >
                         <div className='bg-primaryLight px-4 pb-4 pt-5 sm:p-6 sm:pb-4'>
                             <div className='mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left'>

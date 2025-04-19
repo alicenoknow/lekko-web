@@ -17,7 +17,7 @@ export default function Pagination({
         <div className='mt-6 flex items-center justify-center gap-4'>
             {pagination.prev_page && (
                 <button
-                    className='rounded border px-4 py-2 disabled:opacity-50'
+                    className='border px-4 py-2 disabled:opacity-50'
                     onClick={() => changePage(pagination.prev_page || 1)}
                     disabled={pagination.is_first_page}
                 >
@@ -30,7 +30,7 @@ export default function Pagination({
             </span>
             {pagination.next_page && (
                 <button
-                    className='rounded border px-4 py-2 disabled:opacity-50'
+                    className='border px-4 py-2 disabled:opacity-50'
                     onClick={() => changePage(pagination.next_page || 1)}
                     disabled={pagination.is_last_page}
                 >

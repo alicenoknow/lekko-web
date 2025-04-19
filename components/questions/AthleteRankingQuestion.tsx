@@ -1,15 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Question, Answer } from '@/app/api/typer';
 import { txt } from '@/nls/texts';
-import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
-import AthleteLabel from '../forms/AthleteLabel';
-import Points from './Points';
-import { ActionButton } from '../buttons';
-import { AdminOnly } from '../auth/AdminOnly';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { isAdmin } from '@/lib/Admin';
+import AthleteSearchBar from '../forms/AthleteSearchBar';
+import AthleteLabel from '../forms/AthleteLabel';
+import CorrectAnswer from './common/CorrectAnswer';
+import QuestionFooterButtons from './common/QuestionFooterButtons';
+import QuestionHeader from './common/QuestionHeader';
+import { getAthleteRankingKey, RANKING } from '@/lib/Ranking';
 
 interface Props {
     question: Question;
@@ -31,155 +32,94 @@ export default function AthleteRankingQuestion({
         question_id: 2,
         content: {},
     };
-    const [selectedAthleteId1, setSelectedAthleteId1] = useState<number | null>(
-        answer?.content?.athlete_id_one || null
-    );
-    const [selectedAthleteId2, setSelectedAthleteId2] = useState<number | null>(
-        answer?.content?.athlete_id_two || null
-    );
-    const [selectedAthleteId3, setSelectedAthleteId3] = useState<number | null>(
-        answer?.content?.athlete_id_three || null
-    );
+
+    const [selectedIds, setSelectedIds] = useState<(number | null)[]>([
+        answer?.content?.athlete_id_one || null,
+        answer?.content?.athlete_id_two || null,
+        answer?.content?.athlete_id_three || null,
+    ]);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isModified, setModified] = useState(false);
+    const [isModified, setIsModified] = useState(false);
 
-    const isFormInvalid =
-        !selectedAthleteId1 || !selectedAthleteId2 || !selectedAthleteId3;
+    const isFormInvalid = selectedIds.some((id) => !id);
 
-    const handleSubmit = () => {
+    const handleSelect = useCallback((index: number, id: number | null) => {
+        setSelectedIds((prev) => {
+            const next = [...prev];
+            next[index] = id;
+            return next;
+        });
+        setIsModified(true);
+    }, []);
+
+    const handleSubmit = useCallback(() => {
         if (isFormInvalid) return;
         setIsSubmitting(true);
         onSubmit({
             user_id: user.sub,
             question_id: question.id,
             content: {
-                athlete_id_one: selectedAthleteId1,
-                athlete_id_two: selectedAthleteId2,
-                athlete_id_three: selectedAthleteId3,
+                athlete_id_one: selectedIds[0],
+                athlete_id_two: selectedIds[1],
+                athlete_id_three: selectedIds[2],
             },
         });
         setIsSubmitting(false);
-        setModified(false);
-    };
+        setIsModified(false);
+    }, [isFormInvalid, onSubmit, question.id, selectedIds, user.sub]);
 
-    const handleSelectAthlete1 = (athleteId: number | null) => {
-        setSelectedAthleteId1(athleteId);
-        setModified(true);
-    };
-
-    const handleSelectAthlete2 = (athleteId: number | null) => {
-        setSelectedAthleteId2(athleteId);
-        setModified(true);
-    };
-
-    const handleSelectAthlete3 = (athleteId: number | null) => {
-        setSelectedAthleteId3(athleteId);
-        setModified(true);
-    };
+    const showCorrectAnswers =
+        question.correct_answer && (isPastDeadline || isAdmin(user));
 
     return (
-        <div className='flex w-full flex-col bg-white p-8'>
-            <div className='flex flex-row justify-between'>
-                <div className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                    {question.content}
-                </div>
-                <Points
-                    maxPoints={question.points}
-                    grantedPoints={answer.points}
-                />
-            </div>
-
-            <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                {txt.forms.yourAnswer}:
-            </p>
-            {isPastDeadline ? (
-                <>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥇</span>
-                        <AthleteLabel selected={selectedAthleteId1} />
-                    </div>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥈</span>
-                        <AthleteLabel selected={selectedAthleteId2} />
-                    </div>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥉</span>
-                        <AthleteLabel selected={selectedAthleteId3} />
-                    </div>
-                </>
-            ) : (
-                <>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥇</span>
-                        <AthleteSearchBar
-                            selected={selectedAthleteId1}
-                            onSelect={handleSelectAthlete1}
-                        />
-                    </div>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥈</span>
-                        <AthleteSearchBar
-                            selected={selectedAthleteId2}
-                            onSelect={handleSelectAthlete2}
-                        />
-                    </div>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥉</span>
-                        <AthleteSearchBar
-                            selected={selectedAthleteId3}
-                            onSelect={handleSelectAthlete3}
-                        />
-                    </div>
-                </>
+        <>
+            <QuestionHeader
+                content={question.content}
+                maxPoints={question.points}
+                points={answer.points}
+            />
+            {RANKING.map((emoji, i) => {
+                const label = i === 0 ? txt.forms.yourAnswer : undefined;
+                return isPastDeadline ? (
+                    <AthleteLabel
+                        key={i}
+                        emoji={emoji}
+                        label={label}
+                        selected={selectedIds[i]}
+                    />
+                ) : (
+                    <AthleteSearchBar
+                        key={i}
+                        emoji={emoji}
+                        label={label}
+                        selected={selectedIds[i]}
+                        onSelect={(val) => handleSelect(i, val)}
+                    />
+                );
+            })}
+            {showCorrectAnswers && (
+                <CorrectAnswer>
+                    {RANKING.map((rank, i) => {
+                        const selectedId =
+                            question.correct_answer?.[getAthleteRankingKey(i)];
+                        return (
+                            <AthleteLabel
+                                key={i}
+                                emoji={rank}
+                                selected={selectedId}
+                            />
+                        );
+                    })}
+                </CorrectAnswer>
             )}
-            {question.correct_answer && (isPastDeadline || isAdmin(user)) && (
-                <div className='bg-lightGreen'>
-                    <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                        {txt.forms.yourAnswer}:
-                    </p>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥇</span>
-                        <AthleteLabel
-                            selected={
-                                answer.content.athlete_three.athlete_id_one
-                            }
-                        />
-                    </div>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥈</span>
-                        <AthleteLabel
-                            selected={
-                                answer.content.athlete_three.athlete_id_two
-                            }
-                        />
-                    </div>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥉</span>
-                        <AthleteLabel
-                            selected={
-                                answer.content.athlete_three.athlete_id_three
-                            }
-                        />
-                    </div>
-                </div>
-            )}
-            <div className='flex flex-row justify-between'>
-                <ActionButton
-                    loading={isSubmitting}
-                    label={
-                        isModified && !isPastDeadline
-                            ? txt.forms.save
-                            : txt.forms.saved
-                    }
-                    onClick={handleSubmit}
-                    disabled={!isModified || isPastDeadline}
-                />
-                <AdminOnly>
-                    {onEdit && (
-                        <ActionButton label={txt.forms.edit} onClick={onEdit} />
-                    )}
-                </AdminOnly>
-            </div>
-        </div>
+            <QuestionFooterButtons
+                isSubmitting={isSubmitting}
+                isModified={isModified}
+                isPastDeadline={isPastDeadline}
+                onSubmit={handleSubmit}
+                onEdit={onEdit}
+            />
+        </>
     );
 }

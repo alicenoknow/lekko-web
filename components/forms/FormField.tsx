@@ -11,6 +11,7 @@ interface FormFieldProps {
     required?: boolean;
     multiline?: boolean;
     rows?: number;
+    emoji?: string;
     placeholder?: string;
 }
 
@@ -23,18 +24,20 @@ const FormField: React.FC<FormFieldProps> = ({
     required = false,
     multiline = false,
     rows = 4,
+    emoji,
     placeholder,
 }) => {
     return (
-        <div className='mb-4 flex items-center'>
+        <div className='mb-4 flex items-center gap-4'>
             {label && (
                 <label
-                    className='mr-12 text-sm font-bold uppercase text-primaryDark md:text-lg'
+                    className='mr-8 text-sm font-bold uppercase text-primaryDark md:text-lg'
                     htmlFor={id}
                 >
                     {label}:
                 </label>
             )}
+            {emoji && <span className='text-3xl'>{emoji}</span>}
             {multiline ? (
                 <textarea
                     className='w-full border p-2 text-sm text-primaryDark md:p-4 md:text-lg'

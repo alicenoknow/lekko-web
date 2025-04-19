@@ -2,11 +2,12 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { Question } from '@/app/api/typer';
-import QuestionFooterButtons from './QuestionFooterButtons';
+import QuestionFooterButtons from './common/QuestionFooterButtons';
 import FormField from '@/components/forms/FormField';
 import { txt } from '@/nls/texts';
 import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
-import EditQuestionHeader from '../QuestionHeader';
+import EditQuestionHeader from './common/EditQuestionHeader';
+import CorrectAnswer from '../common/CorrectAnswer';
 
 interface Props {
     question: Question;
@@ -48,13 +49,19 @@ export default function EditAthleteQuestion({
 
     return (
         <div className='relative flex w-full flex-col pr-4 pt-4'>
-            <EditQuestionHeader content={content} points={points} onContentChange={setContent} onPointsChange={setPoints} />
+            <EditQuestionHeader
+                content={content}
+                points={points}
+                onContentChange={setContent}
+                onPointsChange={setPoints}
+            />
             {question.id > 0 && (
-                <AthleteSearchBar
-                    label={txt.forms.correctAnswer}
-                    selected={selectedAthleteId}
-                    onSelect={setSelectedAthleteId}
-                />
+                <CorrectAnswer>
+                    <AthleteSearchBar
+                        selected={selectedAthleteId}
+                        onSelect={setSelectedAthleteId}
+                    />
+                </CorrectAnswer>
             )}
             <QuestionFooterButtons
                 disableSubmit={isFormInvalid}

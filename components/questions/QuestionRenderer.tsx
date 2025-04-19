@@ -1,8 +1,8 @@
+import { Question } from '@/app/api/typer';
 import AthleteQuestion from './AthleteQuestion';
 import AthleteRankingQuestion from './AthleteRankingQuestion';
 import CountryQuestion from './CountryQuestion';
 import CountryRankingQuestion from './CountryRankingQuestion';
-import { Question } from '@/app/api/typer';
 
 interface Props {
     question: Question;
@@ -17,44 +17,39 @@ export default function QuestionRenderer({
     onSubmit,
     onEdit,
 }: Props) {
+    const sharedProps = {
+        question,
+        isPastDeadline,
+        onSubmit,
+        onEdit,
+    };
+
+    let content: JSX.Element | null = null;
+
     switch (question.type) {
         case 'athlete':
-            return (
-                <AthleteQuestion
-                    question={question}
-                    onSubmit={onSubmit}
-                    isPastDeadline={isPastDeadline}
-                    onEdit={onEdit}
-                />
-            );
+            content = <AthleteQuestion {...sharedProps} />;
+            break;
         case 'athletes_three':
-            return (
-                <AthleteRankingQuestion
-                    question={question}
-                    onSubmit={onSubmit}
-                    isPastDeadline={isPastDeadline}
-                    onEdit={onEdit}
-                />
-            );
+            content = <AthleteRankingQuestion {...sharedProps} />;
+            break;
         case 'country':
-            return (
-                <CountryQuestion
-                    question={question}
-                    onSubmit={onSubmit}
-                    isPastDeadline={isPastDeadline}
-                    onEdit={onEdit}
-                />
-            );
+            content = <CountryQuestion {...sharedProps} />;
+            break;
         case 'countries_three':
-            return (
-                <CountryRankingQuestion
-                    question={question}
-                    onSubmit={onSubmit}
-                    isPastDeadline={isPastDeadline}
-                    onEdit={onEdit}
-                />
-            );
+            content = <CountryRankingQuestion {...sharedProps} />;
+            break;
         default:
             return null;
     }
+
+    return <StyledQuestion>{content}</StyledQuestion>;
+}
+
+interface StyledQuestionProps {
+    children: React.ReactNode;
+}
+
+function StyledQuestion({ children }: StyledQuestionProps) {
+    return <div className='flex w-full flex-col bg-white p-8'>{children}</div>;
 }

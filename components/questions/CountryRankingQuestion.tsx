@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Question, Answer } from '@/app/api/typer';
 import { txt } from '@/nls/texts';
-import Points from './Points';
-import { ActionButton } from '../buttons';
-import { AdminOnly } from '../auth/AdminOnly';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { isAdmin } from '@/lib/Admin';
 import CountryDropdown from '../forms/CountryDropdown';
+import CorrectAnswer from './common/CorrectAnswer';
+import QuestionFooterButtons from './common/QuestionFooterButtons';
+import QuestionHeader from './common/QuestionHeader';
+import { RANKING } from '@/lib/Ranking';
 
 interface Props {
     question: Question;
@@ -25,132 +26,98 @@ export default function CountryRankingQuestion({
 }: Props) {
     const { user } = usePrivateUserContext();
 
+    // TODO
     const answer: Answer = {
         id: 1,
         question_id: 2,
         content: {},
     };
-    const [selectedCountry1, setSelectedCountry1] = useState<string | null>(
-        answer?.content?.country_one || null
-    );
-    const [selectedCountry2, setSelectedCountry2] = useState<string | null>(
-        answer?.content?.country_two || null
-    );
-    const [selectedCountry3, setSelectedCountry3] = useState<string | null>(
-        answer?.content?.country_three || null
-    );
+
+    const [selectedCountries, setSelectedCountries] = useState<
+        (string | null)[]
+    >([
+        answer?.content?.country_one || null,
+        answer?.content?.country_two || null,
+        answer?.content?.country_three || null,
+    ]);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isModified, setModified] = useState(false);
 
-    const isFormInvalid =
-        !selectedCountry1 || !selectedCountry2 || !selectedCountry3;
+    const isFormInvalid = selectedCountries.some((c) => !c);
 
-    const handleSubmit = () => {
+    const handleSelectCountry = useCallback(
+        (index: number, value: string | null) => {
+            setSelectedCountries((prev) => {
+                const next = [...prev];
+                next[index] = value;
+                return next;
+            });
+            setModified(true);
+        },
+        []
+    );
+
+    const handleSubmit = useCallback(() => {
         if (isFormInvalid) return;
         setIsSubmitting(true);
         onSubmit({
             user_id: user.sub,
             question_id: question.id,
             content: {
-                country_one: selectedCountry1,
-                country_two: selectedCountry2,
-                country_three: selectedCountry3,
+                country_one: selectedCountries[0],
+                country_two: selectedCountries[1],
+                country_three: selectedCountries[2],
             },
         });
         setIsSubmitting(false);
         setModified(false);
-    };
+    }, [isFormInvalid, onSubmit, question.id, selectedCountries, user.sub]);
 
-    const handleSelectCountry1 = (country: string | null) => {
-        setSelectedCountry1(country);
-        setModified(true);
-    };
-
-    const handleSelectCountry2 = (country: string | null) => {
-        setSelectedCountry2(country);
-        setModified(true);
-    };
-
-    const handleSelectCountry3 = (country: string | null) => {
-        setSelectedCountry3(country);
-        setModified(true);
-    };
+    const showCorrectAnswers =
+        question.correct_answer && (isPastDeadline || isAdmin(user));
 
     return (
-        <div className='flex w-full flex-col bg-white p-8'>
-            <div className='flex flex-row justify-between'>
-                <div className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                    {question.content}
-                </div>
-                <Points
-                    maxPoints={question.points}
-                    grantedPoints={answer.points}
+        <>
+            <QuestionHeader
+                content={question.content}
+                maxPoints={question.points}
+                points={answer.points}
+            />
+            {selectedCountries.map((country, i) => (
+                <CountryDropdown
+                    key={i}
+                    label={i == 0 ? txt.forms.yourAnswer : ''}
+                    emoji={RANKING[i]}
+                    selected={country}
+                    onSelect={(value) => handleSelectCountry(i, value)}
+                    disabled={isPastDeadline}
                 />
-            </div>
-
-            <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                {txt.forms.yourAnswer}:
-            </p>
-            <CountryDropdown
-                emoji='🥇'
-                selected={selectedCountry1}
-                onSelect={handleSelectCountry1}
-                disabled={isPastDeadline}
-            />
-            <CountryDropdown
-                emoji='🥈'
-                selected={selectedCountry2}
-                onSelect={handleSelectCountry2}
-                disabled={isPastDeadline}
-            />
-            <CountryDropdown
-                emoji='🥉'
-                selected={selectedCountry3}
-                onSelect={handleSelectCountry3}
-                disabled={isPastDeadline}
-            />
-            {question.correct_answer && (isPastDeadline || isAdmin(user)) && (
-                <div className='bg-lightGreen'>
-                    <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                        {txt.forms.correctAnswer}:
-                    </p>
-                    <CountryDropdown
-                        emoji='🥇'
-                        selected={question.correct_answer.country_one}
-                        onSelect={() => {}}
-                        disabled
-                    />
-                    <CountryDropdown
-                        emoji='🥈'
-                        selected={question.correct_answer.country_two}
-                        onSelect={() => {}}
-                        disabled
-                    />
-                    <CountryDropdown
-                        emoji='🥉'
-                        selected={question.correct_answer.country_three}
-                        onSelect={() => {}}
-                        disabled
-                    />
-                </div>
+            ))}
+            {showCorrectAnswers && (
+                <CorrectAnswer>
+                    {[
+                        question.correct_answer.country_one,
+                        question.correct_answer.country_two,
+                        question.correct_answer.country_three,
+                    ].map((country, i) => (
+                        <CountryDropdown
+                            key={i}
+                            emoji={RANKING[i]}
+                            selected={country}
+                            onSelect={() => {}}
+                            disabled
+                        />
+                    ))}
+                </CorrectAnswer>
             )}
-            <div className='flex flex-row justify-between'>
-                <ActionButton
-                    loading={isSubmitting}
-                    label={
-                        isModified && !isPastDeadline
-                            ? txt.forms.save
-                            : txt.forms.saved
-                    }
-                    onClick={handleSubmit}
-                    disabled={!isModified || isPastDeadline}
-                />
-                <AdminOnly>
-                    {onEdit && (
-                        <ActionButton label={txt.forms.edit} onClick={onEdit} />
-                    )}
-                </AdminOnly>
-            </div>
-        </div>
+            <QuestionFooterButtons
+                isSubmitting={isSubmitting}
+                isModified={isModified}
+                isPastDeadline={isPastDeadline}
+                onSubmit={handleSubmit}
+                onEdit={onEdit}
+            />
+        </>
     );
 }

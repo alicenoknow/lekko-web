@@ -5,7 +5,7 @@ interface Props {
     grantedPoints?: number;
 }
 
-export default function Points({ maxPoints, grantedPoints = 12 }: Props) {
+export default function Points({ maxPoints, grantedPoints }: Props) {
     return (
         <div
             className='flex h-12 items-center justify-center bg-accentLight px-3'

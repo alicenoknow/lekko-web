@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import { Question } from '@/app/api/typer';
-import QuestionFooterButtons from './QuestionFooterButtons';
+import QuestionFooterButtons from './common/QuestionFooterButtons';
 import { txt } from '@/nls/texts';
-import EditQuestionHeader from '../QuestionHeader';
+import EditQuestionHeader from './common/EditQuestionHeader';
 import CountryDropdown from '@/components/forms/CountryDropdown';
+import CorrectAnswer from '../common/CorrectAnswer';
 
 interface Props {
     question: Question;
@@ -61,13 +62,14 @@ export default function EditCountryRankingQuestion({
 
     return (
         <div className='relative flex w-full flex-col pr-4 pt-4'>
-            <EditQuestionHeader content={content} points={points} onContentChange={setContent} onPointsChange={setPoints} />
-
+            <EditQuestionHeader
+                content={content}
+                points={points}
+                onContentChange={setContent}
+                onPointsChange={setPoints}
+            />
             {question.id > 0 && (
-                <>
-                    <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                        {txt.forms.correctAnswer}:
-                    </p>
+                <CorrectAnswer>
                     <CountryDropdown
                         emoji="🥇"
                         selected={selectedCountry1}
@@ -83,7 +85,7 @@ export default function EditCountryRankingQuestion({
                         selected={selectedCountry3}
                         onSelect={setSelectedCountry3}
                     />
-                </>
+                </CorrectAnswer>
             )}
             <QuestionFooterButtons
                 disableSubmit={isFormInvalid}

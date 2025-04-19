@@ -1,5 +1,5 @@
 import { txt } from '@/nls/texts';
-import FormField from '../forms/FormField';
+import FormField from '../../../forms/FormField';
 import { useCallback } from 'react';
 
 interface Props {

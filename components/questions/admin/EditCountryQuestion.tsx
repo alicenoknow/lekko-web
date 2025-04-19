@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { Question } from '@/app/api/typer';
-import QuestionFooterButtons from './QuestionFooterButtons';
-import { txt } from '@/nls/texts';
-import EditQuestionHeader from '../QuestionHeader';
+import QuestionFooterButtons from './common/QuestionFooterButtons';
+import EditQuestionHeader from './common/EditQuestionHeader';
 import CountryDropdown from '@/components/forms/CountryDropdown';
+import CorrectAnswer from '../common/CorrectAnswer';
 
 interface Props {
     question: Question;
@@ -49,19 +49,20 @@ export default function EditCountryQuestion({
 
     return (
         <div className='relative flex w-full flex-col pr-4 pt-4'>
-            <EditQuestionHeader content={content} points={points} onContentChange={setContent} onPointsChange={setPoints} />
-
-            {question.id > 0 && (
-                <>
-                    <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                        {txt.forms.correctAnswer}:
-                    </p>
+            <EditQuestionHeader
+                content={content}
+                points={points} 
+                onContentChange={setContent} 
+                onPointsChange={setPoints}
+            />
+            {question.id > 0 &&
+                <CorrectAnswer>
                     <CountryDropdown
                         selected={selectedCountry}
                         onSelect={setSelectedCountry}
                     />
-                </>
-            )}
+                </CorrectAnswer>
+            }
             <QuestionFooterButtons
                 disableSubmit={isFormInvalid}
                 isLoading={isSubmitting}
