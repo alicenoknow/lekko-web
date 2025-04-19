@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Question } from '@/app/api/typer';
 import QuestionFooterButtons from './QuestionFooterButtons';
 import FormField from '@/components/forms/FormField';
@@ -26,41 +26,35 @@ export default function EditAthleteQuestion({
     );
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const isFormInvalid = !content.trim() || points < 1;
+    const isFormInvalid = useMemo(() => !content.trim() || points < 1, [content, points]);
 
-    const handleSubmit = () => {
+    const handleSubmit = useCallback(() => {
         if (isFormInvalid) return;
         setIsSubmitting(true);
         onSubmit({
-            ...question,
-            content: content.trim(),
-            points,
-            ...(selectedAthleteId !== null && {
-                correct_answer: { athlete_id: selectedAthleteId },
-            }),
+          ...question,
+          content: content.trim(),
+          points,
+          ...(selectedAthleteId !== null && { correct_answer: { athlete_id: selectedAthleteId } })
         });
         setIsSubmitting(false);
-    };
-
-    const handleDelete = () => {
+      }, [content, points, question, onSubmit, selectedAthleteId]);
+      
+      const handleDelete = useCallback(() => {
         setIsSubmitting(true);
         onDelete(question.id);
         setIsSubmitting(false);
-    };
+      }, [onDelete, question.id]);
 
     return (
         <div className='relative flex w-full flex-col pr-4 pt-4'>
             <EditQuestionHeader content={content} points={points} onContentChange={setContent} onPointsChange={setPoints} />
             {question.id > 0 && (
-                <>
-                    <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                        {txt.forms.correctAnswer}:
-                    </p>
-                    <AthleteSearchBar
-                        selected={selectedAthleteId}
-                        onSelect={setSelectedAthleteId}
-                    />
-                </>
+                <AthleteSearchBar
+                    label={txt.forms.correctAnswer}
+                    selected={selectedAthleteId}
+                    onSelect={setSelectedAthleteId}
+                />
             )}
             <QuestionFooterButtons
                 disableSubmit={isFormInvalid}

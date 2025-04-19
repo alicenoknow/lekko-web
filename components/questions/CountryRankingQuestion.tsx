@@ -5,12 +5,10 @@ import { Question, Answer } from '@/app/api/typer';
 import { txt } from '@/nls/texts';
 import Points from './Points';
 import { ActionButton } from '../buttons';
-import { COUNTRIES } from '@/lib/Countries';
-import CountryLabel from '../forms/CountryLabel';
-import DropdownField from '../forms/DropdownField';
 import { AdminOnly } from '../auth/AdminOnly';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { isAdmin } from '@/lib/Admin';
+import CountryDropdown from '../forms/CountryDropdown';
 
 interface Props {
     question: Question;
@@ -93,83 +91,47 @@ export default function CountryRankingQuestion({
             <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
                 {txt.forms.yourAnswer}:
             </p>
-            <div className='flex flex-row justify-between'>
-                <span className='mr-4 text-4xl'>🥇</span>
-                <DropdownField
-                    options={Object.keys(COUNTRIES).map((code) => ({
-                        value: code,
-                        label: <CountryLabel code={code} />,
-                    }))}
-                    selected={selectedCountry1}
-                    onSelect={handleSelectCountry1}
-                    disabled={isPastDeadline}
-                />
-            </div>
-            <div className='flex flex-row justify-between'>
-                <span className='mr-4 text-4xl'>🥈</span>
-                <DropdownField
-                    options={Object.keys(COUNTRIES).map((code) => ({
-                        value: code,
-                        label: <CountryLabel code={code} />,
-                    }))}
-                    selected={selectedCountry2}
-                    onSelect={handleSelectCountry2}
-                    disabled={isPastDeadline}
-                />
-            </div>
-            <div className='flex flex-row justify-between'>
-                <span className='mr-4 text-4xl'>🥉</span>
-                <DropdownField
-                    options={Object.keys(COUNTRIES).map((code) => ({
-                        value: code,
-                        label: <CountryLabel code={code} />,
-                    }))}
-                    selected={selectedCountry3}
-                    onSelect={handleSelectCountry3}
-                    disabled={isPastDeadline}
-                />
-            </div>
+            <CountryDropdown
+                emoji='🥇'
+                selected={selectedCountry1}
+                onSelect={handleSelectCountry1}
+                disabled={isPastDeadline}
+            />
+            <CountryDropdown
+                emoji='🥈'
+                selected={selectedCountry2}
+                onSelect={handleSelectCountry2}
+                disabled={isPastDeadline}
+            />
+            <CountryDropdown
+                emoji='🥉'
+                selected={selectedCountry3}
+                onSelect={handleSelectCountry3}
+                disabled={isPastDeadline}
+            />
             {question.correct_answer && (isPastDeadline || isAdmin(user)) && (
                 <div className='bg-lightGreen'>
                     <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
                         {txt.forms.correctAnswer}:
                     </p>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥇</span>
-                        <DropdownField
-                            options={Object.keys(COUNTRIES).map((code) => ({
-                                value: code,
-                                label: <CountryLabel code={code} />,
-                            }))}
-                            selected={question.correct_answer?.country_one}
-                            onSelect={() => {}}
-                            disabled
-                        />
-                    </div>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥈</span>
-                        <DropdownField
-                            options={Object.keys(COUNTRIES).map((code) => ({
-                                value: code,
-                                label: <CountryLabel code={code} />,
-                            }))}
-                            selected={question.correct_answer?.country_two}
-                            onSelect={() => {}}
-                            disabled
-                        />
-                    </div>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥉</span>
-                        <DropdownField
-                            options={Object.keys(COUNTRIES).map((code) => ({
-                                value: code,
-                                label: <CountryLabel code={code} />,
-                            }))}
-                            selected={question.correct_answer?.country_three}
-                            onSelect={() => {}}
-                            disabled
-                        />
-                    </div>
+                    <CountryDropdown
+                        emoji='🥇'
+                        selected={question.correct_answer.country_one}
+                        onSelect={() => {}}
+                        disabled
+                    />
+                    <CountryDropdown
+                        emoji='🥈'
+                        selected={question.correct_answer.country_two}
+                        onSelect={() => {}}
+                        disabled
+                    />
+                    <CountryDropdown
+                        emoji='🥉'
+                        selected={question.correct_answer.country_three}
+                        onSelect={() => {}}
+                        disabled
+                    />
                 </div>
             )}
             <div className='flex flex-row justify-between'>

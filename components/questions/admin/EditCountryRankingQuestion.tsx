@@ -3,12 +3,9 @@
 import { useState } from 'react';
 import { Question } from '@/app/api/typer';
 import QuestionFooterButtons from './QuestionFooterButtons';
-import FormField from '@/components/forms/FormField';
 import { txt } from '@/nls/texts';
-import CountryLabel from '@/components/forms/CountryLabel';
-import { COUNTRIES } from '@/lib/Countries';
-import DropdownField from '@/components/forms/DropdownField';
 import EditQuestionHeader from '../QuestionHeader';
+import CountryDropdown from '@/components/forms/CountryDropdown';
 
 interface Props {
     question: Question;
@@ -71,39 +68,21 @@ export default function EditCountryRankingQuestion({
                     <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
                         {txt.forms.correctAnswer}:
                     </p>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥇</span>
-                        <DropdownField
-                            options={Object.keys(COUNTRIES).map((code) => ({
-                                value: code,
-                                label: <CountryLabel code={code} />,
-                            }))}
-                            selected={selectedCountry1}
-                            onSelect={setSelectedCountry1}
-                        />
-                    </div>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥈</span>
-                        <DropdownField
-                            options={Object.keys(COUNTRIES).map((code) => ({
-                                value: code,
-                                label: <CountryLabel code={code} />,
-                            }))}
-                            selected={selectedCountry2}
-                            onSelect={setSelectedCountry2}
-                        />
-                    </div>
-                    <div className='flex flex-row justify-between'>
-                        <span className='mr-4 text-4xl'>🥉</span>
-                        <DropdownField
-                            options={Object.keys(COUNTRIES).map((code) => ({
-                                value: code,
-                                label: <CountryLabel code={code} />,
-                            }))}
-                            selected={selectedCountry3}
-                            onSelect={setSelectedCountry3}
-                        />
-                    </div>
+                    <CountryDropdown
+                        emoji="🥇"
+                        selected={selectedCountry1}
+                        onSelect={setSelectedCountry1}
+                    />
+                    <CountryDropdown
+                        emoji="🥈"
+                        selected={selectedCountry2}
+                        onSelect={setSelectedCountry2}
+                    />
+                    <CountryDropdown
+                        emoji="🥉"
+                        selected={selectedCountry3}
+                        onSelect={setSelectedCountry3}
+                    />
                 </>
             )}
             <QuestionFooterButtons

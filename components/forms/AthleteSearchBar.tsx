@@ -11,21 +11,18 @@ import CountryLabel from './CountryLabel';
 import { COUNTRIES } from '@/lib/Countries';
 import AthleteLabel from './AthleteLabel';
 
-// TODO open edit mode for question for admin
 // TODO jumping forms
-// TODO country user questions
 // TODO answers fetching
 // TODO athletes paging
-// TODO disable modyfying after deadline
 // TODO verify everything
-// TODO user id from where
 
 interface Props {
     selected: number | null;
+    label?: string;
     onSelect: (athleteId: number | null) => void;
 }
 
-export default function AthleteSearchBar({ selected, onSelect }: Props) {
+export default function AthleteSearchBar({ selected, label, onSelect }: Props) {
     const { token } = usePrivateUserContext();
     const [search, setSearch] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -59,6 +56,11 @@ export default function AthleteSearchBar({ selected, onSelect }: Props) {
 
     return (
         <div className='relative w-full'>
+            {label && (
+                <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
+                    {label}:
+                </p>
+            )}
             {selected ? (
                 <div className='mb-4 flex items-center justify-between border bg-white p-2 text-sm text-primaryDark md:p-4 md:text-lg'>
                     <AthleteLabel selected={selected} />

@@ -13,6 +13,7 @@ import { AdminOnly } from '../auth/AdminOnly';
 import ActionIcon from '../buttons/ActionIcon';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { isAdmin } from '@/lib/Admin';
+import CountryDropdown from '../forms/CountryDropdown';
 
 interface Props {
     question: Question;
@@ -75,11 +76,7 @@ export default function CountryQuestion({
             <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
                 {txt.forms.yourAnswer}:
             </p>
-            <DropdownField
-                options={Object.keys(COUNTRIES).map((code) => ({
-                    value: code,
-                    label: <CountryLabel code={code} />,
-                }))}
+            <CountryDropdown
                 selected={selectedCountry}
                 onSelect={handleSelectCountry}
                 disabled={isPastDeadline}
@@ -89,11 +86,7 @@ export default function CountryQuestion({
                     <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
                         {txt.forms.correctAnswer}:
                     </p>
-                    <DropdownField
-                        options={Object.keys(COUNTRIES).map((code) => ({
-                            value: code,
-                            label: <CountryLabel code={code} />,
-                        }))}
+                    <CountryDropdown
                         selected={question.correct_answer.country}
                         onSelect={() => {}}
                         disabled

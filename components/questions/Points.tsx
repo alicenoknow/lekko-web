@@ -5,17 +5,27 @@ interface Props {
     grantedPoints?: number;
 }
 
-export default function Points({ maxPoints, grantedPoints }: Props) {
+export default function Points({ maxPoints, grantedPoints = 12 }: Props) {
     return (
-        <div className='flex h-12 items-center justify-center bg-accentLight p-2'>
-            <div className='flex flex-row items-center justify-center gap-1 text-center'>
-                <div className='flex items-center text-xl font-bold text-primaryDark'>
-                    {grantedPoints !== undefined && (
-                        <span>{grantedPoints}/</span>
+        <div
+            className='flex h-12 items-center justify-center bg-accentLight px-3'
+            aria-label='Points awarded'
+        >
+            <div className='flex flex-row items-center justify-center gap-2 text-center text-primaryDark'>
+                <div className='text-xl font-bold'>
+                    {grantedPoints !== undefined ? (
+                        <>
+                            <span>{grantedPoints}</span>
+                            <span className='text-sm font-medium'>
+                                {' '}
+                                / {maxPoints}
+                            </span>
+                        </>
+                    ) : (
+                        <span>{maxPoints}</span>
                     )}
-                    <span>{maxPoints}</span>
                 </div>
-                <FaRegStar size={20} className='mb-1 text-primaryDark' />
+                <FaRegStar size={20} className='flex-shrink-0' />
             </div>
         </div>
     );

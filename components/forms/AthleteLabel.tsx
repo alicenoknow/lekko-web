@@ -5,26 +5,35 @@ import CountryLabel from './CountryLabel';
 
 interface Props {
     selected: number | null;
+    label?: string;
 }
 
-export default function AthleteLabel({ selected }: Props) {
+export default function AthleteLabel({ label, selected }: Props) {
     const { token } = usePrivateUserContext();
-    const { data: selectedAthleteData } = useQuery({
+
+    if (!token || selected === null) return null;
+
+    const { data: athlete } = useQuery({
         queryKey: ['athlete', selected],
-        queryFn: () => fetchAthleteById(selected!, token),
-        enabled: !!token && !!selected,
+        queryFn: () => fetchAthleteById(selected, token),
+        enabled: true,
     });
 
-    if (selectedAthleteData) {
-        return (
+    if (!athlete) return null;
+
+    return (
+        <div className='flex flex-col gap-2'>
+            {label && (
+                <p className='text-sm font-bold uppercase text-primaryDark md:text-lg'>
+                    {label}:
+                </p>
+            )}
             <span className='flex flex-row items-center gap-2 uppercase'>
                 <strong>
-                    {selectedAthleteData.first_name}{' '}
-                    {selectedAthleteData.last_name}
+                    {athlete.first_name} {athlete.last_name}
                 </strong>
-                <CountryLabel code={selectedAthleteData.country ?? ''} />
+                <CountryLabel code={athlete.country ?? ''} />
             </span>
-        );
-    }
-    return null;
+        </div>
+    );
 }

@@ -1,5 +1,6 @@
 import { txt } from '@/nls/texts';
 import FormField from '../forms/FormField';
+import { useCallback } from 'react';
 
 interface Props {
     content: string;
@@ -14,6 +15,17 @@ export default function EditQuestionHeader({
     onContentChange,
     onPointsChange,
 }: Props) {
+    const handleContentChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+            onContentChange(e.target.value),
+        [onContentChange]
+    );
+
+    const handlePointsChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+            onPointsChange(Number(e.target.value)),
+        [onPointsChange]
+    );
     return (
         <>
             <FormField
@@ -21,7 +33,7 @@ export default function EditQuestionHeader({
                 id='question-content'
                 type='text'
                 value={content}
-                onChange={(e) => onContentChange(e.target.value)}
+                onChange={handleContentChange}
                 required
                 multiline
             />
@@ -30,7 +42,7 @@ export default function EditQuestionHeader({
                 id='question-points'
                 type='number'
                 value={points}
-                onChange={(e) => onPointsChange(Number(e.target.value))}
+                onChange={handlePointsChange}
                 required
             />
         </>

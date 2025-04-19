@@ -3,12 +3,9 @@
 import { useState } from 'react';
 import { Question } from '@/app/api/typer';
 import QuestionFooterButtons from './QuestionFooterButtons';
-import FormField from '@/components/forms/FormField';
 import { txt } from '@/nls/texts';
-import CountryLabel from '@/components/forms/CountryLabel';
-import { COUNTRIES } from '@/lib/Countries';
-import DropdownField from '@/components/forms/DropdownField';
 import EditQuestionHeader from '../QuestionHeader';
+import CountryDropdown from '@/components/forms/CountryDropdown';
 
 interface Props {
     question: Question;
@@ -59,11 +56,7 @@ export default function EditCountryQuestion({
                     <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
                         {txt.forms.correctAnswer}:
                     </p>
-                    <DropdownField
-                        options={Object.keys(COUNTRIES).map((code) => ({
-                            value: code,
-                            label: <CountryLabel code={code} />,
-                        }))}
+                    <CountryDropdown
                         selected={selectedCountry}
                         onSelect={setSelectedCountry}
                     />

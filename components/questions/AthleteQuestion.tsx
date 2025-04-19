@@ -70,26 +70,22 @@ export default function AthleteQuestion({
                     grantedPoints={answer.points}
                 />
             </div>
-
-            <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                {txt.forms.yourAnswer}:
-            </p>
             {isPastDeadline ? (
-                <AthleteLabel selected={selectedAthleteId} />
+                <AthleteLabel
+                    label={txt.forms.yourAnswer}
+                    selected={selectedAthleteId}
+                />
             ) : (
-                <>
-                    <AthleteSearchBar
-                        selected={selectedAthleteId}
-                        onSelect={handleSelectAthlete}
-                    />
-                </>
+                <AthleteSearchBar
+                    label={txt.forms.yourAnswer}
+                    selected={selectedAthleteId}
+                    onSelect={handleSelectAthlete}
+                />
             )}
             {question.correct_answer && (isPastDeadline || isAdmin(user)) && (
-                <div className='bg-lightGreen'>
-                    <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
-                        {txt.forms.correctAnswer}:
-                    </p>
+                <div className='mb-4 bg-lightGreen p-4'>
                     <AthleteLabel
+                        label={txt.forms.correctAnswer}
                         selected={question.correct_answer.athlete_id}
                     />
                 </div>
