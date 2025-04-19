@@ -8,6 +8,7 @@ import { txt } from '@/nls/texts';
 import CountryLabel from '@/components/forms/CountryLabel';
 import { COUNTRIES } from '@/lib/Countries';
 import DropdownField from '@/components/forms/DropdownField';
+import EditQuestionHeader from '../QuestionHeader';
 
 interface Props {
     question: Question;
@@ -51,23 +52,8 @@ export default function EditCountryQuestion({
 
     return (
         <div className='relative flex w-full flex-col pr-4 pt-4'>
-            <FormField
-                label={txt.questions.content}
-                id='question-content'
-                type='text'
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                required
-                multiline
-            />
-            <FormField
-                label={txt.questions.points}
-                id='question-points'
-                type='number'
-                value={points}
-                onChange={(e) => setPoints(Number(e.target.value))}
-                required
-            />
+            <EditQuestionHeader content={content} points={points} onContentChange={setContent} onPointsChange={setPoints} />
+
             {question.id > 0 && (
                 <>
                     <p className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>

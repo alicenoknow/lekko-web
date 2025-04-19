@@ -170,14 +170,17 @@ export async function deleteEvent(
     return res.data;
 }
 
-type AnswersResponse = {};
+type AnswersResponse = {
+    data: Answer[];
+    pagination: PaginationInfo;
+};
 
 export async function fetchUserAnswers(
     eventId: number,
     token: string
 ): Promise<AnswersResponse> {
     const res = await axios.get(
-        `${API_URL}/api/v1/answers?event_id=${eventId}`,
+        `${API_URL}/api/v1/users/me/answers?event_id=${eventId}`,
         getAuthConfig(token)
     );
     if (isApiError(res.data)) {

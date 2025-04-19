@@ -44,7 +44,7 @@ function CreateEventPage() {
     const handleSubmit = useCallback(() => {
         setErrorMessage('');
         mutation.mutate();
-    }, [mutation, name, description, deadline, token]);
+    }, [mutation]);
 
     return (
         <div className='mx-auto w-full max-w-2xl p-6'>

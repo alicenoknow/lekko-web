@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Question, Answer } from '@/app/api/typer';
 import { txt } from '@/nls/texts';
-import AthleteLabel from '../forms/AthleteLabel';
 import Points from './Points';
 import { ActionButton } from '../buttons';
 import { COUNTRIES } from '@/lib/Countries';
