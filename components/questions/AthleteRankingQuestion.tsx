@@ -2,47 +2,33 @@
 
 import { useState, useCallback } from 'react';
 import { Question, Answer } from '@/app/api/typer';
-import { txt } from '@/nls/texts';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
-import { isAdmin } from '@/lib/Admin';
 import AthleteSearchBar from '../forms/AthleteSearchBar';
 import AthleteLabel from '../forms/AthleteLabel';
+import { RANKING, getAthleteRankingKey } from '@/lib/Ranking';
+import { txt } from '@/nls/texts';
 import CorrectAnswer from './common/CorrectAnswer';
-import QuestionFooterButtons from './common/QuestionFooterButtons';
-import QuestionHeader from './common/QuestionHeader';
-import { getAthleteRankingKey, RANKING } from '@/lib/Ranking';
+import { isAdmin } from '@/lib/Admin';
+import { usePrivateUserContext } from '@/context/PrivateUserContext';
 
 interface Props {
     question: Question;
+    answer: Answer;
     isPastDeadline: boolean;
-    onSubmit: (answer: Answer) => void;
-    onEdit?: () => void;
+    onAnswerChanged: (content: Answer['content']) => void; // TODO typing
 }
 
 export default function AthleteRankingQuestion({
     question,
+    answer,
     isPastDeadline,
-    onSubmit,
-    onEdit,
+    onAnswerChanged,
 }: Props) {
     const { user } = usePrivateUserContext();
-
-    const answer: Answer = {
-        id: 1,
-        question_id: 2,
-        content: {},
-    };
-
     const [selectedIds, setSelectedIds] = useState<(number | null)[]>([
         answer?.content?.athlete_id_one || null,
         answer?.content?.athlete_id_two || null,
         answer?.content?.athlete_id_three || null,
     ]);
-
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isModified, setIsModified] = useState(false);
-
-    const isFormInvalid = selectedIds.some((id) => !id);
 
     const handleSelect = useCallback((index: number, id: number | null) => {
         setSelectedIds((prev) => {
@@ -50,35 +36,21 @@ export default function AthleteRankingQuestion({
             next[index] = id;
             return next;
         });
-        setIsModified(true);
     }, []);
 
-    const handleSubmit = useCallback(() => {
-        if (isFormInvalid) return;
-        setIsSubmitting(true);
-        onSubmit({
-            user_id: user.sub,
-            question_id: question.id,
-            content: {
-                athlete_id_one: selectedIds[0],
-                athlete_id_two: selectedIds[1],
-                athlete_id_three: selectedIds[2],
-            },
+    useCallback(() => {
+        onAnswerChanged({
+            athlete_id_one: selectedIds[0],
+            athlete_id_two: selectedIds[1],
+            athlete_id_three: selectedIds[2],
         });
-        setIsSubmitting(false);
-        setIsModified(false);
-    }, [isFormInvalid, onSubmit, question.id, selectedIds, user.sub]);
+    }, [selectedIds, onAnswerChanged]);
 
     const showCorrectAnswers =
         question.correct_answer && (isPastDeadline || isAdmin(user));
 
     return (
         <>
-            <QuestionHeader
-                content={question.content}
-                maxPoints={question.points}
-                points={answer.points}
-            />
             {RANKING.map((emoji, i) => {
                 const label = i === 0 ? txt.forms.yourAnswer : undefined;
                 return isPastDeadline ? (
@@ -113,13 +85,6 @@ export default function AthleteRankingQuestion({
                     })}
                 </CorrectAnswer>
             )}
-            <QuestionFooterButtons
-                isSubmitting={isSubmitting}
-                isModified={isModified}
-                isPastDeadline={isPastDeadline}
-                onSubmit={handleSubmit}
-                onEdit={onEdit}
-            />
         </>
     );
 }

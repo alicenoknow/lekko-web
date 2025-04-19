@@ -2,12 +2,9 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchAthletes, fetchDisciplines } from '@/app/api/typer';
+import { fetchAthletes } from '@/app/api/typer';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import FormField from '@/components/forms/FormField';
-import DropdownPillFilter from './DropdownPillFilter';
-import CountryLabel from './CountryLabel';
-import { COUNTRIES } from '@/lib/Countries';
 import { txt } from '@/nls/texts';
 import AthleteLabel from './AthleteLabel';
 import AthleteSearchFilter from './AthleteSearchFilter';
@@ -122,3 +119,11 @@ function useDebouncedValue<T>(value: T, delay: number): T {
 
     return debounced;
 }
+
+// TODO paging athletes
+// TODO paging in general
+// TODO refactor components
+// TODO test
+// TODO points input zero
+// TODO answers impl
+// TODO ranking impl

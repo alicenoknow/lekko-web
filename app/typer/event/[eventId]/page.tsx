@@ -92,6 +92,9 @@ export default function EventDetailPage() {
                         <QuestionRenderer
                             key={q.id}
                             question={q}
+                            answer={{ // TODO
+                                question_id: q.id, content: null
+                            }}
                             onSubmit={submitAnswer}
                             isPastDeadline={isPastDeadline(eventData.deadline)}
                         />
