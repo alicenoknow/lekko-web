@@ -7,7 +7,6 @@ import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import {
     fetchEventById,
     fetchQuestionsFromEvent,
-    fetchUserAnswers,
     Question,
 } from '@/app/api/typer';
 import { AdminOnly } from '@/components/auth/AdminOnly';
@@ -47,9 +46,13 @@ export default function EventDetailPage() {
     });
 
     const isPastDeadline = (deadline: string) => {
-        console.warn("AAA", new Date(deadline), new Date(deadline) < new Date(), )
+        console.warn(
+            'AAA',
+            new Date(deadline),
+            new Date(deadline) < new Date()
+        );
         return new Date(deadline) < new Date();
-    }
+    };
 
     const handleOpenAdminPanel = () => {
         router.replace(`/typer/event/${eventId}/admin`);

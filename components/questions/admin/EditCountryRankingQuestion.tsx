@@ -5,9 +5,7 @@ import { Question } from '@/app/api/typer';
 import QuestionFooterButtons from './QuestionFooterButtons';
 import FormField from '@/components/forms/FormField';
 import { txt } from '@/nls/texts';
-import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
 import CountryLabel from '@/components/forms/CountryLabel';
-import DropdownPillFilter from '@/components/forms/DropdownPillFilter';
 import { COUNTRIES } from '@/lib/Countries';
 import DropdownField from '@/components/forms/DropdownField';
 
@@ -44,13 +42,15 @@ export default function EditCountryRankingQuestion({
             ...question,
             content: content.trim(),
             points,
-            ...((selectedCountry1 !== null && selectedCountry2 !== null && selectedCountry3 !== null) && {
-            correct_answer: {
-                    country_one: selectedCountry1,
-                    country_two: selectedCountry2,
-                    country_three: selectedCountry3,
-            }
-        }),
+            ...(selectedCountry1 !== null &&
+                selectedCountry2 !== null &&
+                selectedCountry3 !== null && {
+                    correct_answer: {
+                        country_one: selectedCountry1,
+                        country_two: selectedCountry2,
+                        country_three: selectedCountry3,
+                    },
+                }),
         });
         setIsSubmitting(false);
     };

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useContext, memo, useMemo } from 'react';
+import React, { useState, useCallback, memo, useMemo } from 'react';
 import Link from 'next/link';
 import MenuLogo from './MenuLogo';
 import { txt as txtData } from '@/nls/texts';

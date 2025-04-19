@@ -1,4 +1,3 @@
-import { Question } from '@/app/api/typer';
 import { ActionButton } from '@/components/buttons';
 import { txt } from '@/nls/texts';
 

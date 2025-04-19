@@ -10,7 +10,7 @@ export const HydrateUser = () => {
         const token = localStorage.getItem('token');
         if (token) setUserFromToken(token);
         setHydrated();
-    }, []);
+    }, [setHydrated]);
 
     return null;
 };

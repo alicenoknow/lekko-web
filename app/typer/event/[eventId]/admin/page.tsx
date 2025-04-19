@@ -157,21 +157,28 @@ export default function EventDetailPage() {
         }
     }, [questionsData]);
 
-    const isPastDeadline = (deadline: string) => new Date(deadline) < new Date();
+    const isPastDeadline = (deadline: string) =>
+        new Date(deadline) < new Date();
 
     const onNewQuestion = useCallback(() => {
         setCurrentQuestion({
-                id: Date.now() * -1,
-                type: selectedType,
-                content: '',
-                points: 0,
-            })
+            id: Date.now() * -1,
+            type: selectedType,
+            content: '',
+            points: 0,
+        });
         setOpenModal(true);
     }, [selectedType, setOpenModal]);
 
     const onQuestionSubmit = useCallback(
         (question: Question) => {
-            if (!question.content || !question.points || !question.type || !eventData) return;
+            if (
+                !question.content ||
+                !question.points ||
+                !question.type ||
+                !eventData
+            )
+                return;
 
             if (question.id < 0) {
                 addQuestionQuery({
@@ -193,13 +200,16 @@ export default function EventDetailPage() {
         [eventData, addQuestionQuery, modifyQuestionQuery]
     );
 
-    const onQuestionDelete = useCallback((id: number) => {
-        if (id > 0) {
-            deleteQuestionQuery({ id });
-        }
-        setQuestions((prev) => prev.filter((q) => q.id !== id));
-    }, [deleteQuestionQuery, setQuestions]);
-    
+    const onQuestionDelete = useCallback(
+        (id: number) => {
+            if (id > 0) {
+                deleteQuestionQuery({ id });
+            }
+            setQuestions((prev) => prev.filter((q) => q.id !== id));
+        },
+        [deleteQuestionQuery, setQuestions]
+    );
+
     if (isEventError || isQuestionsError || !eventData || !questionsData) {
         return <ErrorMessage errorMessage={txt.events.notFound} />;
     }
@@ -264,9 +274,9 @@ export default function EventDetailPage() {
                     <QuestionRenderer
                         key={q.id}
                         question={q}
-                        onEdit={() => { 
+                        onEdit={() => {
                             setCurrentQuestion(q);
-                            setOpenModal(true)
+                            setOpenModal(true);
                         }}
                         onSubmit={() => {}}
                         isPastDeadline={isPastDeadline(eventData.deadline)}

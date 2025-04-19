@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { ActionButton } from '@/components/buttons';
 import { txt } from '@/nls/texts';

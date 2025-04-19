@@ -36,7 +36,9 @@ export default function EditCountryQuestion({
             ...question,
             content: content.trim(),
             points,
-            ...(selectedCountry !== null && { correct_answer: { country: selectedCountry }}),
+            ...(selectedCountry !== null && {
+                correct_answer: { country: selectedCountry },
+            }),
         });
         setIsSubmitting(false);
     };

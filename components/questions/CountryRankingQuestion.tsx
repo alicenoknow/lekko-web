@@ -3,15 +3,12 @@
 import { useState } from 'react';
 import { Question, Answer } from '@/app/api/typer';
 import { txt } from '@/nls/texts';
-import AthleteLabel from '../forms/AthleteLabel';
 import Points from './Points';
 import { ActionButton } from '../buttons';
 import { COUNTRIES } from '@/lib/Countries';
 import CountryLabel from '../forms/CountryLabel';
 import DropdownField from '../forms/DropdownField';
 import { AdminOnly } from '../auth/AdminOnly';
-import ActionIcon from '../buttons/ActionIcon';
-import { FaEdit } from 'react-icons/fa';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { isAdmin } from '@/lib/Admin';
 

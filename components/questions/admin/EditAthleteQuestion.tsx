@@ -37,7 +37,7 @@ export default function EditAthleteQuestion({
             ...(selectedAthleteId !== null && {
                 correct_answer: { athlete_id: selectedAthleteId },
             }),
-        });        
+        });
         setIsSubmitting(false);
     };
 

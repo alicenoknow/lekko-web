@@ -8,7 +8,6 @@ interface AdminOnlyProps {
 }
 
 export const AdminOnly = ({ children, fallback = null }: AdminOnlyProps) => {
-    return <>{children}</>; // TODO and TODO default fallback
     const { user, hydrated } = useUserStore();
 
     if (!hydrated) return null;

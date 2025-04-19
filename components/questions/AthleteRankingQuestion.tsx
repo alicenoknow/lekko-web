@@ -7,9 +7,7 @@ import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
 import AthleteLabel from '../forms/AthleteLabel';
 import Points from './Points';
 import { ActionButton } from '../buttons';
-import { FaEdit } from 'react-icons/fa';
 import { AdminOnly } from '../auth/AdminOnly';
-import ActionIcon from '../buttons/ActionIcon';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { isAdmin } from '@/lib/Admin';
 

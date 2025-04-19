@@ -40,13 +40,15 @@ export default function EditAthleteRankingQuestion({
             ...question,
             content: content.trim(),
             points,
-            ...((selectedAthleteId1 !== null && selectedAthleteId2 !== null && selectedAthleteId3 !== null) && {
-                correct_answer: {
+            ...(selectedAthleteId1 !== null &&
+                selectedAthleteId2 !== null &&
+                selectedAthleteId3 !== null && {
+                    correct_answer: {
                         athlete_id_one: selectedAthleteId1,
                         athlete_id_two: selectedAthleteId1,
                         athlete_id_three: selectedAthleteId1,
                     },
-            }),
+                }),
         });
         setIsSubmitting(false);
     };
