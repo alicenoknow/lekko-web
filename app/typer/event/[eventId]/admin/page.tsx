@@ -111,8 +111,9 @@ export default function EventDetailAdminPage() {
         eventQuery.isLoading ||
         questionsQuery.isLoading ||
         answersQuery.isLoading
-    )
+    ) {
         return <Spinner />;
+    }
 
     if (
         eventQuery.isError ||

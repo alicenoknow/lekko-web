@@ -48,7 +48,7 @@ function CreateEventPage() {
 
     return (
         <>
-            <h1 className='mt-12 mb-6 text-2xl font-bold uppercase'>
+            <h1 className='mb-6 mt-12 text-2xl font-bold uppercase'>
                 {txt.events.createHeader}
             </h1>
             <FormField
