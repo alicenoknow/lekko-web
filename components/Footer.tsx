@@ -19,7 +19,9 @@ const Footer = () => (
     <footer className='z-[3] flex flex-col items-center justify-center gap-2 border-t p-4 text-xs uppercase md:flex-row md:justify-evenly md:text-base'>
         <div className='text-center md:text-left'>
             <p>{founder.name}</p>
-            <p>© {currentYear} {license}</p>
+            <p>
+                © {currentYear} {license}
+            </p>
         </div>
 
         <div className='flex flex-col items-center md:ml-8 md:items-start'>

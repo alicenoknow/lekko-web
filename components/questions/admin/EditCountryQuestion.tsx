@@ -7,30 +7,30 @@ import CountryDropdown from '@/components/forms/CountryDropdown';
 import CorrectAnswer from '../common/CorrectAnswer';
 
 interface Props {
-  question: Question;
-  onAnswerChanged: (content: Answer['content']) => void;
+    question: Question;
+    onAnswerChanged: (content: Answer['content']) => void;
 }
 
 export default function EditCountryQuestion({
-  question,
-  onAnswerChanged,
+    question,
+    onAnswerChanged,
 }: Props) {
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(
-    question.correct_answer?.country || null
-  );
+    const [selectedCountry, setSelectedCountry] = useState<string | null>(
+        question.correct_answer?.country || null
+    );
 
-  useEffect(() => {
-    if (selectedCountry !== null) {
-      onAnswerChanged({ country: selectedCountry });
-    }
-  }, [selectedCountry, onAnswerChanged]);
+    useEffect(() => {
+        if (selectedCountry !== null) {
+            onAnswerChanged({ country: selectedCountry });
+        }
+    }, [selectedCountry, onAnswerChanged]);
 
-  return (
-    <CorrectAnswer>
-      <CountryDropdown
-        selected={selectedCountry}
-        onSelect={setSelectedCountry}
-      />
-    </CorrectAnswer>
-  );
+    return (
+        <CorrectAnswer>
+            <CountryDropdown
+                selected={selectedCountry}
+                onSelect={setSelectedCountry}
+            />
+        </CorrectAnswer>
+    );
 }

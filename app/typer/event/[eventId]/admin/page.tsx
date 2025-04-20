@@ -16,7 +16,12 @@ import QuestionTypeSelector, {
 } from '@/components/questions/admin/QuestionTypeSelector';
 import QuestionModal from '@/components/questions/admin/QuestionModal';
 import QuestionRenderer from '@/components/questions/QuestionRenderer';
-import { createQuestion, deleteQuestion, fetchQuestionsFromEvent, updateQuestion } from '@/app/api/questions';
+import {
+    createQuestion,
+    deleteQuestion,
+    fetchQuestionsFromEvent,
+    updateQuestion,
+} from '@/app/api/questions';
 import { fetchEventById, updateEvent } from '@/app/api/events';
 import { Question } from '@/types/questions';
 

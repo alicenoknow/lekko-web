@@ -48,7 +48,7 @@ export default function AthleteSearchFilter({
             { value: 'man', label: txt.forms.male },
             { value: 'woman', label: txt.forms.female },
         ],
-        [txt.forms]
+        []
     );
 
     return (

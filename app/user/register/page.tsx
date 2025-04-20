@@ -24,11 +24,13 @@ function RegisterForm() {
     const [registered, setRegistered] = useState(false);
     const [isRedirecting, setIsRedirecting] = useState(false);
 
-    const handleChange = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
-        setForm((prev) => ({ ...prev, [field]: e.target.value }));
-        setErrorMessage('');
-        setRegistered(false);
-    };
+    const handleChange =
+        (field: keyof typeof form) =>
+        (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            setForm((prev) => ({ ...prev, [field]: e.target.value }));
+            setErrorMessage('');
+            setRegistered(false);
+        };
 
     const isFormInvalid = useMemo(() => {
         const { username, email, password, passwordRepeat } = form;
@@ -43,7 +45,8 @@ function RegisterForm() {
     }, [form]);
 
     const { mutate: register, isPending: isSubmitting } = useMutation({
-        mutationFn: () => registerUser(form.email, form.username, form.password),
+        mutationFn: () =>
+            registerUser(form.email, form.username, form.password),
         onSuccess: () => setRegistered(true),
         onError: (err) => {
             console.error('Register error:', err.message);
@@ -63,10 +66,17 @@ function RegisterForm() {
     }, [router]);
 
     const renderError = () => {
-        if (form.password && form.passwordRepeat && form.password !== form.passwordRepeat) {
-            return <ErrorMessage errorMessage={txt.register.passwordMismatch} />;
+        if (
+            form.password &&
+            form.passwordRepeat &&
+            form.password !== form.passwordRepeat
+        ) {
+            return (
+                <ErrorMessage errorMessage={txt.register.passwordMismatch} />
+            );
         }
-        if (isFormInvalid) return <ErrorMessage errorMessage={txt.forms.fillAllInfo} />;
+        if (isFormInvalid)
+            return <ErrorMessage errorMessage={txt.forms.fillAllInfo} />;
         if (errorMessage) return <ErrorMessage errorMessage={errorMessage} />;
         return null;
     };

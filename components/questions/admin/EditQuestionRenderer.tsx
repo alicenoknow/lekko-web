@@ -14,7 +14,6 @@ interface Props {
     onDelete: (questionId: number) => void;
 }
 
-
 export default function EditQuestionRenderer({
     question,
     onSubmit,
@@ -23,8 +22,9 @@ export default function EditQuestionRenderer({
     const [content, setContent] = useState(question.content);
     const [points, setPoints] = useState(question.points);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [correctAnswerPayload, setCorrectAnswerPayload] = useState<Answer['content']>();
-    
+    const [correctAnswerPayload, setCorrectAnswerPayload] =
+        useState<Answer['content']>();
+
     const isFormInvalid = useMemo(
         () => !content.trim() || points < 1,
         [content, points]
@@ -42,7 +42,14 @@ export default function EditQuestionRenderer({
             }),
         });
         setIsSubmitting(false);
-    }, [isFormInvalid, content, points, correctAnswerPayload, question, onSubmit]);
+    }, [
+        isFormInvalid,
+        content,
+        points,
+        correctAnswerPayload,
+        question,
+        onSubmit,
+    ]);
 
     const handleDelete = useCallback(() => {
         setIsSubmitting(true);
