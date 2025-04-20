@@ -22,7 +22,6 @@ function RegisterForm() {
 
     const [errorMessage, setErrorMessage] = useState('');
     const [registered, setRegistered] = useState(false);
-    const [isRedirecting, setIsRedirecting] = useState(false);
 
     const handleChange =
         (field: keyof typeof form) =>
@@ -61,7 +60,6 @@ function RegisterForm() {
     }, [register, isFormInvalid]);
 
     const redirectToLogin = useCallback(() => {
-        setIsRedirecting(true);
         router.replace('/user/login');
     }, [router]);
 
@@ -134,7 +132,6 @@ function RegisterForm() {
             <ActionButton
                 label={txt.register.hasAccountText}
                 onClick={redirectToLogin}
-                loading={isRedirecting}
             />
         </div>
     );

@@ -17,7 +17,6 @@ import AddEvent from '@/components/event/AddEvent';
 export default function EventsPage() {
     const router = useRouter();
     const [page, setPage] = useState(1);
-    const [isRedirecting, setIsRedirecting] = useState(false);
     const { token } = usePrivateUserContext();
 
     const {
@@ -40,17 +39,11 @@ export default function EventsPage() {
     });
 
     const handleOpen = useCallback(
-        (id: number) => {
-            setIsRedirecting(true);
-            router.push(`/typer/event/${id}`);
-        },
+        (id: number) => router.push(`/typer/event/${id}`),
         [router]
     );
 
-    const handleAdd = useCallback(() => {
-        setIsRedirecting(true);
-        router.push('/typer/new');
-    }, [setIsRedirecting, router]);
+    const handleAdd = useCallback(() => router.push('/typer/new'), [router]);
 
     if (isLoading || isDeleting) return <Spinner />;
     if (isError || !events || !events.data || events.data.length === 0) {
@@ -62,10 +55,7 @@ export default function EventsPage() {
             <div className='mb-4 flex items-center justify-between'>
                 <span className='text-3xl font-bold'>{txt.events.title}</span>
                 <AdminOnly>
-                    <AddEvent
-                        isLoading={isRedirecting}
-                        onEventAdd={handleAdd}
-                    />
+                    <AddEvent onEventAdd={handleAdd} />
                 </AdminOnly>
             </div>
             {events.data.map((event) => (
@@ -75,7 +65,6 @@ export default function EventsPage() {
                     onEdit={() => handleOpen(event.id)}
                     onDelete={() => deleteEventMutation(event.id)}
                     isDeleting={isDeleting}
-                    isRedirecting={isRedirecting}
                 />
             ))}
             {events?.pagination_info && (

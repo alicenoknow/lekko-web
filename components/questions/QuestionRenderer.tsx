@@ -13,7 +13,7 @@ import { Question } from '@/types/questions';
 
 interface Props {
     question: Question;
-    answer: Answer;
+    answer: Answer | undefined;
     isPastDeadline: boolean;
     onSubmit: (answer: Answer) => void;
     onEdit?: () => void;
@@ -30,13 +30,15 @@ export default function QuestionRenderer({
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isModified, setIsModified] = useState(false);
-    const [answerPayload, setAnswerPayload] = useState<Answer['content']>({});
+    const [answerPayload, setAnswerPayload] = useState<
+        Answer['content'] | undefined
+    >(answer?.content);
 
     const handleSubmit = useCallback(() => {
         if (!answerPayload) return;
         setIsSubmitting(true);
         onSubmit({
-            user_id: user.sub,
+            id: answer?.id ?? Date.now() * -1,
             question_id: question.id,
             content: answerPayload,
         });
@@ -76,7 +78,7 @@ export default function QuestionRenderer({
             <QuestionHeader
                 content={question.content}
                 maxPoints={question.points}
-                points={answer.points}
+                points={answer?.points}
             />
             {renderQuestionComponent()}
             <QuestionFooterButtons

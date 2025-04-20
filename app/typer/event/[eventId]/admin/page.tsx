@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
@@ -24,11 +24,13 @@ import {
 } from '@/app/api/questions';
 import { fetchEventById, updateEvent } from '@/app/api/events';
 import { Question } from '@/types/questions';
+import { createAnswer, fetchAnswers, updateAnswer } from '@/app/api/answers';
+import { Answer } from '@/types/answers';
 
 export default function EventDetailPage() {
     const { eventId: eventIdParam } = useParams<{ eventId: string }>();
     const eventId = parseInt(eventIdParam, 10);
-    const { token } = usePrivateUserContext();
+    const { token, user } = usePrivateUserContext();
     const [page, setPage] = useState(1);
     const [isOpenModal, setOpenModal] = useState(false);
     const [questions, setQuestions] = useState<Question[]>([]);
@@ -45,6 +47,7 @@ export default function EventDetailPage() {
         description: '',
         deadline: '',
     });
+    const questionsIds = useMemo(() => questions.map(q => q.id), [questions]);
 
     const {
         data: eventData,
@@ -64,6 +67,16 @@ export default function EventDetailPage() {
         queryKey: ['questions', eventId, page],
         queryFn: () => fetchQuestionsFromEvent(token, eventId, page),
         enabled: !!token && !!eventId,
+    });
+
+    const {
+        data: answersData,
+        isLoading: isAnswersLoading,
+        isError: isAnswersError,
+    } = useQuery({
+        queryKey: ['answers', questionsIds],
+        queryFn: () => fetchAnswers(token, questionsIds),
+        enabled: !!token && questionsIds.length > 0,
     });
 
     const { mutate: updateEventQuery, isPending: isUpdatingEvent } =
@@ -139,6 +152,41 @@ export default function EventDetailPage() {
                 return deleteQuestion(token, id);
             },
         });
+    
+    const { mutate: addAnswerQuery, isPending: isUpdatingNewAnswer } =
+            useMutation({
+                mutationFn: ({ questionId, content }: {
+                    questionId: number;
+                    content: { [key: string]: any; };
+                }) => {
+                    return createAnswer(token, questionId, user.sub, content);
+                }
+            });
+    
+        const { mutate: modifyAnswerQuery, isPending: isUpdatingAnswer } =
+            useMutation({
+                mutationFn: ({ id, questionId, content }: {
+                    id: number;
+                    questionId: number;
+                    content: { [key: string]: any; };
+                }) => {
+                    return updateAnswer(token, id, questionId, user.sub, content);
+                }
+            });
+    
+        const onAnswerSubmit = useCallback(
+            (answer: Answer) => {
+                if (!answer.content || !answer.question_id)
+                    return;
+    
+                if (answer.id < 0) {
+                    addAnswerQuery({ questionId: answer.question_id, content: answer.content });
+                } else {
+                    modifyAnswerQuery({ id: answer.id, questionId: answer.question_id, content: answer.content });
+                }
+            },
+            [eventData, addAnswerQuery, modifyAnswerQuery]
+        );
 
     useEffect(() => {
         if (eventData) {
@@ -209,11 +257,11 @@ export default function EventDetailPage() {
         [deleteQuestionQuery, setQuestions]
     );
 
-    if (isEventError || isQuestionsError || !eventData || !questionsData) {
+    if (isEventError || isQuestionsError || isAnswersError || !eventData || !questionsData) {
         return <ErrorMessage errorMessage={txt.events.notFound} />;
     }
 
-    if (isEventLoading || isQuestionsLoading) return <Spinner />;
+    if (isEventLoading || isQuestionsLoading || isAnswersLoading) return <Spinner />;
 
     return (
         <div className='flex min-h-screen justify-center'>
@@ -273,16 +321,12 @@ export default function EventDetailPage() {
                     <QuestionRenderer
                         key={q.id}
                         question={q}
-                        answer={{
-                            // TODO
-                            question_id: q.id,
-                            content: null,
-                        }}
+                        answer={answersData?.data.find(a => a.question_id == q.id)}
                         onEdit={() => {
                             setCurrentQuestion(q);
                             setOpenModal(true);
                         }}
-                        onSubmit={() => {}}
+                        onSubmit={onAnswerSubmit}
                         isPastDeadline={isPastDeadline(eventData.deadline)}
                     />
                 ))}

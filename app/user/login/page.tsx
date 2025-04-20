@@ -16,7 +16,6 @@ function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [isRedirecting, setIsRedirecting] = useState(false);
 
     const router = useRouter();
     const { setUserFromToken } = useUserStore();
@@ -40,7 +39,6 @@ function LoginPage() {
     }, [login, isFormInvalid]);
 
     const handleRegisterRedirect = useCallback(() => {
-        setIsRedirecting(true);
         router.replace('/user/register');
     }, [router]);
 
@@ -79,7 +77,6 @@ function LoginPage() {
             />
             <ActionButton
                 label={txt.login.noAccountText}
-                loading={isRedirecting}
                 onClick={handleRegisterRedirect}
             />
         </div>

@@ -11,16 +11,9 @@ interface Props {
     onEdit: () => void;
     onDelete: () => void;
     isDeleting: boolean;
-    isRedirecting: boolean;
 }
 
-function EventCard({
-    event,
-    onEdit,
-    onDelete,
-    isDeleting,
-    isRedirecting,
-}: Props) {
+function EventCard({ event, onEdit, onDelete, isDeleting }: Props) {
     return (
         <div className='flex flex-col rounded-md border bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between'>
             <div className='flex flex-col text-left'>
@@ -34,12 +27,7 @@ function EventCard({
                 </p>
             </div>
             <div className='mt-4 flex items-center gap-4 md:ml-6 md:mt-0'>
-                <ActionIcon
-                    label={<FaEdit size={30} />}
-                    onClick={onEdit}
-                    loading={isRedirecting}
-                    disabled={isRedirecting}
-                />
+                <ActionIcon label={<FaEdit size={30} />} onClick={onEdit} />
                 <AdminOnly>
                     <ActionIcon
                         label={<TiDelete size={30} />}

@@ -11,7 +11,7 @@ import { Question } from '@/types/questions';
 
 interface Props {
     question: Question;
-    answer: Answer;
+    answer: Answer | undefined;
     isPastDeadline: boolean;
     onAnswerChanged: (content: Answer['content']) => void;
 }
@@ -24,7 +24,7 @@ export default function CountryQuestion({
 }: Props) {
     const { user } = usePrivateUserContext();
     const [selectedCountry, setSelectedCountry] = useState<string | null>(
-        answer.content?.country || null
+        answer?.content?.country || null
     );
 
     useEffect(() => {

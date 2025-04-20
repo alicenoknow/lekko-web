@@ -3,11 +3,10 @@ import { FaPlus } from 'react-icons/fa';
 import ActionButton from '../buttons/ActionButton';
 
 interface Props {
-    isLoading: boolean;
     onEventAdd: () => void;
 }
 
-export default function AddEvent({ isLoading, onEventAdd }: Props) {
+export default function AddEvent({ onEventAdd }: Props) {
     return (
         <ActionButton
             label={
@@ -18,8 +17,6 @@ export default function AddEvent({ isLoading, onEventAdd }: Props) {
                     </span>
                 </span>
             }
-            loading={isLoading}
-            disabled={isLoading}
             onClick={onEventAdd}
         />
     );

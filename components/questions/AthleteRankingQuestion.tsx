@@ -13,7 +13,7 @@ import { Question } from '@/types/questions';
 
 interface Props {
     question: Question;
-    answer: Answer;
+    answer: Answer | undefined;
     isPastDeadline: boolean;
     onAnswerChanged: (content: Answer['content']) => void; // TODO typing
 }
