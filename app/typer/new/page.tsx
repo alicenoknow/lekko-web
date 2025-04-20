@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { txt } from '@/nls/texts';
 import FormField from '@/components/forms/FormField';
-import { ActionButton } from '@/components/buttons';
+import ActionButton from '@/components/buttons/ActionButton';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
 import { createEvent } from '@/app/api/events';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';

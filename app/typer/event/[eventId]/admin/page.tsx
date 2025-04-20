@@ -8,7 +8,7 @@ import Spinner from '@/components/Spinner';
 import { txt } from '@/nls/texts';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
 import Pagination from '@/components/typer/Pagination';
-import { ActionButton } from '@/components/buttons';
+import ActionButton from '@/components/buttons/ActionButton';
 import FormField from '@/components/forms/FormField';
 import { toLocalDatetimeInputFormat } from '@/lib/dateUtils';
 import QuestionTypeSelector, {

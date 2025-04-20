@@ -12,7 +12,7 @@ import { AdminOnly } from '@/components/auth/AdminOnly';
 import ActionIcon from '@/components/buttons/ActionIcon';
 import { FaEdit, FaPlus } from 'react-icons/fa';
 import { TiDelete } from 'react-icons/ti';
-import { ActionButton } from '@/components/buttons';
+import ActionButton from '@/components/buttons/ActionButton';
 import { useRouter } from 'next/navigation';
 import { queryClient } from '@/context/QueryProvider';
 
