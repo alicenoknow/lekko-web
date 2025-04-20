@@ -1,6 +1,6 @@
 'use client';
 
-import { PaginationInfo } from '@/app/api/typer';
+import { PaginationInfo } from '@/app/api/events';
 import { txt } from '@/nls/texts';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 

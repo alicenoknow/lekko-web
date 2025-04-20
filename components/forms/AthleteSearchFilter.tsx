@@ -1,5 +1,5 @@
-import { fetchDisciplines } from '@/app/api/typer';
-import { COUNTRIES } from '@/lib/Countries';
+import { fetchDisciplines } from '@/app/api/events';
+import { COUNTRIES } from '@/lib/countries';
 import { txt } from '@/nls/texts';
 import { useQuery } from '@tanstack/react-query';
 import CountryLabel from './CountryLabel';

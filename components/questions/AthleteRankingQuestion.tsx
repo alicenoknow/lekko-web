@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Question, Answer } from '@/app/api/typer';
+import { Question, Answer } from '@/app/api/events';
 import AthleteSearchBar from '../forms/AthleteSearchBar';
 import AthleteLabel from '../forms/AthleteLabel';
-import { RANKING, getAthleteRankingKey } from '@/lib/Ranking';
+import { RANKING, getAthleteRankingKey } from '@/lib/ranking';
 import { txt } from '@/nls/texts';
 import CorrectAnswer from './common/CorrectAnswer';
-import { isAdmin } from '@/lib/Admin';
+import { isAdmin } from '@/lib/admin';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 
 interface Props {

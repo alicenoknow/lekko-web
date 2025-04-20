@@ -4,11 +4,6 @@ import { useCallback, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
-import {
-    fetchEventById,
-    fetchQuestionsFromEvent,
-    Question,
-} from '@/app/api/typer';
 import { AdminOnly } from '@/components/auth/AdminOnly';
 import ActionIcon from '@/components/buttons/ActionIcon';
 import Spinner from '@/components/Spinner';
@@ -17,6 +12,9 @@ import { FaEdit } from 'react-icons/fa';
 import QuestionRenderer from '@/components/questions/QuestionRenderer';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
 import Pagination from '@/components/typer/Pagination';
+import { fetchEventById } from '@/app/api/events';
+import { fetchQuestionsFromEvent } from '@/app/api/questions';
+import { Question } from '@/types/questions';
 
 export default function EventDetailPage() {
     const { eventId: eventIdParam } = useParams<{ eventId: string }>();

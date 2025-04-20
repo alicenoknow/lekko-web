@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Question, Answer } from '@/app/api/typer';
+import { Question, Answer } from '@/app/api/events';
 import { txt } from '@/nls/texts';
 import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
 import AthleteLabel from '../forms/AthleteLabel';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
-import { isAdmin } from '@/lib/Admin';
+import { isAdmin } from '@/lib/admin';
 import CorrectAnswer from './common/CorrectAnswer';
 
 interface Props {

@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Question, Answer } from '@/app/api/typer';
+import { Question, Answer } from '@/app/api/events';
 import { txt } from '@/nls/texts';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
-import { isAdmin } from '@/lib/Admin';
+import { isAdmin } from '@/lib/admin';
 import CountryDropdown from '../forms/CountryDropdown';
 import CorrectAnswer from './common/CorrectAnswer';
 

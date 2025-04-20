@@ -1,4 +1,4 @@
-import { COUNTRIES } from '@/lib/Countries';
+import { COUNTRIES } from '@/lib/countries';
 import CountryLabel from './CountryLabel';
 import DropdownField from './DropdownField';
 import { useMemo } from 'react';

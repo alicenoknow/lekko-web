@@ -1,4 +1,4 @@
-import { COUNTRIES } from '@/lib/Countries';
+import { COUNTRIES } from '@/lib/countries';
 import Flag from 'react-world-flags';
 
 interface Props {

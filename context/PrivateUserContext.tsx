@@ -1,4 +1,4 @@
-import { User } from '@/types/User';
+import { User } from '@/types/user';
 import { createContext, useContext } from 'react';
 
 interface PrivateUserContextValue {

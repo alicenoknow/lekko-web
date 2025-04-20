@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchAthletes } from '@/app/api/typer';
+import { fetchAthletes } from '@/app/api/events';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import FormField from '@/components/forms/FormField';
 import { txt } from '@/nls/texts';

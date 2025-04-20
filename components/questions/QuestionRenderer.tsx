@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
-import { Question, Answer } from '@/app/api/typer';
+import { Question, Answer } from '@/app/api/events';
 import QuestionHeader from './common/QuestionHeader';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
 import AthleteQuestion from './AthleteQuestion';

@@ -7,8 +7,8 @@ import { ErrorMessage } from '@/components/error/ErrorMessage';
 import { txt } from '@/nls/texts';
 import { ActionButton } from '@/components/buttons';
 import { useUserStore } from '@/store/user';
-import { LoginData, loginUser } from '@/app/api/auth';
 import FormField from '@/components/forms/FormField';
+import { LoginData, loginUser } from '@/app/api/auth';
 
 function LoginPage() {
     const [email, setEmail] = useState('');

@@ -2,7 +2,7 @@ import EditAthleteQuestion from './EditAthleteQuestion';
 import EditAthleteRankingQuestion from './EditAthleteRankingQuestion';
 import EditCountryQuestion from './EditCountryQuestion';
 import EditCountryRankingQuestion from './EditCountryRankingQuestion';
-import { Question } from '@/app/api/typer';
+import { Question } from '@/app/api/events';
 
 interface Props {
     question: Question;

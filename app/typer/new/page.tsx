@@ -7,7 +7,7 @@ import { txt } from '@/nls/texts';
 import FormField from '@/components/forms/FormField';
 import { ActionButton } from '@/components/buttons';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
-import { createEvent } from '@/app/api/typer';
+import { createEvent } from '@/app/api/events';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { AdminOnly } from '@/components/auth/AdminOnly';
 

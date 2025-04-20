@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Question } from '@/app/api/typer';
+import { Question } from '@/app/api/events';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
 import EditQuestionHeader from './common/EditQuestionHeader';
 import CountryDropdown from '@/components/forms/CountryDropdown';

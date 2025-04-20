@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { jwtDecode } from 'jwt-decode';
-import { User } from '@/types/User';
+import { User } from '@/types/user';
 
 interface UserStore {
   user: User | null;

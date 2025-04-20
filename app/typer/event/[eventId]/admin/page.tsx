@@ -4,27 +4,21 @@ import { useCallback, useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
-import {
-    fetchEventById,
-    fetchQuestionsFromEvent,
-    updateEvent,
-    Question,
-    createQuestion,
-    updateQuestion,
-    deleteQuestion,
-} from '@/app/api/typer';
 import Spinner from '@/components/Spinner';
 import { txt } from '@/nls/texts';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
 import Pagination from '@/components/typer/Pagination';
 import { ActionButton } from '@/components/buttons';
 import FormField from '@/components/forms/FormField';
-import { toLocalDatetimeInputFormat } from '@/lib/DateUtils';
+import { toLocalDatetimeInputFormat } from '@/lib/dateUtils';
 import QuestionTypeSelector, {
     QuestionType,
 } from '@/components/questions/admin/QuestionTypeSelector';
 import QuestionModal from '@/components/questions/admin/QuestionModal';
 import QuestionRenderer from '@/components/questions/QuestionRenderer';
+import { createQuestion, deleteQuestion, fetchQuestionsFromEvent, updateQuestion } from '@/app/api/questions';
+import { fetchEventById, updateEvent } from '@/app/api/events';
+import { Question } from '@/types/questions';
 
 export default function EventDetailPage() {
     const { eventId: eventIdParam } = useParams<{ eventId: string }>();

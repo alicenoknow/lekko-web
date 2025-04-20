@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { fetchAthleteById } from '@/app/api/typer';
+import { fetchAthleteById } from '@/app/api/events';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import CountryLabel from './CountryLabel';
 

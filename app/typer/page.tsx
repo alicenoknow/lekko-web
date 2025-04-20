@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
-import { deleteEvent, fetchEvents } from '@/app/api/typer';
+import { deleteEvent, fetchEvents } from '@/app/api/events';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import Spinner from '@/components/Spinner';
 import { txt } from '@/nls/texts';
@@ -14,7 +14,7 @@ import { FaEdit, FaPlus } from 'react-icons/fa';
 import { TiDelete } from 'react-icons/ti';
 import { ActionButton } from '@/components/buttons';
 import { useRouter } from 'next/navigation';
-import { queryClient } from '@/lib/QueryProvider';
+import { queryClient } from '@/context/QueryProvider';
 
 export default function EventsPage() {
     const router = useRouter();

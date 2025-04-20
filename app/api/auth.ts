@@ -1,15 +1,16 @@
-import axios, { AxiosResponse } from 'axios';
-import { ApiErrorType, handleError, isApiError } from './errors';
+import axios from 'axios';
+import { EmptyResponse, handleError, isApiError } from './common';
+import { ApiErrorType } from '@/types/errors';
 
-export type RegisterData = {};
-export type RegisterResponse = RegisterData | ApiErrorType;
+type RegisterData = EmptyResponse;
+type RegisterResponse = RegisterData | ApiErrorType;
 
 export async function registerUser(
     email: string,
     username: string,
     password: string
-): Promise<AxiosResponse<RegisterData>> {
-    const res = await axios.post(
+): Promise<RegisterData> {
+    const res = await axios.post<RegisterResponse>(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/register`,
         {
             email,
@@ -25,7 +26,7 @@ export async function registerUser(
 }
 
 export type LoginData = { token: string };
-export type LoginResponse = LoginData | ApiErrorType;
+type LoginResponse = LoginData | ApiErrorType;
 
 export async function loginUser(
     email: string,
