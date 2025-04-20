@@ -44,11 +44,6 @@ export default function EventDetailPage() {
     });
 
     const isPastDeadline = (deadline: string) => {
-        console.warn(
-            'AAA',
-            new Date(deadline),
-            new Date(deadline) < new Date()
-        );
         return new Date(deadline) < new Date();
     };
 

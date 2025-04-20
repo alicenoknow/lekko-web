@@ -36,7 +36,6 @@ export default function AthleteQuestion({
 
     const showCorrectAnswer =
         question.correct_answer && (isPastDeadline || isAdmin(user));
-    console.warn(question.correct_answer);
     return (
         <>
             {isPastDeadline ? (

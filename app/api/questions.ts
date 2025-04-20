@@ -53,8 +53,6 @@ export async function updateQuestion(
     points?: number,
     correct_answer?: any
 ): Promise<UpdateQuestionResponse> {
-    console.warn(content, type, event_id, points, correct_answer);
-
     const res = await axios.put(
         `${API_URL}/api/v1/questions/${id}`,
         { content, type, event_id, points, correct_answer },
