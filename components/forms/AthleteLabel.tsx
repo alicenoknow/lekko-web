@@ -1,9 +1,9 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { fetchAthleteById } from '@/app/api/events';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import CountryLabel from './CountryLabel';
+import { fetchAthleteById } from '@/app/api/athletes';
 
 interface Props {
     selected: number | null;
@@ -25,7 +25,7 @@ export default function AthleteLabel({ label, selected, emoji }: Props) {
     return (
         <div className='my-2 flex flex-col gap-2'>
             {label && (
-                <p className='text-sm font-bold uppercase text-primaryDark md:text-lg'>
+                <p className='md:text-md text-sm font-bold uppercase text-primaryDark'>
                     {label}:
                 </p>
             )}

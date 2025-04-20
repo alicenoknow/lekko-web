@@ -42,7 +42,7 @@ export default function DropdownField({
     return (
         <div className='flex w-full flex-col gap-1'>
             {label && (
-                <span className='mr-12 text-sm font-bold uppercase text-primaryDark md:text-lg'>
+                <span className='md:text-md mr-12 text-sm font-bold uppercase text-primaryDark'>
                     {label}
                 </span>
             )}

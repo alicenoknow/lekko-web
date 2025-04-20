@@ -1,10 +1,10 @@
-import { fetchDisciplines } from '@/app/api/events';
 import { COUNTRIES } from '@/lib/countries';
 import { txt } from '@/nls/texts';
 import { useQuery } from '@tanstack/react-query';
 import CountryLabel from './CountryLabel';
 import DropdownPillFilter from './DropdownPillFilter';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { fetchDisciplines } from '@/app/api/disciplines';
 
 interface Props {
     disciplines: string[];

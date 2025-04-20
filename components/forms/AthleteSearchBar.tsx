@@ -2,12 +2,12 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchAthletes } from '@/app/api/events';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import FormField from '@/components/forms/FormField';
 import { txt } from '@/nls/texts';
 import AthleteLabel from './AthleteLabel';
 import AthleteSearchFilter from './AthleteSearchFilter';
+import { fetchAthletes } from '@/app/api/athletes';
 
 interface Props {
     selected: number | null;
@@ -49,7 +49,7 @@ export default function AthleteSearchBar({
         <div className='relative flex w-full flex-row justify-center gap-2'>
             <div className='w-full'>
                 {label && (
-                    <p className='mb-2 text-sm font-bold uppercase text-primaryDark md:text-lg'>
+                    <p className='md:text-md mb-2 text-sm font-bold uppercase text-primaryDark'>
                         {label}:
                     </p>
                 )}
