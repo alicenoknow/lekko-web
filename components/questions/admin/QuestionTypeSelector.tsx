@@ -44,7 +44,7 @@ function QuestionTypeSelector({ selected, setSelected, onAdd }: Props) {
                 label={
                     <span className='flex items-center gap-2'>
                         <FaPlus />
-                        <span className='hidden text-lg md:inline'>
+                        <span className='text-lg'>
                             {txt.questions.add}
                         </span>
                     </span>

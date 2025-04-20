@@ -15,7 +15,7 @@ export async function fetchQuestionsFromEvent(
     page: number = 1
 ): Promise<Questions> {
     const res = await axios.get(
-        `${API_URL}/api/v1/questions?event_id=${id}&page=${page}`,
+        `${API_URL}/api/v1/questions?event_id=${id}&page_no=${page}`,
         getAuthConfig(token)
     );
     if (isApiError(res.data)) throw handleError(res.data);

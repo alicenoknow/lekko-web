@@ -84,5 +84,7 @@
     "typerTitleText": "Wydarzenia",
     "editAnswer": "Edytuj",
     "addAnswer": "Wypełnij",
-    "searchText": "Szukaj"
+    "searchText": "Szukaj",
+    "loading": "Ładowanie...",
+    "loadMore": "Więcej"
 }

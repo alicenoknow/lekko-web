@@ -32,6 +32,7 @@ export default function AthleteSearchFilter({
         queryKey: ['disciplines'],
         queryFn: () => fetchDisciplines(token),
         enabled: !!token,
+        staleTime: 60 * 60 * 1000,
     });
 
     const countryOptions = useMemo(

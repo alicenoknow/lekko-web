@@ -9,12 +9,14 @@ export function useEventDetails(token: string, eventId: number, page: number) {
         queryKey: ['event', eventId],
         queryFn: () => fetchEventById(token, eventId),
         enabled: !!token && !!eventId,
+        staleTime: 60 * 60 * 1000,
     });
 
     const questionsQuery = useQuery({
         queryKey: ['questions', eventId, page],
         queryFn: () => fetchQuestionsFromEvent(token, eventId, page),
         enabled: !!token && !!eventId,
+        staleTime: 60 * 60 * 1000,
     });
 
     const questionIds = useMemo(
@@ -26,6 +28,7 @@ export function useEventDetails(token: string, eventId: number, page: number) {
         queryKey: ['answers', questionIds],
         queryFn: () => fetchAnswers(token, questionIds),
         enabled: !!token && questionIds.length > 0,
+        staleTime: 60 * 60 * 1000,
     });
 
     const isPastDeadline = useMemo(() => {

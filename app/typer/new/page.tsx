@@ -10,6 +10,7 @@ import { ErrorMessage } from '@/components/error/ErrorMessage';
 import { createEvent } from '@/app/api/events';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { AdminOnly } from '@/components/auth/AdminOnly';
+import { queryClient } from '@/context/QueryProvider';
 
 function CreateEventPage() {
     const router = useRouter();
@@ -34,6 +35,7 @@ function CreateEventPage() {
         },
         onSuccess: (data) => {
             router.replace(`/typer/event/${data.id}`);
+            queryClient.invalidateQueries({ queryKey: ['events'] });
         },
         onError: (err) => {
             console.error('Create event error:', err.message);
@@ -48,7 +50,7 @@ function CreateEventPage() {
 
     return (
         <>
-            <h1 className='mb-6 mt-12 text-2xl font-bold uppercase'>
+            <h1 className='my-6 text-2xl font-bold uppercase'>
                 {txt.events.createHeader}
             </h1>
             <FormField

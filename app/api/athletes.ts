@@ -27,7 +27,7 @@ export async function fetchAthletes(
 ): Promise<Athletes> {
     const params: Record<string, any> = {
         search,
-        page,
+        page_no: page,
     };
 
     if (discipline_ids && discipline_ids.length > 0) {

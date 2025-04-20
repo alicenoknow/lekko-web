@@ -13,7 +13,7 @@ export default function EventHeader({ event }: { event: EventDetail }) {
     }, [event, router]);
 
     return (
-        <div className='m-auto mt-12 flex flex-row justify-between'>
+        <div className='m-auto mt-6 flex flex-row justify-between'>
             <div className='space-y-2'>
                 <h1 className='text-3xl font-bold'>{event.name}</h1>
                 {event.description && <p>{event.description}</p>}

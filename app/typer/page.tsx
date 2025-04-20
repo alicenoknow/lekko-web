@@ -28,6 +28,7 @@ export default function EventsPage() {
         queryFn: () => fetchEvents(token, page),
         enabled: !!token,
         placeholderData: keepPreviousData,
+        staleTime: 10 * 60 * 1000,
     });
 
     const { mutate: deleteEventMutation, isPending: isDeleting } = useMutation({
@@ -52,7 +53,7 @@ export default function EventsPage() {
 
     return (
         <>
-            <div className='mb-4 mt-12 flex items-center justify-between'>
+            <div className='mb-4 mt-6 flex items-center justify-between'>
                 <span className='text-3xl font-bold'>{txt.events.title}</span>
                 <AdminOnly>
                     <AddEvent onEventAdd={handleAdd} />

@@ -21,6 +21,7 @@ function AthleteLabel({ selected, label, emoji }: Props) {
         queryKey: ['athlete', selected ?? 'none'],
         queryFn: () => fetchAthleteById(selected!, token),
         enabled: shouldFetch,
+        staleTime: 60 * 60 * 1000,
     });
 
     if (!shouldFetch || !athlete) return null;

@@ -126,7 +126,7 @@ export default function EventDetailAdminPage() {
 
     return (
         <>
-            <h1 className='mt-12 text-xl font-bold md:text-3xl'>
+            <h1 className='mt-6 text-xl font-bold md:text-3xl'>
                 {txt.events.edit}
             </h1>
             <FormField

@@ -15,7 +15,7 @@ export async function fetchEvents(
     page = 1
 ): Promise<EventsData> {
     const res = await axios.get(
-        `${API_URL}/api/v1/events?page=${page}`,
+        `${API_URL}/api/v1/events?page_no=${page}`,
         getAuthConfig(token)
     );
     if (isApiError(res.data)) throw handleError(res.data);
