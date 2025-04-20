@@ -1,4 +1,4 @@
-import { ActionButton } from '@/components/buttons';
+import ActionButton from '@/components/buttons/ActionButton';
 import { txt } from '@/nls/texts';
 
 interface Props {

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/user';
-import { ActionButton } from '@/components/buttons';
+import ActionButton from '@/components/buttons/ActionButton';
 import { txt } from '@/nls/texts';
 import { PrivateContent } from '@/components/auth/PrivateContent';
 import Spinner from '@/components/Spinner';

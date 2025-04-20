@@ -6,9 +6,9 @@ import {
     DialogPanel,
     DialogTitle,
 } from '@headlessui/react';
-import { Question } from '@/app/api/events';
 import EditQuestionRenderer from './EditQuestionRenderer';
 import { txt } from '@/nls/texts';
+import { Question } from '@/types/questions';
 
 interface Props {
     question: Question;

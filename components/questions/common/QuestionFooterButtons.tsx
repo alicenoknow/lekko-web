@@ -1,6 +1,6 @@
 import { txt } from '@/nls/texts';
 import { AdminOnly } from '../../auth/AdminOnly';
-import { ActionButton } from '../../buttons';
+import ActionButton from '../../buttons/ActionButton';
 
 interface Props {
     isSubmitting: boolean;

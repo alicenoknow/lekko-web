@@ -2,13 +2,14 @@
 
 import { useCallback, useState } from 'react';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
-import { Question, Answer } from '@/app/api/events';
 import QuestionHeader from './common/QuestionHeader';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
 import AthleteQuestion from './AthleteQuestion';
 import AthleteRankingQuestion from './AthleteRankingQuestion';
 import CountryQuestion from './CountryQuestion';
 import CountryRankingQuestion from './CountryRankingQuestion';
+import { Answer } from '@/types/answers';
+import { Question } from '@/types/questions';
 
 interface Props {
     question: Question;

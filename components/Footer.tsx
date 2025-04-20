@@ -1,57 +1,44 @@
-import React, { memo } from 'react';
+'use client';
+
+import React from 'react';
 import { FaGithub } from 'react-icons/fa';
 
-// TODO extract from code
-const currentYear = '2025';
+const currentYear = new Date().getFullYear();
+const license = 'Wszystkie prawa zastrzeżone';
+
 const founder = {
     name: 'Krystian Wieteska',
 };
+
 const creators = [
     { name: 'Alicja Niewiadomska', github: 'https://github.com/alicenoknow' },
     { name: 'Filip Juza', github: 'https://github.com/filipio' },
 ];
-// TODO read how it works
-const license = '\t\t Wszystkie prawa zastrzeżone';
 
-const Footer = () => {
-    const OwnerFooter = memo(function OwnerFooter() {
-        return (
-            <div>
-                <p>{founder.name}</p>
-                <p>
-                    © {currentYear} {license}
-                </p>
-            </div>
-        );
-    });
+const Footer = () => (
+    <footer className='z-[3] flex flex-col items-center justify-center gap-2 border-t p-4 text-xs uppercase md:flex-row md:justify-evenly md:text-base'>
+        <div className='text-center md:text-left'>
+            <p>{founder.name}</p>
+            <p>© {currentYear} {license}</p>
+        </div>
 
-    const CreatorsFooter = memo(function CreatorsFooter() {
-        return (
-            <div className='ml-8 flex'>
-                <ul>
-                    {creators.map((creator, index) => (
-                        <li key={index}>
-                            <a
-                                href={creator.github}
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                className='hover:pointer flex items-center hover:text-accentLight'
-                            >
-                                <FaGithub className='mr-2' /> {creator.name}
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        );
-    });
-
-    return (
-        <footer className='z-[3] flex items-center justify-evenly border-t p-2 text-xs uppercase md:text-base'>
-            <OwnerFooter />
-            <CreatorsFooter />
-        </footer>
-    );
-};
+        <div className='flex flex-col items-center md:ml-8 md:items-start'>
+            <ul className='space-y-1'>
+                {creators.map((creator) => (
+                    <li key={creator.name}>
+                        <a
+                            href={creator.github}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='flex items-center gap-2 hover:text-accentLight'
+                        >
+                            <FaGithub /> {creator.name}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </footer>
+);
 
 export default Footer;

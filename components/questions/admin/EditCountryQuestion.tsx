@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Question } from '@/app/api/events';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
 import EditQuestionHeader from './common/EditQuestionHeader';
 import CountryDropdown from '@/components/forms/CountryDropdown';
 import CorrectAnswer from '../common/CorrectAnswer';
+import { Question } from '@/types/questions';
 
 interface Props {
     question: Question;

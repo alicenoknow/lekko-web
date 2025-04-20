@@ -1,11 +1,11 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { Question } from '@/app/api/events';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
 import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
 import EditQuestionHeader from './common/EditQuestionHeader';
 import CorrectAnswer from '../common/CorrectAnswer';
+import { Question } from '@/types/questions';
 
 interface Props {
     question: Question;

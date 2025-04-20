@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Question, Answer } from '@/app/api/events';
 import { txt } from '@/nls/texts';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { isAdmin } from '@/lib/admin';
 import { RANKING } from '@/lib/ranking';
 import CountryDropdown from '../forms/CountryDropdown';
 import CorrectAnswer from './common/CorrectAnswer';
+import { Answer } from '@/types/answers';
+import { Question } from '@/types/questions';
 
 interface Props {
     question: Question;

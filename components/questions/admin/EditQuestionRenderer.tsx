@@ -1,8 +1,8 @@
+import { Question } from '@/types/questions';
 import EditAthleteQuestion from './EditAthleteQuestion';
 import EditAthleteRankingQuestion from './EditAthleteRankingQuestion';
 import EditCountryQuestion from './EditCountryQuestion';
 import EditCountryRankingQuestion from './EditCountryRankingQuestion';
-import { Question } from '@/app/api/events';
 
 interface Props {
     question: Question;

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { txt } from '@/nls/texts';
-import { LinkButton } from '../buttons';
+import LinkButton from '../buttons/LinkButton';
 
 const LEKKO_FB = 'https://www.facebook.com/groups/715213372162917/';
 
