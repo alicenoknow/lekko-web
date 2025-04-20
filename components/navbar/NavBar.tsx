@@ -1,14 +1,17 @@
 import React, { memo } from 'react';
 import NavBarMenu from './NavBarMenu';
-
-const title = 'Lekkoatletawka';
+import { txt } from '@/nls/texts';
+import Link from 'next/link';
 
 const NavBar = () => {
     const Logo = memo(() => (
         <div className='mr-6 flex flex-shrink-0 items-center text-primaryDark'>
-            <span className='text-2xl font-bold uppercase tracking-tight'>
-                {title}
-            </span>
+            <Link
+                href={'/'}
+                className='text-2xl font-bold uppercase tracking-tight'
+            >
+                {txt.title}
+            </Link>
         </div>
     ));
 

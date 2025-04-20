@@ -3,7 +3,6 @@ export { txt };
 
 export type Translations = {
     title: string;
-    mainPage: string;
     rules: string;
     typer: string;
     account: string;

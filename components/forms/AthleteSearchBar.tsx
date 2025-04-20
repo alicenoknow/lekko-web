@@ -122,9 +122,8 @@ function useDebouncedValue<T>(value: T, delay: number): T {
 
 // TODO paging athletes
 // TODO paging in general
-// TODO refactor components
+// TODO refactor pages
 // TODO test all
 // TODO points input zero
 // TODO answers impl
 // TODO ranking impl
-// TODO test edit after refactor
