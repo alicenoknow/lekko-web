@@ -40,7 +40,6 @@ export function NavBarMenu() {
                 className={`z-[4] ${isOpen ? 'block' : 'hidden'} block w-full flex-grow md:flex md:w-auto md:items-center`}
             >
                 <div className='text-lg font-semibold uppercase text-primaryDark md:flex-grow'>
-                    <NavButton title={txt.rules} link='/rules' />
                     <NavButton title={txt.typer} link='/typer' />
                     <NavButton title={txt.results} link='/results' />
                     <NavButton title={txt.account} link='/user' />
