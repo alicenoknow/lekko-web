@@ -6,13 +6,15 @@
     "results": "Wyniki",
     "login": {
         "header": "Logowanie",
-        "noAccountText": "Nie masz konta?"
+        "noAccountText": "Nie masz konta?",
+        "error": "Nie udało się zalogować."
     },
     "register": {
         "header": "Rejestracja",
         "hasAccountText": "Masz już konto?",
         "passwordMismatch": "Podane hasła nie są takie same.",
-        "success": "Zarejestrowano pomyślnie."
+        "success": "Zarejestrowano pomyślnie.",
+        "error": "Nie udało się zarejstrować."
     },
     "forms": {
         "fillAllInfo": "Wypełnij wszystkie pola",

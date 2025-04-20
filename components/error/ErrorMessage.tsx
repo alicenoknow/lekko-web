@@ -7,7 +7,7 @@ interface ErrorProps {
 export const ErrorMessage = (props: ErrorProps) => {
     if (props.errorMessage) {
         return (
-            <p className='mb-6 text-lg font-semibold uppercase text-red-500'>
+            <p className='mb-6 text-sm font-semibold uppercase text-red-500 md:text-lg'>
                 {props.errorMessage}
             </p>
         );

@@ -1,22 +1,30 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { ErrorMessage } from '@/components/error/ErrorMessage';
-import { txt } from '@/nls/texts';
-import ActionButton from '@/components/buttons/ActionButton';
+import { useMutation } from '@tanstack/react-query';
+
 import { useUserStore } from '@/store/user';
+import { loginUser, LoginData } from '@/app/api/auth';
+
+import { txt } from '@/nls/texts';
 import FormField from '@/components/forms/FormField';
-import { LoginData, loginUser } from '@/app/api/auth';
+import ActionButton from '@/components/buttons/ActionButton';
+import { ErrorMessage } from '@/components/error/ErrorMessage';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isRedirecting, setIsRedirecting] = useState(false);
+
     const router = useRouter();
     const { setUserFromToken } = useUserStore();
+
+    const isFormInvalid = useMemo(
+        () => !email || !password || password.length < 6,
+        [email, password]
+    );
 
     const { mutate: login, isPending: isSubmitting } = useMutation({
         mutationFn: () => loginUser(email, password),
@@ -24,34 +32,23 @@ function LoginPage() {
             setUserFromToken(data.token);
             router.replace('/user');
         },
-        onError: (err) => {
-            console.error('Login error:', err.message);
-            setErrorMessage('Nie udało się zalogować. Spróbuj ponownie.');
-        },
+        onError: () => setErrorMessage(txt.login.error),
     });
 
-    const checkIfFormInvalid = useCallback(
-        () => !email || !password || password.length < 6,
-        [email, password]
-    );
+    const handleLogin = useCallback(() => {
+        if (!isFormInvalid) login();
+    }, [login, isFormInvalid]);
 
-    const redirectToRegister = useCallback(() => {
+    const handleRegisterRedirect = useCallback(() => {
         setIsRedirecting(true);
         router.replace('/user/register');
     }, [router]);
 
-    const maybeRenderError = () => {
-        if (checkIfFormInvalid())
-            return <ErrorMessage errorMessage={txt.forms.fillAllInfo} />;
-        if (errorMessage) return <ErrorMessage errorMessage={errorMessage} />;
-    };
-
-    // TODO wider form login register
     return (
-        <div className='m-auto flex flex-col p-4'>
-            <p className='mb-12 text-2xl font-bold uppercase tracking-tight text-primaryDark'>
+        <div className='m-auto flex w-full max-w-md flex-col justify-center space-y-6 p-4'>
+            <h1 className='text-2xl font-bold uppercase tracking-tight text-primaryDark'>
                 {txt.login.header}
-            </p>
+            </h1>
             <FormField
                 label={txt.forms.email}
                 id='email'
@@ -68,21 +65,25 @@ function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
             />
-            {maybeRenderError()}
+            {isFormInvalid && (
+                <ErrorMessage errorMessage={txt.forms.fillAllInfo} />
+            )}
+            {!isFormInvalid && errorMessage && (
+                <ErrorMessage errorMessage={errorMessage} />
+            )}
             <ActionButton
                 label={txt.forms.send}
-                onClick={() => login()}
+                onClick={handleLogin}
                 loading={isSubmitting}
-                disabled={checkIfFormInvalid()}
+                disabled={isFormInvalid}
             />
-            <div className='mt-6' />
             <ActionButton
                 label={txt.login.noAccountText}
                 loading={isRedirecting}
-                onClick={redirectToRegister}
+                onClick={handleRegisterRedirect}
             />
         </div>
     );
 }
 
-export default React.memo(LoginPage);
+export default LoginPage;

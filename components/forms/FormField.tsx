@@ -34,7 +34,7 @@ const FormField: React.FC<FormFieldProps> = ({
     return (
         <div className='mb-4 flex w-full items-start gap-4'>
             {emoji && <span className='text-2xl'>{emoji}</span>}
-            <div className='flex w-full flex-col'>
+            <div className='flex w-full flex-row items-center gap-8'>
                 {label && (
                     <label
                         htmlFor={id}

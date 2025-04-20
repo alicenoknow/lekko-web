@@ -1,26 +1,37 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
+
 import { registerUser } from '@/app/api/auth';
 import { txt } from '@/nls/texts';
+import FormField from '@/components/forms/FormField';
 import ActionButton from '@/components/buttons/ActionButton';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
-import FormField from '@/components/forms/FormField';
 
 function RegisterForm() {
     const router = useRouter();
 
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordRepeat, setPasswordRepeat] = useState('');
+    const [form, setForm] = useState({
+        username: '',
+        email: '',
+        password: '',
+        passwordRepeat: '',
+    });
+
     const [errorMessage, setErrorMessage] = useState('');
     const [registered, setRegistered] = useState(false);
     const [isRedirecting, setIsRedirecting] = useState(false);
 
+    const handleChange = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
+        setForm((prev) => ({ ...prev, [field]: e.target.value }));
+        setErrorMessage('');
+        setRegistered(false);
+    };
+
     const isFormInvalid = useMemo(() => {
+        const { username, email, password, passwordRepeat } = form;
         return (
             !username ||
             !email ||
@@ -29,99 +40,87 @@ function RegisterForm() {
             password.length < 6 ||
             password !== passwordRepeat
         );
-    }, [username, email, password, passwordRepeat]);
+    }, [form]);
 
     const { mutate: register, isPending: isSubmitting } = useMutation({
-        mutationFn: () => registerUser(email, username, password),
-        onSuccess: () => {
-            setRegistered(true);
-        },
+        mutationFn: () => registerUser(form.email, form.username, form.password),
+        onSuccess: () => setRegistered(true),
         onError: (err) => {
             console.error('Register error:', err.message);
-            setErrorMessage('Nie udało się zarejstrować. Spróbuj ponownie.');
+            setErrorMessage(txt.register.error);
         },
     });
 
-    const maybeRenderError = () => {
-        if (password && passwordRepeat && password !== passwordRepeat) {
-            return (
-                <ErrorMessage errorMessage={txt.register.passwordMismatch} />
-            );
+    const handleSubmit = useCallback(() => {
+        if (!isFormInvalid) {
+            register();
         }
-        if (isFormInvalid) {
-            return <ErrorMessage errorMessage={txt.forms.fillAllInfo} />;
+    }, [register, isFormInvalid]);
+
+    const redirectToLogin = useCallback(() => {
+        setIsRedirecting(true);
+        router.replace('/user/login');
+    }, [router]);
+
+    const renderError = () => {
+        if (form.password && form.passwordRepeat && form.password !== form.passwordRepeat) {
+            return <ErrorMessage errorMessage={txt.register.passwordMismatch} />;
         }
-        if (errorMessage) {
-            return <ErrorMessage errorMessage={errorMessage} />;
-        }
+        if (isFormInvalid) return <ErrorMessage errorMessage={txt.forms.fillAllInfo} />;
+        if (errorMessage) return <ErrorMessage errorMessage={errorMessage} />;
         return null;
     };
 
-    const handleSubmit = () => {
-        setErrorMessage('');
-        setRegistered(false);
-        register();
-    };
-
-    const redirectToLogin = () => {
-        setIsRedirecting(true);
-        router.replace('/user/login');
-    };
-
     return (
-        <div className='m-auto flex flex-col justify-center p-4'>
-            <p className='mb-12 text-2xl font-bold uppercase tracking-tight text-primaryDark'>
+        <div className='m-auto flex max-w-md flex-col space-y-6 p-4'>
+            <h1 className='text-2xl font-bold uppercase tracking-tight text-primaryDark'>
                 {txt.register.header}
-            </p>
-
+            </h1>
             <FormField
                 label={txt.forms.username}
                 id='username'
                 type='text'
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={form.username}
+                onChange={handleChange('username')}
                 required
             />
             <FormField
                 label={txt.forms.email}
                 id='email'
                 type='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={form.email}
+                onChange={handleChange('email')}
                 required
             />
             <FormField
                 label={txt.forms.password}
                 id='password'
                 type='password'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={form.password}
+                onChange={handleChange('password')}
                 required
             />
             <FormField
                 label={txt.forms.repeatPassword}
                 id='passwordRepeat'
                 type='password'
-                value={passwordRepeat}
-                onChange={(e) => setPasswordRepeat(e.target.value)}
+                value={form.passwordRepeat}
+                onChange={handleChange('passwordRepeat')}
                 required
             />
-
             {registered ? (
-                <p className='mb-6 text-lg font-semibold uppercase text-green-700'>
+                <p className='text-lg font-semibold uppercase text-green-700'>
                     {txt.register.success}
                 </p>
             ) : (
-                maybeRenderError()
+                renderError()
             )}
-
             <ActionButton
                 label={txt.forms.send}
-                disabled={isFormInvalid}
                 onClick={handleSubmit}
+                disabled={isFormInvalid}
                 loading={isSubmitting}
             />
-            <div className='mt-6' />
             <ActionButton
                 label={txt.register.hasAccountText}
                 onClick={redirectToLogin}
@@ -131,4 +130,4 @@ function RegisterForm() {
     );
 }
 
-export default React.memo(RegisterForm);
+export default RegisterForm;

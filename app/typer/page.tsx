@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { deleteEvent, fetchEvents } from '@/app/api/events';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
@@ -15,6 +15,8 @@ import { TiDelete } from 'react-icons/ti';
 import ActionButton from '@/components/buttons/ActionButton';
 import { useRouter } from 'next/navigation';
 import { queryClient } from '@/context/QueryProvider';
+import EventCard from '@/components/event/EventCard';
+import AddEvent from '@/components/event/AddEvent';
 
 export default function EventsPage() {
     const router = useRouter();
@@ -41,19 +43,18 @@ export default function EventsPage() {
         onError: () => console.error('Cannot remove event.'),
     });
 
-    const handleOpen = (id: number) => {
-        setIsRedirecting(true);
-        router.push(`/typer/event/${id}`);
-    };
+    const handleOpen = useCallback(
+        (id: number) => {
+            setIsRedirecting(true);
+            router.push(`/typer/event/${id}`);
+        },
+        [router]
+    );
 
-    const handleDelete = (id: number) => {
-        deleteEventMutation(id);
-    };
-
-    const handleAdd = () => {
+    const handleAdd = useCallback(() => {
         setIsRedirecting(true);
         router.push('/typer/new');
-    };
+    }, [setIsRedirecting, router]);
 
     if (isLoading || isDeleting) return <Spinner />;
     if (isError || !events || !events.data || events.data.length === 0) {
@@ -65,61 +66,22 @@ export default function EventsPage() {
             <div className='mb-4 flex items-center justify-between'>
                 <span className='text-3xl font-bold'>{txt.events.title}</span>
                 <AdminOnly>
-                    <ActionButton
-                        label={
-                            <span className='flex items-center gap-2'>
-                                <FaPlus />
-                                <span className='hidden text-lg md:inline'>
-                                    {txt.events.newEvent}
-                                </span>
-                            </span>
-                        }
-                        loading={isRedirecting}
-                        disabled={isRedirecting}
-                        onClick={handleAdd}
+                    <AddEvent
+                        isLoading={isRedirecting}
+                        onEventAdd={handleAdd}
                     />
                 </AdminOnly>
             </div>
-
-            <ul className='space-y-4'>
-                {events.data.map((event) => (
-                    <li
-                        key={event.id}
-                        className='flex flex-col rounded-md border bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between'
-                    >
-                        <div className='flex flex-col text-left'>
-                            <h2 className='font-semibold md:text-xl'>
-                                {event.name}
-                            </h2>
-                            {event.description && (
-                                <p className='mt-1 text-gray-600'>
-                                    {event.description}
-                                </p>
-                            )}
-                            <p className='mt-2 text-sm'>
-                                {txt.events.deadline}:{' '}
-                                {new Date(event.deadline).toLocaleString()}
-                            </p>
-                        </div>
-                        <div className='mt-4 flex items-center gap-4 md:ml-6 md:mt-0'>
-                            <ActionIcon
-                                label={<FaEdit size={32} />}
-                                onClick={() => handleOpen(event.id)}
-                                loading={isRedirecting}
-                                disabled={isRedirecting}
-                            />
-                            <AdminOnly>
-                                <ActionIcon
-                                    disabled={isDeleting}
-                                    loading={isDeleting}
-                                    label={<TiDelete size={32} />}
-                                    onClick={() => handleDelete(event.id)}
-                                />
-                            </AdminOnly>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+            {events.data.map((event) => (
+                <EventCard
+                    key={event.id}
+                    event={event}
+                    onEdit={() => handleOpen(event.id)}
+                    onDelete={() => deleteEventMutation(event.id)}
+                    isDeleting={isDeleting}
+                    isRedirecting={isRedirecting}
+                />
+            ))}
             {events?.pagination_info && (
                 <Pagination
                     pagination={events.pagination_info}
