@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import QuestionHeader from './common/QuestionHeader';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
 import AthleteQuestion from './AthleteQuestion';
@@ -26,8 +25,6 @@ export default function QuestionRenderer({
     onSubmit,
     onEdit,
 }: Props) {
-    const { user } = usePrivateUserContext();
-
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isModified, setIsModified] = useState(false);
     const [answerPayload, setAnswerPayload] = useState<
@@ -44,7 +41,7 @@ export default function QuestionRenderer({
         });
         setIsSubmitting(false);
         setIsModified(false);
-    }, [answerPayload, onSubmit, question.id, user.sub]);
+    }, [answerPayload, onSubmit, answer?.id, question.id]);
 
     const handleAnswerChanged = useCallback((content: Answer['content']) => {
         setAnswerPayload(content);

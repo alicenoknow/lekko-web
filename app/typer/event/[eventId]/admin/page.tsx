@@ -1,7 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import Spinner from '@/components/Spinner';
@@ -10,30 +9,43 @@ import { ErrorMessage } from '@/components/error/ErrorMessage';
 import Pagination from '@/components/buttons/Pagination';
 import ActionButton from '@/components/buttons/ActionButton';
 import FormField from '@/components/forms/FormField';
-import { toLocalDatetimeInputFormat } from '@/lib/dateUtils';
 import QuestionTypeSelector, {
     QuestionType,
 } from '@/components/questions/admin/QuestionTypeSelector';
 import QuestionModal from '@/components/questions/admin/QuestionModal';
 import QuestionRenderer from '@/components/questions/QuestionRenderer';
-import {
-    createQuestion,
-    deleteQuestion,
-    fetchQuestionsFromEvent,
-    updateQuestion,
-} from '@/app/api/questions';
-import { fetchEventById, updateEvent } from '@/app/api/events';
 import { Question } from '@/types/questions';
-import { createAnswer, fetchAnswers, updateAnswer } from '@/app/api/answers';
-import { Answer } from '@/types/answers';
+import { toLocalDatetimeInputFormat } from '@/lib/dateUtils';
+import { useEventDetails } from '@/hooks/useEventDetails';
+import { useEventAdmin } from '@/hooks/useEventAdmin';
+import { useAnswerSubmit } from '@/hooks/useAnswerSubmit';
 
-export default function EventDetailPage() {
+export default function EventDetailAdminPage() {
     const { eventId: eventIdParam } = useParams<{ eventId: string }>();
     const eventId = parseInt(eventIdParam, 10);
     const { token, user } = usePrivateUserContext();
     const [page, setPage] = useState(1);
-    const [isOpenModal, setOpenModal] = useState(false);
+
+    const { eventQuery, questionsQuery, answersQuery, isPastDeadline } =
+        useEventDetails(token, eventId, page);
+
+    const {
+        updateEventQuery,
+        addQuestionQuery,
+        modifyQuestionQuery,
+        deleteQuestionQuery,
+    } = useEventAdmin(token, eventId);
+
+    const { onSubmit: onAnswerSubmit } = useAnswerSubmit(token, user.sub);
+
+    const [form, setForm] = useState({
+        name: '',
+        description: '',
+        deadline: '',
+    });
+    const [isEventModified, setEventModified] = useState(false);
     const [questions, setQuestions] = useState<Question[]>([]);
+    const [isOpenModal, setOpenModal] = useState(false);
     const [selectedType, setSelectedType] = useState<QuestionType>('athlete');
     const [currentQuestion, setCurrentQuestion] = useState<Question>({
         id: Date.now() * -1,
@@ -41,171 +53,22 @@ export default function EventDetailPage() {
         content: '',
         points: 0,
     });
-    const [isEventModified, setEventModified] = useState(false);
-    const [form, setForm] = useState({
-        name: '',
-        description: '',
-        deadline: '',
-    });
-    const questionsIds = useMemo(() => questions.map(q => q.id), [questions]);
-
-    const {
-        data: eventData,
-        isLoading: isEventLoading,
-        isError: isEventError,
-    } = useQuery({
-        queryKey: ['event', eventId],
-        queryFn: () => fetchEventById(token, eventId),
-        enabled: !!token && !!eventId,
-    });
-
-    const {
-        data: questionsData,
-        isLoading: isQuestionsLoading,
-        isError: isQuestionsError,
-    } = useQuery({
-        queryKey: ['questions', eventId, page],
-        queryFn: () => fetchQuestionsFromEvent(token, eventId, page),
-        enabled: !!token && !!eventId,
-    });
-
-    const {
-        data: answersData,
-        isLoading: isAnswersLoading,
-        isError: isAnswersError,
-    } = useQuery({
-        queryKey: ['answers', questionsIds],
-        queryFn: () => fetchAnswers(token, questionsIds),
-        enabled: !!token && questionsIds.length > 0,
-    });
-
-    const { mutate: updateEventQuery, isPending: isUpdatingEvent } =
-        useMutation({
-            mutationFn: () => {
-                const deadline = new Date(form.deadline).toISOString();
-                return updateEvent(
-                    eventId,
-                    token,
-                    form.name,
-                    form.description,
-                    deadline
-                );
-            },
-            onSuccess: () => setEventModified(false),
-        });
-
-    const { mutate: addQuestionQuery, isPending: isUpdatingNewQuestion } =
-        useMutation({
-            mutationFn: ({
-                type,
-                content,
-                points,
-            }: {
-                type: string;
-                content: string;
-                points: number;
-            }) => {
-                return createQuestion(token, eventId, type, content, points);
-            },
-            onSuccess: (data: Question) => {
-                setQuestions((prev) => [...prev, data]);
-            },
-        });
-
-    const { mutate: modifyQuestionQuery, isPending: isUpdatingQuestion } =
-        useMutation({
-            mutationFn: ({
-                id,
-                type,
-                content,
-                points,
-                event_id,
-                correct_answer,
-            }: {
-                id: number;
-                type: string;
-                content: string;
-                points: number;
-                event_id: number;
-                correct_answer?: any;
-            }) => {
-                return updateQuestion(
-                    token,
-                    id,
-                    event_id,
-                    type,
-                    content,
-                    points,
-                    correct_answer
-                );
-            },
-            onSuccess: (data: Question) => {
-                setQuestions((prev) =>
-                    prev.map((q) => (q.id === data.id ? data : q))
-                );
-            },
-        });
-
-    const { mutate: deleteQuestionQuery, isPending: isDeletingQuestion } =
-        useMutation({
-            mutationFn: ({ id }: { id: number }) => {
-                return deleteQuestion(token, id);
-            },
-        });
-    
-    const { mutate: addAnswerQuery, isPending: isUpdatingNewAnswer } =
-            useMutation({
-                mutationFn: ({ questionId, content }: {
-                    questionId: number;
-                    content: { [key: string]: any; };
-                }) => {
-                    return createAnswer(token, questionId, user.sub, content);
-                }
-            });
-    
-        const { mutate: modifyAnswerQuery, isPending: isUpdatingAnswer } =
-            useMutation({
-                mutationFn: ({ id, questionId, content }: {
-                    id: number;
-                    questionId: number;
-                    content: { [key: string]: any; };
-                }) => {
-                    return updateAnswer(token, id, questionId, user.sub, content);
-                }
-            });
-    
-        const onAnswerSubmit = useCallback(
-            (answer: Answer) => {
-                if (!answer.content || !answer.question_id)
-                    return;
-    
-                if (answer.id < 0) {
-                    addAnswerQuery({ questionId: answer.question_id, content: answer.content });
-                } else {
-                    modifyAnswerQuery({ id: answer.id, questionId: answer.question_id, content: answer.content });
-                }
-            },
-            [eventData, addAnswerQuery, modifyAnswerQuery]
-        );
 
     useEffect(() => {
-        if (eventData) {
+        if (eventQuery.data) {
             setForm({
-                name: eventData.name || '',
-                description: eventData.description || '',
-                deadline: toLocalDatetimeInputFormat(eventData.deadline) || '',
+                name: eventQuery.data.name || '',
+                description: eventQuery.data.description || '',
+                deadline: toLocalDatetimeInputFormat(eventQuery.data.deadline),
             });
         }
-    }, [eventData]);
+    }, [eventQuery.data]);
 
     useEffect(() => {
-        if (questionsData?.data) {
-            setQuestions(questionsData.data);
+        if (questionsQuery.data?.data) {
+            setQuestions(questionsQuery.data.data);
         }
-    }, [questionsData]);
-
-    const isPastDeadline = (deadline: string) =>
-        new Date(deadline) < new Date();
+    }, [questionsQuery.data]);
 
     const onNewQuestion = useCallback(() => {
         setCurrentQuestion({
@@ -215,131 +78,122 @@ export default function EventDetailPage() {
             points: 0,
         });
         setOpenModal(true);
-    }, [selectedType, setOpenModal]);
+    }, [selectedType]);
 
     const onQuestionSubmit = useCallback(
         (question: Question) => {
-            if (
-                !question.content ||
-                !question.points ||
-                !question.type ||
-                !eventData
-            )
-                return;
+            if (!question.content || !question.points || !question.type) return;
 
             if (question.id < 0) {
-                addQuestionQuery({
+                addQuestionQuery.mutate({
                     type: question.type,
                     content: question.content,
                     points: question.points,
                 });
             } else {
-                modifyQuestionQuery({
-                    id: question.id,
-                    content: question.content,
-                    type: question.type,
-                    event_id: eventData.id,
-                    points: question.points,
-                    correct_answer: question.correct_answer,
-                });
+                modifyQuestionQuery.mutate(question);
             }
         },
-        [eventData, addQuestionQuery, modifyQuestionQuery]
+        [addQuestionQuery, modifyQuestionQuery]
     );
 
     const onQuestionDelete = useCallback(
         (id: number) => {
             if (id > 0) {
-                deleteQuestionQuery({ id });
+                deleteQuestionQuery.mutate(id);
             }
             setQuestions((prev) => prev.filter((q) => q.id !== id));
         },
-        [deleteQuestionQuery, setQuestions]
+        [deleteQuestionQuery]
     );
 
-    if (isEventError || isQuestionsError || isAnswersError || !eventData || !questionsData) {
+    if (
+        eventQuery.isLoading ||
+        questionsQuery.isLoading ||
+        answersQuery.isLoading
+    )
+        return <Spinner />;
+
+    if (
+        eventQuery.isError ||
+        questionsQuery.isError ||
+        answersQuery.isError ||
+        !eventQuery.data
+    ) {
         return <ErrorMessage errorMessage={txt.events.notFound} />;
     }
 
-    if (isEventLoading || isQuestionsLoading || isAnswersLoading) return <Spinner />;
-
     return (
-        <div className='flex min-h-screen justify-center'>
-            <div className='w-full max-w-2xl space-y-6'>
-                <p className='pt-8 text-xl font-bold md:text-3xl'>
-                    {txt.events.edit}
-                </p>
-                <FormField
-                    label={txt.forms.name}
-                    id='event-title'
-                    type='text'
-                    value={form.name}
-                    onChange={(e) => {
-                        setForm({ ...form, name: e.target.value });
-                        setEventModified(true);
+        <>
+            <h1 className='mt-12 text-xl font-bold md:text-3xl'>
+                {txt.events.edit}
+            </h1>
+            <FormField
+                label={txt.forms.name}
+                id='event-title'
+                type='text'
+                value={form.name}
+                onChange={(e) => {
+                    setForm({ ...form, name: e.target.value });
+                    setEventModified(true);
+                }}
+            />
+            <FormField
+                label={txt.forms.description}
+                id='event-description'
+                type='text'
+                multiline
+                value={form.description}
+                onChange={(e) => {
+                    setForm({ ...form, description: e.target.value });
+                    setEventModified(true);
+                }}
+            />
+            <FormField
+                label={txt.forms.deadline}
+                id='event-deadline'
+                type='datetime-local'
+                value={form.deadline}
+                onChange={(e) => {
+                    setForm({ ...form, deadline: e.target.value });
+                    setEventModified(true);
+                }}
+            />
+            <ActionButton
+                label={isEventModified ? txt.forms.save : txt.forms.saved}
+                onClick={() => updateEventQuery.mutate(form)}
+                loading={updateEventQuery.isPending}
+                disabled={!isEventModified}
+            />
+            <h2 className='pt-8 text-xl font-bold md:text-3xl'>
+                {txt.events.questions}
+            </h2>
+            <QuestionTypeSelector
+                selected={selectedType}
+                setSelected={setSelectedType}
+                onAdd={onNewQuestion}
+            />
+            {questions.map((q: Question) => (
+                <QuestionRenderer
+                    key={q.id}
+                    question={q}
+                    answer={answersQuery.data?.data.find(
+                        (a) => a.question_id === q.id
+                    )}
+                    onEdit={() => {
+                        setCurrentQuestion(q);
+                        setOpenModal(true);
                     }}
+                    onSubmit={onAnswerSubmit}
+                    isPastDeadline={isPastDeadline}
                 />
-                <FormField
-                    label={txt.forms.description}
-                    id='event-description'
-                    type='text'
-                    multiline
-                    value={form.description}
-                    onChange={(e) => {
-                        setForm({ ...form, description: e.target.value });
-                        setEventModified(true);
-                    }}
+            ))}
+            {questionsQuery.data?.pagination_info && (
+                <Pagination
+                    pagination={questionsQuery.data.pagination_info}
+                    changePage={setPage}
                 />
-                <FormField
-                    label={txt.forms.deadline}
-                    id='event-deadline'
-                    type='datetime-local'
-                    value={form.deadline}
-                    onChange={(e) => {
-                        setForm({ ...form, deadline: e.target.value });
-                        setEventModified(true);
-                    }}
-                />
-                <ActionButton
-                    label={isEventModified ? txt.forms.save : txt.forms.saved}
-                    onClick={updateEventQuery}
-                    loading={isUpdatingEvent}
-                    disabled={!isEventModified}
-                />
-                <p className='pt-8 text-xl font-bold md:text-3xl'>
-                    {txt.events.questions}
-                </p>
-                {(isDeletingQuestion ||
-                    isUpdatingNewQuestion ||
-                    isUpdatingQuestion) && <Spinner isInline />}
-                <QuestionTypeSelector
-                    selected={selectedType}
-                    setSelected={setSelectedType}
-                    onAdd={onNewQuestion}
-                />
-                {questions.map((q: Question) => (
-                    <QuestionRenderer
-                        key={q.id}
-                        question={q}
-                        answer={answersData?.data.find(a => a.question_id == q.id)}
-                        onEdit={() => {
-                            setCurrentQuestion(q);
-                            setOpenModal(true);
-                        }}
-                        onSubmit={onAnswerSubmit}
-                        isPastDeadline={isPastDeadline(eventData.deadline)}
-                    />
-                ))}
-                {questionsData?.pagination_info && (
-                    <Pagination
-                        pagination={questionsData.pagination_info}
-                        changePage={(newPage) => {
-                            setPage(newPage);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }}
-                    />
-                )}
-            </div>
+            )}
             <QuestionModal
                 isOpen={isOpenModal}
                 setOpen={setOpenModal}
@@ -347,6 +201,6 @@ export default function EventDetailPage() {
                 onSubmit={onQuestionSubmit}
                 onDelete={onQuestionDelete}
             />
-        </div>
+        </>
     );
 }

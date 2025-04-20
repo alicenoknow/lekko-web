@@ -47,8 +47,8 @@ function CreateEventPage() {
     }, [mutation]);
 
     return (
-        <div className='mx-auto w-full max-w-2xl p-6'>
-            <h1 className='mb-6 text-2xl font-bold uppercase'>
+        <>
+            <h1 className='mt-12 mb-6 text-2xl font-bold uppercase'>
                 {txt.events.createHeader}
             </h1>
             <FormField
@@ -89,7 +89,7 @@ function CreateEventPage() {
                 loading={mutation.isPending}
                 disabled={isFormInvalid}
             />
-        </div>
+        </>
     );
 }
 

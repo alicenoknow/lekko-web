@@ -51,8 +51,8 @@ export default function EventsPage() {
     }
 
     return (
-        <div className='space-y-4 p-6'>
-            <div className='mb-4 flex items-center justify-between'>
+        <>
+            <div className='mb-4 mt-12 flex items-center justify-between'>
                 <span className='text-3xl font-bold'>{txt.events.title}</span>
                 <AdminOnly>
                     <AddEvent onEventAdd={handleAdd} />
@@ -73,6 +73,6 @@ export default function EventsPage() {
                     changePage={setPage}
                 />
             )}
-        </div>
+        </>
     );
 }
