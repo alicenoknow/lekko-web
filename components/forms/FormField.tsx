@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 interface FormFieldProps {
@@ -16,50 +18,46 @@ interface FormFieldProps {
 }
 
 const FormField: React.FC<FormFieldProps> = ({
-    label,
     id,
-    type = 'text',
     value,
     onChange,
+    label,
+    type = 'text',
     required = false,
     multiline = false,
     rows = 4,
     emoji,
     placeholder,
 }) => {
+    const InputComponent = multiline ? 'textarea' : 'input';
+
     return (
-        <div className='mb-4 flex items-center gap-4'>
-            {label && (
-                <label
-                    className='mr-8 text-sm font-bold uppercase text-primaryDark md:text-lg'
-                    htmlFor={id}
-                >
-                    {label}:
-                </label>
-            )}
-            {emoji && <span className='text-3xl'>{emoji}</span>}
-            {multiline ? (
-                <textarea
-                    className='w-full border p-2 text-sm text-primaryDark md:p-4 md:text-lg'
+        <div className='mb-4 flex w-full items-start gap-4'>
+            {emoji && <span className='text-2xl'>{emoji}</span>}
+            <div className='flex w-full flex-col'>
+                {label && (
+                    <label
+                        htmlFor={id}
+                        className='mb-1 text-sm font-bold uppercase text-primaryDark md:text-lg'
+                    >
+                        {label}
+                        {required && (
+                            <span className='ml-1 text-red-500'>*</span>
+                        )}
+                    </label>
+                )}
+                <InputComponent
                     id={id}
-                    value={value}
-                    onChange={onChange}
-                    required={required}
-                    rows={rows}
-                    placeholder={placeholder}
-                />
-            ) : (
-                <input
                     className='w-full border p-2 text-sm text-primaryDark md:p-4 md:text-lg'
-                    type={type}
-                    id={id}
                     value={value}
                     onChange={onChange}
                     required={required}
                     placeholder={placeholder}
+                    rows={multiline ? rows : undefined}
+                    type={!multiline ? type : undefined}
                     autoComplete='off'
                 />
-            )}
+            </div>
         </div>
     );
 };

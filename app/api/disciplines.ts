@@ -9,9 +9,6 @@ export async function fetchDisciplines(token: string): Promise<Disciplines> {
         // fetch all no paging
         ...getAuthConfig(token),
     });
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }

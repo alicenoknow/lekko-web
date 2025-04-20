@@ -11,10 +11,11 @@ import { txt } from '@/nls/texts';
 import { FaEdit } from 'react-icons/fa';
 import QuestionRenderer from '@/components/questions/QuestionRenderer';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
-import Pagination from '@/components/typer/Pagination';
+import Pagination from '@/components/buttons/Pagination';
 import { fetchEventById } from '@/app/api/events';
 import { fetchQuestionsFromEvent } from '@/app/api/questions';
 import { Question } from '@/types/questions';
+import ActionButton from '@/components/buttons/ActionButton';
 
 export default function EventDetailPage() {
     const { eventId: eventIdParam } = useParams<{ eventId: string }>();
@@ -71,8 +72,8 @@ export default function EventDetailPage() {
             </p>
 
             <AdminOnly>
-                <ActionIcon
-                    label={<FaEdit size={24} />}
+                <ActionButton
+                    label={txt.forms.edit}
                     onClick={handleOpenAdminPanel}
                 />
             </AdminOnly>

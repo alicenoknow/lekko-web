@@ -7,7 +7,7 @@ import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import Spinner from '@/components/Spinner';
 import { txt } from '@/nls/texts';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
-import Pagination from '@/components/typer/Pagination';
+import Pagination from '@/components/buttons/Pagination';
 import ActionButton from '@/components/buttons/ActionButton';
 import FormField from '@/components/forms/FormField';
 import { toLocalDatetimeInputFormat } from '@/lib/dateUtils';

@@ -1,17 +1,19 @@
 import { txt } from '@/nls/texts';
-import React, { ReactNode } from 'react';
+import { ReactNode, memo } from 'react';
 
-interface Props {
+interface CorrectAnswerProps {
     children: ReactNode;
 }
 
-export default function CorrectAnswer({ children }: Props) {
+const CorrectAnswer = memo(function CorrectAnswer({ children }: CorrectAnswerProps) {
     return (
-        <div className='mb-4 bg-lightGreen p-4'>
-            <p className='mb-4 text-sm font-bold uppercase text-primaryDark md:text-md'>
+        <section className="mb-4 rounded bg-lightGreen p-4">
+            <h3 className="mb-4 text-sm font-bold uppercase text-primaryDark md:text-md">
                 {txt.forms.correctAnswer}:
-            </p>
+            </h3>
             {children}
-        </div>
+        </section>
     );
-}
+});
+
+export default CorrectAnswer;

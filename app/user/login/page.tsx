@@ -46,6 +46,7 @@ function LoginPage() {
         if (errorMessage) return <ErrorMessage errorMessage={errorMessage} />;
     };
 
+    // TODO wider form login register
     return (
         <div className='m-auto flex flex-col p-4'>
             <p className='mb-12 text-2xl font-bold uppercase tracking-tight text-primaryDark'>

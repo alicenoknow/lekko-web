@@ -30,7 +30,7 @@ const Footer = () => (
                             href={creator.github}
                             target='_blank'
                             rel='noopener noreferrer'
-                            className='flex items-center gap-2 hover:text-accentLight'
+                            className='flex items-center gap-2 hover:text-lightGray'
                         >
                             <FaGithub /> {creator.name}
                         </a>

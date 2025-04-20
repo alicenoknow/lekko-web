@@ -20,7 +20,7 @@ export default function QuestionFooterButtons({
     onEdit,
 }: Props) {
     return (
-        <div className='mt-4 flex flex-row justify-between'>
+        <div className='mt-4 flex flex-row justify-evenly'>
             <ActionButton
                 loading={isSubmitting}
                 label={

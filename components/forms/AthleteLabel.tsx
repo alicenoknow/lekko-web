@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import CountryLabel from './CountryLabel';
 import { fetchAthleteById } from '@/app/api/athletes';
+import React from 'react';
 
 interface Props {
     selected: number | null;
@@ -11,16 +12,18 @@ interface Props {
     emoji?: string;
 }
 
-export default function AthleteLabel({ label, selected, emoji }: Props) {
+function AthleteLabel({ selected, label, emoji }: Props) {
     const { token } = usePrivateUserContext();
 
+    const shouldFetch = !!token && !!selected;
+
     const { data: athlete } = useQuery({
-        queryKey: ['athlete', selected],
+        queryKey: ['athlete', selected ?? 'none'],
         queryFn: () => fetchAthleteById(selected!, token),
-        enabled: !!token && selected !== null,
+        enabled: shouldFetch,
     });
 
-    if (!athlete) return null;
+    if (!shouldFetch || !athlete) return null;
 
     return (
         <div className='my-2 flex flex-col gap-2'>
@@ -39,3 +42,5 @@ export default function AthleteLabel({ label, selected, emoji }: Props) {
         </div>
     );
 }
+
+export default React.memo(AthleteLabel);

@@ -12,9 +12,6 @@ export async function fetchUserAnswers(
         `${API_URL}/api/v1/users/me/answers?event_id=${eventId}`,
         getAuthConfig(token)
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }

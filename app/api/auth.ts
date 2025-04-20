@@ -18,10 +18,7 @@ export async function registerUser(
             password,
         }
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }
 
@@ -36,9 +33,6 @@ export async function loginUser(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/login`,
         { email, password }
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }

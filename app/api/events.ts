@@ -18,10 +18,7 @@ export async function fetchEvents(
         `${API_URL}/api/v1/events?page=${page}`,
         getAuthConfig(token)
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }
 
@@ -33,10 +30,7 @@ export async function fetchEventById(
         `${API_URL}/api/v1/events/${id}`,
         getAuthConfig(token)
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }
 
@@ -51,10 +45,7 @@ export async function createEvent(
         { name, deadline, description },
         getAuthConfig(token)
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }
 
@@ -74,10 +65,7 @@ export async function updateEvent(
         },
         getAuthConfig(token)
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }
 
@@ -89,9 +77,6 @@ export async function deleteEvent(
         `${API_URL}/api/v1/events/${eventId}`,
         getAuthConfig(token)
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }

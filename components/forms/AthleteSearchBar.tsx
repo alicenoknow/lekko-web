@@ -94,7 +94,7 @@ export default function AthleteSearchBar({
                                             onSelect(athlete.id);
                                             setSearch('');
                                         }}
-                                        className='cursor-pointer p-2 hover:bg-gray-100'
+                                        className='hover:lightGray cursor-pointer p-2'
                                     >
                                         {athlete.first_name} {athlete.last_name}{' '}
                                         ({athlete.country})
@@ -123,7 +123,8 @@ function useDebouncedValue<T>(value: T, delay: number): T {
 // TODO paging athletes
 // TODO paging in general
 // TODO refactor components
-// TODO test
+// TODO test all
 // TODO points input zero
 // TODO answers impl
 // TODO ranking impl
+// TODO test edit after refactor

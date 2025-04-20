@@ -7,8 +7,8 @@ import {
     ListboxOptions,
 } from '@headlessui/react';
 import { FaChevronDown, FaCheck } from 'react-icons/fa';
-import React from 'react';
 import { txt } from '@/nls/texts';
+import React from 'react';
 
 interface Option {
     label: React.ReactNode;
@@ -24,7 +24,7 @@ interface DropdownFieldProps {
     onSelect: ((value: string | null) => void) | ((value: string[]) => void);
 }
 
-export default function DropdownField({
+function DropdownField({
     label,
     options,
     selected,
@@ -32,17 +32,22 @@ export default function DropdownField({
     disabled = false,
     onSelect,
 }: DropdownFieldProps) {
-    const selectedLabel = Array.isArray(selected)
-        ? selected.length === 0
-            ? txt.forms.select
-            : ` ${txt.forms.selected} ${selected.length}`
-        : (options.find((o) => o.value === selected)?.label ??
-          txt.forms.select);
+    const getSelectedLabel = () => {
+        if (Array.isArray(selected)) {
+            return selected.length
+                ? `${txt.forms.selected} ${selected.length}`
+                : txt.forms.select;
+        }
+
+        return (
+            options.find((o) => o.value === selected)?.label ?? txt.forms.select
+        );
+    };
 
     return (
         <div className='flex w-full flex-col gap-1'>
             {label && (
-                <span className='md:text-md mr-12 text-sm font-bold uppercase text-primaryDark'>
+                <span className='md:text-md text-sm font-bold uppercase text-primaryDark'>
                     {label}
                 </span>
             )}
@@ -52,14 +57,21 @@ export default function DropdownField({
                 multiple={multiple}
                 disabled={disabled}
             >
-                <div className='relative inline-block text-left'>
-                    <ListboxButton className='flex w-full items-center justify-between border bg-white px-4 py-2 text-sm text-primaryDark shadow-sm focus:outline-none md:p-4 md:text-lg'>
-                        {selectedLabel}
+                <div className='relative inline-block w-full text-left'>
+                    <ListboxButton
+                        className={`flex w-full items-center justify-between border px-4 py-2 text-sm shadow-sm focus:outline-none md:p-4 md:text-lg ${
+                            disabled
+                                ? 'bg-gray-100 text-gray-400'
+                                : 'bg-white text-primaryDark'
+                        }`}
+                    >
+                        {getSelectedLabel()}
                         <FaChevronDown className='ml-2 h-4 w-4' />
                     </ListboxButton>
-                    <ListboxOptions className='absolute z-50 mt-1 max-h-60 w-full overflow-auto border bg-white text-sm text-primaryDark shadow-lg focus:outline-none md:p-4 md:text-lg'>
+
+                    <ListboxOptions className='absolute z-50 mt-1 max-h-60 w-full overflow-auto border bg-white text-sm shadow-lg focus:outline-none'>
                         <ListboxOption
-                            key='select'
+                            key='none'
                             value={undefined}
                             className='cursor-pointer px-4 py-2'
                         >
@@ -94,3 +106,5 @@ export default function DropdownField({
         </div>
     );
 }
+
+export default React.memo(DropdownField);

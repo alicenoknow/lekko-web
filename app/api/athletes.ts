@@ -13,10 +13,7 @@ export async function fetchAthleteById(
         `${API_URL}/api/v1/athletes/${id}`,
         getAuthConfig(token)
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }
 
@@ -47,9 +44,6 @@ export async function fetchAthletes(
             qs.stringify(params, { arrayFormat: 'repeat' }),
     });
 
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }

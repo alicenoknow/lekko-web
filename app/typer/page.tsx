@@ -6,7 +6,7 @@ import { deleteEvent, fetchEvents } from '@/app/api/events';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import Spinner from '@/components/Spinner';
 import { txt } from '@/nls/texts';
-import Pagination from '@/components/typer/Pagination';
+import Pagination from '@/components/buttons/Pagination';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
 import { AdminOnly } from '@/components/auth/AdminOnly';
 import ActionIcon from '@/components/buttons/ActionIcon';
@@ -103,7 +103,7 @@ export default function EventsPage() {
                         </div>
                         <div className='mt-4 flex items-center gap-4 md:ml-6 md:mt-0'>
                             <ActionIcon
-                                label={<FaEdit size={24} />}
+                                label={<FaEdit size={32} />}
                                 onClick={() => handleOpen(event.id)}
                                 loading={isRedirecting}
                                 disabled={isRedirecting}
@@ -112,7 +112,7 @@ export default function EventsPage() {
                                 <ActionIcon
                                     disabled={isDeleting}
                                     loading={isDeleting}
-                                    label={<TiDelete size={24} />}
+                                    label={<TiDelete size={32} />}
                                     onClick={() => handleDelete(event.id)}
                                 />
                             </AdminOnly>

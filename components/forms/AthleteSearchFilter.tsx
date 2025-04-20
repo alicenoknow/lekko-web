@@ -1,3 +1,6 @@
+'use client';
+
+import { useMemo } from 'react';
 import { COUNTRIES } from '@/lib/countries';
 import { txt } from '@/nls/texts';
 import { useQuery } from '@tanstack/react-query';
@@ -31,6 +34,23 @@ export default function AthleteSearchFilter({
         enabled: !!token,
     });
 
+    const countryOptions = useMemo(
+        () =>
+            Object.keys(COUNTRIES).map((code) => ({
+                value: code,
+                label: <CountryLabel code={code} />,
+            })),
+        []
+    );
+
+    const genderOptions = useMemo(
+        () => [
+            { value: 'man', label: txt.forms.male },
+            { value: 'woman', label: txt.forms.female },
+        ],
+        [txt.forms]
+    );
+
     return (
         <div className='mb-4 flex flex-row gap-2'>
             {allDisciplines?.data && (
@@ -47,19 +67,13 @@ export default function AthleteSearchFilter({
             )}
             <DropdownPillFilter
                 label={txt.forms.country}
-                options={Object.keys(COUNTRIES).map((code) => ({
-                    value: code,
-                    label: <CountryLabel code={code} />,
-                }))}
+                options={countryOptions}
                 selected={country}
                 onSelect={onCountryChanged}
             />
             <DropdownPillFilter
                 label={txt.forms.gender}
-                options={[
-                    { value: 'man', label: txt.forms.male },
-                    { value: 'woman', label: txt.forms.female },
-                ]}
+                options={genderOptions}
                 selected={gender}
                 onSelect={onGenderChanged}
             />

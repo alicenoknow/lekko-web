@@ -18,10 +18,7 @@ export async function fetchQuestionsFromEvent(
         `${API_URL}/api/v1/questions?event_id=${id}&page=${page}`,
         getAuthConfig(token)
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }
 
@@ -37,10 +34,7 @@ export async function createQuestion(
         { event_id, type, content, points },
         getAuthConfig(token)
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }
 
@@ -58,10 +52,7 @@ export async function updateQuestion(
         { content, type, event_id, points, correct_answer },
         getAuthConfig(token)
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }
 
@@ -73,9 +64,6 @@ export async function deleteQuestion(
         `${API_URL}/api/v1/questions/${id}`,
         getAuthConfig(token)
     );
-    if (isApiError(res.data)) {
-        const err = handleError(res.data);
-        throw err;
-    }
+    if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }
