@@ -22,8 +22,12 @@ export default function EditQuestionHeader({
     );
 
     const handlePointsChange = useCallback(
-        (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-            onPointsChange(Number(e.target.value)),
+        (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            const value = e.target.value;
+            if (/^\d*$/.test(value)) {
+                onPointsChange(Number(value));
+            }
+        },
         [onPointsChange]
     );
     return (
@@ -40,7 +44,7 @@ export default function EditQuestionHeader({
             <FormField
                 label={txt.questions.points}
                 id='question-points'
-                type='number'
+                type='text'
                 value={points}
                 onChange={handlePointsChange}
                 required

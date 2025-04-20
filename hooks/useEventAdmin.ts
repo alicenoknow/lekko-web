@@ -31,6 +31,9 @@ export function useEventAdmin(token: string, eventId: number) {
         }) => {
             return createQuestion(token, eventId, type, content, points);
         },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
+        },
     });
 
     const modifyQuestionQuery = useMutation({
@@ -45,10 +48,16 @@ export function useEventAdmin(token: string, eventId: number) {
                 question.correct_answer
             );
         },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
+        },
     });
 
     const deleteQuestionQuery = useMutation({
         mutationFn: (id: number) => deleteQuestion(token, id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
+        },
     });
 
     return {
