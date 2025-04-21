@@ -15,7 +15,7 @@ export async function fetchAnswers(
 ): Promise<AnswersResponse> {
     const params: Record<string, any> = {};
     if (question_ids && question_ids.length > 0) {
-        params['question_ids'] = question_ids;
+        params['question_ids'] = question_ids.join(',');
     }
     const res = await axios.get(`${API_URL}/api/v1/users/me/answers`, {
         ...getAuthConfig(token),
