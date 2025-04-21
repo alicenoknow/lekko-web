@@ -15,7 +15,7 @@ export interface Athletes {
 export type AthletesParams = {
     search: string;
     page_no?: number;
-    discipline_ids?: string[];
+    discipline_ids?: string;
     country?: string;
     gender?: string;
 } 

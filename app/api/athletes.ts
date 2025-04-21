@@ -1,7 +1,6 @@
 import { Athlete, Athletes, AthletesParams } from '@/types/athletes';
 import axios from 'axios';
 import { getAuthConfig, handleError, isApiError } from './common';
-import qs from 'qs';
 
 const API_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
@@ -31,17 +30,14 @@ export async function fetchAthletes(
     };
 
     if (discipline_ids && discipline_ids.length > 0) {
-        params['discipline_ids'] = discipline_ids;
+        params['discipline_ids'] = discipline_ids.join(',');
     }
-
     if (country) params.country = country;
     if (gender) params.gender = gender;
 
     const res = await axios.get(`${API_URL}/api/v1/athletes`, {
         ...getAuthConfig(token),
         params,
-        paramsSerializer: (params) =>
-            qs.stringify(params, { arrayFormat: 'repeat' }),
     });
 
     if (isApiError(res.data)) throw handleError(res.data);
