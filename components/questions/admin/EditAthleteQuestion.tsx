@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react';
 import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
 import CorrectAnswer from '../common/CorrectAnswer';
-import { Question } from '@/types/questions';
-import { Answer } from '@/types/answers';
+import { AthleteQuestion } from '@/types/questions';
+import { AthleteAnswerContent } from '@/types/answers';
 
 interface Props {
-    question: Question;
-    onAnswerChanged: (content: Answer['content']) => void;
+    question: AthleteQuestion;
+    onAnswerChanged: (content: AthleteAnswerContent) => void;
 }
 
 export default function EditAthleteQuestion({

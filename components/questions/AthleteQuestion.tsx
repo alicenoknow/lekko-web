@@ -7,14 +7,14 @@ import AthleteLabel from '../forms/AthleteLabel';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { isAdmin } from '@/lib/admin';
 import CorrectAnswer from './common/CorrectAnswer';
-import { Answer } from '@/types/answers';
-import { Question } from '@/types/questions';
+import { AthleteAnswer, AthleteAnswerContent } from '@/types/answers';
+import { AthleteQuestion as AthleteQuestionType } from '@/types/questions';
 
 interface Props {
-    question: Question;
-    answer: Answer | undefined;
+    question: AthleteQuestionType;
+    answer: AthleteAnswer | undefined;
     isPastDeadline: boolean;
-    onAnswerChanged: (content: Answer['content']) => void;
+    onAnswerChanged: (content: AthleteAnswerContent) => void;
 }
 
 export default function AthleteQuestion({
@@ -34,8 +34,7 @@ export default function AthleteQuestion({
         }
     }, [selectedId, onAnswerChanged]);
 
-    const showCorrectAnswer =
-        question.correct_answer && (isPastDeadline || isAdmin(user));
+    const showCorrectAnswer = isPastDeadline || isAdmin(user);
     return (
         <>
             {isPastDeadline ? (
@@ -51,7 +50,7 @@ export default function AthleteQuestion({
                 />
             )}
 
-            {showCorrectAnswer && (
+            {showCorrectAnswer && question.correct_answer && (
                 <CorrectAnswer>
                     <AthleteLabel
                         selected={question.correct_answer.athlete_id}

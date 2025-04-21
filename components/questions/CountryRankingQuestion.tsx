@@ -7,15 +7,18 @@ import { isAdmin } from '@/lib/admin';
 import { RANKING } from '@/lib/ranking';
 import CountryDropdown from '../forms/CountryDropdown';
 import CorrectAnswer from './common/CorrectAnswer';
-import { Answer } from '@/types/answers';
-import { Question } from '@/types/questions';
+import {
+    CountryRankingAnswer,
+    CountryRankingAnswerContent,
+} from '@/types/answers';
+import { CountryRankingQuestion as CountryRankingQuestionType } from '@/types/questions';
 import CountryLabel from '../forms/CountryLabel';
 
 interface Props {
-    question: Question;
-    answer: Answer | undefined;
+    question: CountryRankingQuestionType;
+    answer: CountryRankingAnswer | undefined;
     isPastDeadline: boolean;
-    onAnswerChanged: (content: Answer['content']) => void;
+    onAnswerChanged: (content: CountryRankingAnswerContent) => void;
 }
 
 export default function CountryRankingQuestion({
@@ -41,8 +44,7 @@ export default function CountryRankingQuestion({
         });
     }, [selectedCountries, onAnswerChanged]);
 
-    const showCorrectAnswers =
-        question.correct_answer && (isPastDeadline || isAdmin(user));
+    const showCorrectAnswers = isPastDeadline || isAdmin(user);
 
     return (
         <>
@@ -62,20 +64,23 @@ export default function CountryRankingQuestion({
                     disabled={isPastDeadline}
                 />
             ))}
-            {showCorrectAnswers && (
+            {showCorrectAnswers && question.correct_answer && (
                 <CorrectAnswer>
                     {[
                         question.correct_answer.country_one,
                         question.correct_answer.country_two,
                         question.correct_answer.country_three,
-                    ].map((country, i) => (
-                        <CountryLabel
-                            key={i}
-                            emoji={RANKING[i]}
-                            code={country}
-                            isLarge
-                        />
-                    ))}
+                    ].map(
+                        (country, i) =>
+                            country && (
+                                <CountryLabel
+                                    key={i}
+                                    emoji={RANKING[i]}
+                                    code={country}
+                                    isLarge
+                                />
+                            )
+                    )}
                 </CorrectAnswer>
             )}
         </>

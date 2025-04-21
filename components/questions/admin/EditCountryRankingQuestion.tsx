@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Question } from '@/types/questions';
-import { Answer } from '@/types/answers';
+import { CountryRankingQuestion } from '@/types/questions';
+import { CountryRankingAnswerContent } from '@/types/answers';
 import CountryDropdown from '@/components/forms/CountryDropdown';
 import CorrectAnswer from '../common/CorrectAnswer';
 
 interface Props {
-    question: Question;
-    onAnswerChanged: (content: Answer['content']) => void;
+    question: CountryRankingQuestion;
+    onAnswerChanged: (content: CountryRankingAnswerContent) => void;
 }
 
 export default function EditCountryRankingQuestion({

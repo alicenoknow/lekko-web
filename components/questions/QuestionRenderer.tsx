@@ -1,13 +1,22 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import QuestionHeader from './common/QuestionHeader';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
 import AthleteQuestion from './AthleteQuestion';
 import AthleteRankingQuestion from './AthleteRankingQuestion';
 import CountryQuestion from './CountryQuestion';
 import CountryRankingQuestion from './CountryRankingQuestion';
-import { Answer } from '@/types/answers';
+
+import {
+    Answer,
+    AnswerContent,
+    AthleteAnswer,
+    AthleteRankingAnswer,
+    CountryAnswer,
+    CountryRankingAnswer,
+} from '@/types/answers';
+
 import { Question } from '@/types/questions';
 
 interface Props {
@@ -27,48 +36,74 @@ export default function QuestionRenderer({
 }: Props) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isModified, setIsModified] = useState(false);
-    const [answerPayload, setAnswerPayload] = useState<
-        Answer['content'] | undefined
-    >(answer?.content);
+
+    const [answerPayload, setAnswerPayload] = useState<AnswerContent | null>(
+        answer?.content ?? null
+    );
 
     const handleSubmit = useCallback(() => {
         if (!answerPayload) return;
+
         setIsSubmitting(true);
+
         onSubmit({
             id: answer?.id ?? Date.now() * -1,
             question_id: question.id,
             content: answerPayload,
-        });
+        } as Answer);
+
         setIsSubmitting(false);
         setIsModified(false);
     }, [answerPayload, onSubmit, answer?.id, question.id]);
 
-    const handleAnswerChanged = useCallback((content: Answer['content']) => {
+    const handleAnswerChanged = useCallback((content: AnswerContent) => {
         setAnswerPayload(content);
         setIsModified(true);
     }, []);
 
-    const renderQuestionComponent = () => {
+    const renderQuestionComponent = useMemo(() => {
         const sharedProps = {
-            question,
-            answer,
             isPastDeadline,
             onAnswerChanged: handleAnswerChanged,
         };
 
         switch (question.type) {
             case 'athlete':
-                return <AthleteQuestion {...sharedProps} />;
+                return (
+                    <AthleteQuestion
+                        question={question}
+                        answer={answer as AthleteAnswer}
+                        {...sharedProps}
+                    />
+                );
             case 'athletes_three':
-                return <AthleteRankingQuestion {...sharedProps} />;
+                return (
+                    <AthleteRankingQuestion
+                        question={question}
+                        answer={answer as AthleteRankingAnswer}
+                        {...sharedProps}
+                    />
+                );
             case 'country':
-                return <CountryQuestion {...sharedProps} />;
+                return (
+                    <CountryQuestion
+                        question={question}
+                        answer={answer as CountryAnswer}
+                        {...sharedProps}
+                    />
+                );
             case 'countries_three':
-                return <CountryRankingQuestion {...sharedProps} />;
+                return (
+                    <CountryRankingQuestion
+                        question={question}
+                        answer={answer as CountryRankingAnswer}
+                        {...sharedProps}
+                    />
+                );
             default:
                 return null;
         }
-    };
+    }, [question, answer, isPastDeadline, handleAnswerChanged]);
 
     return (
         <div className='flex w-full flex-col bg-white p-8'>
@@ -77,7 +112,7 @@ export default function QuestionRenderer({
                 maxPoints={question.points}
                 points={answer?.points}
             />
-            {renderQuestionComponent()}
+            {renderQuestionComponent}
             <QuestionFooterButtons
                 isSubmitting={isSubmitting}
                 isModified={isModified}

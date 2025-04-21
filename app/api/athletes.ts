@@ -1,4 +1,4 @@
-import { Athlete, Athletes } from '@/types/athletes';
+import { Athlete, Athletes, AthletesParams } from '@/types/athletes';
 import axios from 'axios';
 import { getAuthConfig, handleError, isApiError } from './common';
 import qs from 'qs';
@@ -25,7 +25,7 @@ export async function fetchAthletes(
     gender?: string | null,
     page = 1
 ): Promise<Athletes> {
-    const params: Record<string, any> = {
+    const params: AthletesParams = {
         search,
         page_no: page,
     };

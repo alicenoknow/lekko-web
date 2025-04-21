@@ -44,9 +44,7 @@ function QuestionTypeSelector({ selected, setSelected, onAdd }: Props) {
                 label={
                     <span className='flex items-center gap-2'>
                         <FaPlus />
-                        <span className='text-lg'>
-                            {txt.questions.add}
-                        </span>
+                        <span className='text-lg'>{txt.questions.add}</span>
                     </span>
                 }
                 onClick={onAdd}

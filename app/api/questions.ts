@@ -6,6 +6,7 @@ import {
 } from '@/types/questions';
 import axios from 'axios';
 import { getAuthConfig, handleError, isApiError } from './common';
+import { AnswerContent } from '@/types/answers';
 
 const API_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
@@ -45,7 +46,7 @@ export async function updateQuestion(
     type: string,
     content?: string,
     points?: number,
-    correct_answer?: any
+    correct_answer?: AnswerContent
 ): Promise<UpdateQuestionResponse> {
     const res = await axios.put(
         `${API_URL}/api/v1/questions/${id}`,

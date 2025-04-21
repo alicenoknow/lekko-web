@@ -8,14 +8,17 @@ import { txt } from '@/nls/texts';
 import CorrectAnswer from './common/CorrectAnswer';
 import { isAdmin } from '@/lib/admin';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
-import { Answer } from '@/types/answers';
-import { Question } from '@/types/questions';
+import {
+    AthleteRankingAnswer,
+    AthleteRankingAnswerContent,
+} from '@/types/answers';
+import { AthleteRankingQuestion as AthleteRankingQuestionType } from '@/types/questions';
 
 interface Props {
-    question: Question;
-    answer: Answer | undefined;
+    question: AthleteRankingQuestionType;
+    answer: AthleteRankingAnswer | undefined;
     isPastDeadline: boolean;
-    onAnswerChanged: (content: Answer['content']) => void;
+    onAnswerChanged: (content: AthleteRankingAnswerContent) => void;
 }
 
 export default function AthleteRankingQuestion({
@@ -71,11 +74,13 @@ export default function AthleteRankingQuestion({
                     />
                 );
             })}
-            {showCorrectAnswers && (
+            {showCorrectAnswers && question.correct_answer && (
                 <CorrectAnswer>
                     {RANKING.map((rank, i) => {
                         const selectedId =
-                            question.correct_answer?.[getAthleteRankingKey(i)];
+                            question.correct_answer?.[
+                                getAthleteRankingKey(i)
+                            ] ?? null;
                         return (
                             <AthleteLabel
                                 key={i}

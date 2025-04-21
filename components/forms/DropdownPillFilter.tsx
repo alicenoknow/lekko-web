@@ -21,7 +21,7 @@ interface Props {
     selected: string | string[] | null;
     multiple?: boolean;
     disabled?: boolean;
-    onSelect: (value: any) => void;
+    onSelect: ((value: string | null) => void) | ((value: string[]) => void);
 }
 
 function DropdownPillFilter({

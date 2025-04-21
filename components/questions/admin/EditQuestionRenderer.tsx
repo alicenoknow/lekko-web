@@ -1,10 +1,18 @@
-import { Question } from '@/types/questions';
+import {
+    Question,
+    AthleteQuestion,
+    AthleteRankingQuestion,
+    CountryQuestion,
+    CountryRankingQuestion,
+} from '@/types/questions';
+import { AnswerContentMap } from '@/types/answers';
+
 import EditAthleteQuestion from './EditAthleteQuestion';
 import EditAthleteRankingQuestion from './EditAthleteRankingQuestion';
 import EditCountryQuestion from './EditCountryQuestion';
 import EditCountryRankingQuestion from './EditCountryRankingQuestion';
+
 import { useCallback, useMemo, useState } from 'react';
-import { Answer } from '@/types/answers';
 import EditQuestionHeader from './common/EditQuestionHeader';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
 
@@ -14,42 +22,31 @@ interface Props {
     onDelete: (questionId: number) => void;
 }
 
-export default function EditQuestionRenderer({
-    question,
-    onSubmit,
-    onDelete,
-}: Props) {
+export default function EditQuestionRenderer({ question, onSubmit, onDelete }: Props) {
     const [content, setContent] = useState(question.content);
     const [points, setPoints] = useState(question.points);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [correctAnswerPayload, setCorrectAnswerPayload] =
-        useState<Answer['content']>();
 
     const isFormInvalid = useMemo(
         () => !content.trim() || points < 1,
         [content, points]
     );
 
+    const [correctAnswerPayload, setCorrectAnswerPayload] = useState<AnswerContentMap[typeof question.type]>();
+
     const handleSubmit = useCallback(() => {
         if (isFormInvalid) return;
         setIsSubmitting(true);
+
         onSubmit({
             ...question,
             content: content.trim(),
             points,
-            ...(correctAnswerPayload && {
-                correct_answer: correctAnswerPayload,
-            }),
-        });
+            correct_answer: correctAnswerPayload,
+        } as Question);
+
         setIsSubmitting(false);
-    }, [
-        isFormInvalid,
-        content,
-        points,
-        correctAnswerPayload,
-        question,
-        onSubmit,
-    ]);
+    }, [question, content, points, correctAnswerPayload, onSubmit, isFormInvalid]);
 
     const handleDelete = useCallback(() => {
         setIsSubmitting(true);
@@ -57,21 +54,38 @@ export default function EditQuestionRenderer({
         setIsSubmitting(false);
     }, [onDelete, question.id]);
 
-    const renderQuestionComponent = () => {
-        const sharedProps = {
-            question,
-            onAnswerChanged: setCorrectAnswerPayload,
-        };
+    const sharedProps = { onAnswerChanged: setCorrectAnswerPayload };
 
+    const renderQuestionComponent = () => {
         switch (question.type) {
             case 'athlete':
-                return <EditAthleteQuestion {...sharedProps} />;
+                return (
+                    <EditAthleteQuestion
+                        question={question as AthleteQuestion}
+                        {...sharedProps}
+                    />
+                );
             case 'athletes_three':
-                return <EditAthleteRankingQuestion {...sharedProps} />;
+                return (
+                    <EditAthleteRankingQuestion
+                        question={question as AthleteRankingQuestion}
+                        {...sharedProps}
+                    />
+                );
             case 'country':
-                return <EditCountryQuestion {...sharedProps} />;
+                return (
+                    <EditCountryQuestion
+                        question={question as CountryQuestion}
+                        {...sharedProps}
+                    />
+                );
             case 'countries_three':
-                return <EditCountryRankingQuestion {...sharedProps} />;
+                return (
+                    <EditCountryRankingQuestion
+                        question={question as CountryRankingQuestion}
+                        {...sharedProps}
+                    />
+                );
             default:
                 return null;
         }

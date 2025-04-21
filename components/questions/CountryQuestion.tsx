@@ -6,15 +6,15 @@ import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { isAdmin } from '@/lib/admin';
 import CountryDropdown from '../forms/CountryDropdown';
 import CorrectAnswer from './common/CorrectAnswer';
-import { Answer } from '@/types/answers';
-import { Question } from '@/types/questions';
+import { CountryAnswer, CountryAnswerContent } from '@/types/answers';
+import { CountryQuestion as CountryQuestionType } from '@/types/questions';
 import CountryLabel from '../forms/CountryLabel';
 
 interface Props {
-    question: Question;
-    answer: Answer | undefined;
+    question: CountryQuestionType;
+    answer: CountryAnswer | undefined;
     isPastDeadline: boolean;
-    onAnswerChanged: (content: Answer['content']) => void;
+    onAnswerChanged: (content: CountryAnswerContent) => void;
 }
 
 export default function CountryQuestion({
@@ -32,8 +32,7 @@ export default function CountryQuestion({
         onAnswerChanged({ country: selectedCountry });
     }, [selectedCountry, onAnswerChanged]);
 
-    const showCorrectAnswer =
-        question.correct_answer && (isPastDeadline || isAdmin(user));
+    const showCorrectAnswer = isPastDeadline || isAdmin(user);
 
     return (
         <>
@@ -43,7 +42,7 @@ export default function CountryQuestion({
                 onSelect={setSelectedCountry}
                 disabled={isPastDeadline}
             />
-            {showCorrectAnswer && (
+            {showCorrectAnswer && question.correct_answer?.country && (
                 <CorrectAnswer>
                     <CountryLabel
                         code={question.correct_answer.country}

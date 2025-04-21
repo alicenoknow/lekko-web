@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Question } from '@/types/questions';
-import { Answer } from '@/types/answers';
+import { AthleteRankingQuestion } from '@/types/questions';
+import { AthleteRankingAnswerContent } from '@/types/answers';
 import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
 import CorrectAnswer from '../common/CorrectAnswer';
 
 interface Props {
-    question: Question;
-    onAnswerChanged: (content: Answer['content']) => void;
+    question: AthleteRankingQuestion;
+    onAnswerChanged: (content: AthleteRankingAnswerContent) => void;
 }
 
 export default function EditAthleteRankingQuestion({
