@@ -13,12 +13,13 @@ export default function EventHeader({ event }: { event: EventDetail }) {
     }, [event, router]);
 
     return (
-        <div className='m-auto mt-6 flex flex-row justify-between'>
-            <div className='space-y-2'>
+        <div className='m-auto mt-6 flex flex-row items-center justify-between'>
+            <div className='flex flex-col items-start space-y-2'>
                 <h1 className='text-3xl font-bold'>{event.name}</h1>
                 {event.description && <p>{event.description}</p>}
-                <p className='text-sm text-gray-600'>
-                    {txt.events.deadline}: {event.deadline}
+                <p className='text-sm text-lightGray'>
+                    {txt.events.deadline}:{' '}
+                    {new Date(event.deadline).toLocaleString()}
                 </p>
             </div>
             <AdminOnly>

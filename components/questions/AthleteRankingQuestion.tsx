@@ -15,7 +15,7 @@ interface Props {
     question: Question;
     answer: Answer | undefined;
     isPastDeadline: boolean;
-    onAnswerChanged: (content: Answer['content']) => void; // TODO typing
+    onAnswerChanged: (content: Answer['content']) => void;
 }
 
 export default function AthleteRankingQuestion({

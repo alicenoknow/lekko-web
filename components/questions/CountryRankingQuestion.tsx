@@ -9,6 +9,7 @@ import CountryDropdown from '../forms/CountryDropdown';
 import CorrectAnswer from './common/CorrectAnswer';
 import { Answer } from '@/types/answers';
 import { Question } from '@/types/questions';
+import CountryLabel from '../forms/CountryLabel';
 
 interface Props {
     question: Question;
@@ -68,12 +69,11 @@ export default function CountryRankingQuestion({
                         question.correct_answer.country_two,
                         question.correct_answer.country_three,
                     ].map((country, i) => (
-                        <CountryDropdown
+                        <CountryLabel
                             key={i}
                             emoji={RANKING[i]}
-                            selected={country}
-                            onSelect={() => {}}
-                            disabled
+                            code={country}
+                            isLarge
                         />
                     ))}
                 </CorrectAnswer>

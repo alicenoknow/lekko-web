@@ -8,6 +8,7 @@ import CountryDropdown from '../forms/CountryDropdown';
 import CorrectAnswer from './common/CorrectAnswer';
 import { Answer } from '@/types/answers';
 import { Question } from '@/types/questions';
+import CountryLabel from '../forms/CountryLabel';
 
 interface Props {
     question: Question;
@@ -44,10 +45,9 @@ export default function CountryQuestion({
             />
             {showCorrectAnswer && (
                 <CorrectAnswer>
-                    <CountryDropdown
-                        selected={question.correct_answer.country}
-                        onSelect={() => {}}
-                        disabled
+                    <CountryLabel
+                        code={question.correct_answer.country}
+                        isLarge
                     />
                 </CorrectAnswer>
             )}

@@ -15,7 +15,7 @@ import QuestionTypeSelector, {
 import QuestionModal from '@/components/questions/admin/QuestionModal';
 import QuestionRenderer from '@/components/questions/QuestionRenderer';
 import { Question } from '@/types/questions';
-import { toLocalDatetimeInputFormat } from '@/lib/DateUtils';
+import { toLocalDatetimeInputFormat } from '@/lib/dateUtils';
 import { useEventDetails } from '@/hooks/useEventDetails';
 import { useEventAdmin } from '@/hooks/useEventAdmin';
 import { useAnswerSubmit } from '@/hooks/useAnswerSubmit';
