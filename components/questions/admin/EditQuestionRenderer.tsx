@@ -5,7 +5,7 @@ import {
     CountryQuestion,
     CountryRankingQuestion,
 } from '@/types/questions';
-import { AnswerContentMap } from '@/types/answers';
+import { AnswerContentByType, AnswerContentMap } from '@/types/answers';
 
 import EditAthleteQuestion from './EditAthleteQuestion';
 import EditAthleteRankingQuestion from './EditAthleteRankingQuestion';

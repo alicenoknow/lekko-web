@@ -1,30 +1,29 @@
 import { PaginationInfo } from "./pagination";
 
 
-interface BaseAnswer {
+export interface Answer {
     id: number;
     question_id: number;
     user_id?: number;
     points?: number;
     created_at?: string;
     updated_at?: string;
-};
+    content: AnswerContent | null;
+}
 
-export type Answer = AthleteAnswer | AthleteRankingAnswer | CountryAnswer | CountryRankingAnswer;
-
-export interface AthleteAnswer extends BaseAnswer {
+export interface AthleteAnswer extends Answer {
     content: AthleteAnswerContent | null;
 };
 
-export interface AthleteRankingAnswer extends BaseAnswer {
+export interface AthleteRankingAnswer extends Answer {
     content: AthleteRankingAnswerContent | null;
 };
 
-export interface CountryAnswer extends BaseAnswer {
+export interface CountryAnswer extends Answer {
     content: CountryAnswerContent | null;
 };
 
-export interface CountryRankingAnswer extends BaseAnswer {
+export interface CountryRankingAnswer extends Answer {
     content: CountryRankingAnswerContent | null;
 };
 

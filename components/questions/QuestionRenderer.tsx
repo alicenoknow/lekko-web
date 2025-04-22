@@ -48,7 +48,7 @@ export default function QuestionRenderer({
             id: answer?.id ?? Date.now() * -1,
             question_id: question.id,
             content: answerPayload,
-        } as Answer);
+        });
         setIsSubmitting(false);
         setIsModified(false);
     }, [answerPayload, onSubmit, answer?.id, question.id]);
