@@ -1,7 +1,7 @@
 'use client';
 
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { fetchEvents } from '../api/events';
 import { fetchRankingFromEvent } from '../api/ranking';
@@ -23,10 +23,9 @@ export default function Ranking() {
         isLoading: isLoadingEvents,
         isError: isEventsError,
     } = useQuery({
-        queryKey: ['events', page],
-        queryFn: () => fetchEvents(token, page),
+        queryKey: ['events'],
+        queryFn: () => fetchEvents(token),
         enabled: !!token,
-        placeholderData: keepPreviousData,
         staleTime: 10 * 60 * 1000,
     });
 
