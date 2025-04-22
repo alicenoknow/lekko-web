@@ -5,7 +5,7 @@ import {
     CountryQuestion,
     CountryRankingQuestion,
 } from '@/types/questions';
-import { AnswerContentByType, AnswerContentMap } from '@/types/answers';
+import { AnswerContentMap } from '@/types/answers';
 
 import EditAthleteQuestion from './EditAthleteQuestion';
 import EditAthleteRankingQuestion from './EditAthleteRankingQuestion';
@@ -42,14 +42,13 @@ export default function EditQuestionRenderer({
     const handleSubmit = useCallback(() => {
         if (isFormInvalid) return;
         setIsSubmitting(true);
-
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         onSubmit({
             ...question,
             content: content.trim(),
             points,
             correct_answer: correctAnswerPayload,
         } as Question);
-
         setIsSubmitting(false);
     }, [
         question,
