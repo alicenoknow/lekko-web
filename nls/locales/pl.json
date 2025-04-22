@@ -2,7 +2,11 @@
     "title": "Lekkoatletawka",
     "typer": "Typer",
     "account": "Konto",
-    "results": "Ranking",
+    "ranking": {
+        "title": "Ranking",
+        "selectEvent": "Wydarzenie",
+        "all": "Wszystkie"
+    },
     "login": {
         "header": "Logowanie",
         "noAccountText": "Nie masz konta?",
@@ -86,5 +90,6 @@
     "addAnswer": "Wypełnij",
     "searchText": "Szukaj",
     "loading": "Ładowanie...",
-    "loadMore": "Więcej"
+    "loadMore": "Więcej",
+    "rankingError": "Nie udało się załadować rankingu."
 }

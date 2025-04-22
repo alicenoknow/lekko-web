@@ -43,15 +43,12 @@ export default function QuestionRenderer({
 
     const handleSubmit = useCallback(() => {
         if (!answerPayload) return;
-
         setIsSubmitting(true);
-
         onSubmit({
             id: answer?.id ?? Date.now() * -1,
             question_id: question.id,
             content: answerPayload,
         } as Answer);
-
         setIsSubmitting(false);
         setIsModified(false);
     }, [answerPayload, onSubmit, answer?.id, question.id]);

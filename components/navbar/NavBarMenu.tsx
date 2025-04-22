@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useState, useCallback, memo, useMemo } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import Link from 'next/link';
 import MenuLogo from './MenuLogo';
-import { txt as txtData } from '@/nls/texts';
+import { txt } from '@/nls/texts';
 
 export function NavBarMenu() {
-    const txt = useMemo(() => txtData, []);
     const [isOpen, setIsOpen] = useState(false);
 
     const NavButton = useCallback(
@@ -41,7 +40,7 @@ export function NavBarMenu() {
             >
                 <div className='text-lg font-semibold uppercase text-primaryDark md:flex-grow'>
                     <NavButton title={txt.typer} link='/typer' />
-                    <NavButton title={txt.results} link='/results' />
+                    <NavButton title={txt.ranking.title} link='/ranking' />
                     <NavButton title={txt.account} link='/user' />
                 </div>
             </div>
