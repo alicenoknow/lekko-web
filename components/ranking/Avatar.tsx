@@ -4,14 +4,14 @@ import { useMemo } from 'react';
 import Image from 'next/image';
 
 interface AvatarProps {
-    username: string;
+    username: string | undefined;
     size?: number;
     className?: string;
     rounded?: boolean;
     style?: React.CSSProperties;
 }
 
-export default function UsernameAvatar({
+export default function Avatar({
     username,
     size = 40,
     className = '',
