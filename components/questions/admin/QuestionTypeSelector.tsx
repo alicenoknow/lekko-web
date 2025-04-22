@@ -4,12 +4,7 @@ import { FaPlus } from 'react-icons/fa';
 import ActionButton from '@/components/buttons/ActionButton';
 import { txt } from '@/nls/texts';
 import React from 'react';
-
-export type QuestionType =
-    | 'athlete'
-    | 'athletes_three'
-    | 'country'
-    | 'countries_three';
+import { QuestionType } from '@/types/questions';
 
 interface Props {
     selected: QuestionType;

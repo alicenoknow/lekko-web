@@ -1,6 +1,6 @@
 import { EmptyResponse } from "@/app/api/common";
 import { PaginationInfo } from "./pagination";
-import { AnswerContentMap, AthleteAnswerContent, AthleteRankingAnswerContent, CountryAnswerContent, CountryRankingAnswerContent } from "./answers";
+import { AthleteAnswerContent, AthleteRankingAnswerContent, CountryAnswerContent, CountryRankingAnswerContent } from "./answers";
 
 export interface Questions {
     data: Question[];

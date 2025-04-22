@@ -9,12 +9,10 @@ import { ErrorMessage } from '@/components/error/ErrorMessage';
 import Pagination from '@/components/buttons/Pagination';
 import ActionButton from '@/components/buttons/ActionButton';
 import FormField from '@/components/forms/FormField';
-import QuestionTypeSelector, {
-    QuestionType,
-} from '@/components/questions/admin/QuestionTypeSelector';
+import QuestionTypeSelector from '@/components/questions/admin/QuestionTypeSelector';
 import QuestionModal from '@/components/questions/admin/QuestionModal';
 import QuestionRenderer from '@/components/questions/QuestionRenderer';
-import { Question } from '@/types/questions';
+import { Question, QuestionType } from '@/types/questions';
 import { toLocalDatetimeInputFormat } from '@/lib/dateUtils';
 import { useEventDetails } from '@/hooks/useEventDetails';
 import { useEventAdmin } from '@/hooks/useEventAdmin';
