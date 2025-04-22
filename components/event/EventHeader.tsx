@@ -17,7 +17,7 @@ export default function EventHeader({ event }: { event: EventDetail }) {
             <div className='flex flex-col items-start space-y-2'>
                 <h1 className='text-3xl font-bold'>{event.name}</h1>
                 {event.description && <p>{event.description}</p>}
-                <p className='text-sm text-lightGray'>
+                <p className='text-sm text-primaryDark'>
                     {txt.events.deadline}:{' '}
                     {new Date(event.deadline).toLocaleString()}
                 </p>
@@ -28,3 +28,6 @@ export default function EventHeader({ event }: { event: EventDetail }) {
         </div>
     );
 }
+
+// TODO colors
+// TODO banner

@@ -23,6 +23,7 @@ function QuestionTypeSelector({ selected, setSelected, onAdd }: Props) {
     return (
         <div className='mx-auto flex max-w-sm flex-col gap-4 sm:flex-row sm:items-center sm:gap-6'>
             <select
+                aria-label="select question type"
                 className='border-r-8 border-transparent p-2 text-sm text-primaryDark md:p-4 md:text-xl'
                 value={selected}
                 onChange={(e) => {
