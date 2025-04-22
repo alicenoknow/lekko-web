@@ -9,7 +9,7 @@ const font = Nunito({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
     title: 'Lekkoatletawka',
-    description: 'lekko',
+    description: 'Lekkoatletawka lekkoatletyka',
 };
 
 export default function RootLayout({

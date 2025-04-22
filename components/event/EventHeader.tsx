@@ -31,3 +31,4 @@ export default function EventHeader({ event }: { event: EventDetail }) {
 
 // TODO colors
 // TODO banner
+// TODO pills
