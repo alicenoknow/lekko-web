@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import AthleteSearchBar from '../forms/AthleteSearchBar';
 import AthleteLabel from '../forms/AthleteLabel';
 import { RANKING, getAthleteRankingKey } from '@/lib/ranking';
@@ -29,16 +29,17 @@ export default function AthleteRankingQuestion({
 }: Props) {
     const { user } = usePrivateUserContext();
     const [selectedIds, setSelectedIds] = useState<(number | null)[]>([
-        answer?.content?.athlete_id_one || null,
-        answer?.content?.athlete_id_two || null,
-        answer?.content?.athlete_id_three || null,
+        null,
+        null,
+        null,
     ]);
 
     useEffect(() => {
         if (
-            answer?.content?.athlete_id_one &&
-            answer?.content?.athlete_id_two &&
-            answer?.content?.athlete_id_three
+            answer?.content &&
+            answer.content.athlete_id_one &&
+            answer.content.athlete_id_two &&
+            answer.content.athlete_id_three
         ) {
             setSelectedIds([
                 answer.content.athlete_id_one,
@@ -46,11 +47,7 @@ export default function AthleteRankingQuestion({
                 answer.content.athlete_id_three,
             ]);
         }
-    }, [
-        answer?.content?.athlete_id_one,
-        answer?.content?.athlete_id_two,
-        answer?.content?.athlete_id_three,
-    ]);
+    }, [answer?.content]);
 
     const handleSelect = useCallback((index: number, id: number | null) => {
         setSelectedIds((prev) => {
@@ -60,13 +57,23 @@ export default function AthleteRankingQuestion({
         });
     }, []);
 
-    useCallback(() => {
-        onAnswerChanged({
-            athlete_id_one: selectedIds[0],
-            athlete_id_two: selectedIds[1],
-            athlete_id_three: selectedIds[2],
-        });
-    }, [selectedIds, onAnswerChanged]);
+    useEffect(() => {
+        const [one, two, three] = selectedIds;
+
+        const isComplete = one && two && three;
+        const isDifferent =
+            one !== answer?.content?.athlete_id_one ||
+            two !== answer?.content?.athlete_id_two ||
+            three !== answer?.content?.athlete_id_three;
+
+        if (isComplete && isDifferent) {
+            onAnswerChanged({
+                athlete_id_one: one,
+                athlete_id_two: two,
+                athlete_id_three: three,
+            });
+        }
+    }, [selectedIds, answer?.content, onAnswerChanged]);
 
     const showCorrectAnswers =
         question.correct_answer && (isPastDeadline || isAdmin(user));
@@ -92,21 +99,19 @@ export default function AthleteRankingQuestion({
                     />
                 );
             })}
-            {showCorrectAnswers && question.correct_answer && (
+            {showCorrectAnswers && (
                 <CorrectAnswer>
-                    {RANKING.map((rank, i) => {
-                        const selectedId =
-                            question.correct_answer?.[
-                                getAthleteRankingKey(i)
-                            ] ?? null;
-                        return (
-                            <AthleteLabel
-                                key={i}
-                                emoji={rank}
-                                selected={selectedId}
-                            />
-                        );
-                    })}
+                    {RANKING.map((emoji, i) => (
+                        <AthleteLabel
+                            key={i}
+                            emoji={emoji}
+                            selected={
+                                question.correct_answer?.[
+                                    getAthleteRankingKey(i)
+                                ] ?? null
+                            }
+                        />
+                    ))}
                 </CorrectAnswer>
             )}
         </>

@@ -1,4 +1,5 @@
 import { PrivateContent } from '@/components/auth/PrivateContent';
+import ErrorDialog from '@/components/error/ErrorDialog';
 import Spinner from '@/components/Spinner';
 import QueryProvider from '@/context/QueryProvider';
 
@@ -13,6 +14,7 @@ export default function TyperLayout({
                 <div className='flex min-h-screen justify-center p-6'>
                     <div className='w-full max-w-4xl space-y-6'>{children}</div>
                 </div>
+                <ErrorDialog />
             </PrivateContent>
         </QueryProvider>
     );

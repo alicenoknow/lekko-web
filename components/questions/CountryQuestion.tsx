@@ -6,9 +6,9 @@ import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { isAdmin } from '@/lib/admin';
 import CountryDropdown from '../forms/CountryDropdown';
 import CorrectAnswer from './common/CorrectAnswer';
+import CountryLabel from '../forms/CountryLabel';
 import { CountryAnswer, CountryAnswerContent } from '@/types/answers';
 import { CountryQuestion as CountryQuestionType } from '@/types/questions';
-import CountryLabel from '../forms/CountryLabel';
 
 interface Props {
     question: CountryQuestionType;
@@ -24,9 +24,7 @@ export default function CountryQuestion({
     onAnswerChanged,
 }: Props) {
     const { user } = usePrivateUserContext();
-    const [selectedCountry, setSelectedCountry] = useState<string | null>(
-        answer?.content?.country || null
-    );
+    const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
     useEffect(() => {
         if (answer?.content?.country) {
@@ -35,8 +33,10 @@ export default function CountryQuestion({
     }, [answer?.content?.country]);
 
     useEffect(() => {
-        onAnswerChanged({ country: selectedCountry });
-    }, [selectedCountry, onAnswerChanged]);
+        if (selectedCountry && selectedCountry !== answer?.content?.country) {
+            onAnswerChanged({ country: selectedCountry });
+        }
+    }, [selectedCountry, answer?.content?.country, onAnswerChanged]);
 
     const showCorrectAnswer = isPastDeadline || isAdmin(user);
 

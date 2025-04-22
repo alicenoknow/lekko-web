@@ -7,8 +7,12 @@ import {
 import { updateEvent } from '@/app/api/events';
 import { Question } from '@/types/questions';
 import { queryClient } from '@/context/QueryProvider';
+import { useErrorStore } from '@/store/error';
+import { txt } from '@/nls/texts';
 
 export function useEventAdmin(token: string, eventId: number) {
+    const { showErrorDialog } = useErrorStore();
+
     const updateEventQuery = useMutation({
         mutationFn: (form: { name: string; description: string; deadline: string }) => {
             const deadline = new Date(form.deadline).toISOString();
@@ -16,6 +20,10 @@ export function useEventAdmin(token: string, eventId: number) {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['event', eventId] });
+        },
+        onError: () => {
+            console.error("Cannot update event.")
+            showErrorDialog(txt.errors.eventUpdate);
         },
     });
 
@@ -34,6 +42,10 @@ export function useEventAdmin(token: string, eventId: number) {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
         },
+        onError: () => {
+            console.error("Cannot add question.")
+            showErrorDialog(txt.errors.questionAdd);
+        },
     });
 
     const modifyQuestionQuery = useMutation({
@@ -51,12 +63,20 @@ export function useEventAdmin(token: string, eventId: number) {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
         },
+        onError: () => {
+            console.error("Cannot update question.")
+            showErrorDialog(txt.errors.questionUpdate);
+        },
     });
 
     const deleteQuestionQuery = useMutation({
         mutationFn: (id: number) => deleteQuestion(token, id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
+        },
+        onError: () => {
+            console.error("Cannot remove question.")
+            showErrorDialog(txt.errors.questionDelete);
         },
     });
 

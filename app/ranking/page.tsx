@@ -54,7 +54,7 @@ export default function Ranking() {
         return <Spinner />;
     }
     if (isRankingError || isEventsError || !events?.data || !ranking?.data) {
-        return <ErrorMessage errorMessage={txt.rankingError} />;
+        return <ErrorMessage errorMessage={txt.errors.rankingError} />;
     }
     return (
         <>

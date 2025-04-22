@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { txt } from '@/nls/texts';
 import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
 import AthleteLabel from '../forms/AthleteLabel';
@@ -24,21 +24,19 @@ export default function AthleteQuestion({
     onAnswerChanged,
 }: Props) {
     const { user } = usePrivateUserContext();
-    const [selectedId, setSelectedId] = useState<number | null>(
-        answer?.content?.athlete_id ?? null
-    );
+    const [selectedId, setSelectedId] = useState<number | null>(null);
 
     useEffect(() => {
-        if (answer?.content?.athlete_id) {
+        if (answer?.content?.athlete_id !== undefined) {
             setSelectedId(answer.content.athlete_id);
         }
     }, [answer?.content?.athlete_id]);
 
     useEffect(() => {
-        if (selectedId !== null) {
+        if (selectedId !== null && selectedId !== answer?.content?.athlete_id) {
             onAnswerChanged({ athlete_id: selectedId });
         }
-    }, [selectedId, onAnswerChanged]);
+    }, [selectedId, answer?.content?.athlete_id, onAnswerChanged]);
 
     const showCorrectAnswer = isPastDeadline || isAdmin(user);
     return (
@@ -55,8 +53,7 @@ export default function AthleteQuestion({
                     onSelect={setSelectedId}
                 />
             )}
-
-            {showCorrectAnswer && question.correct_answer && (
+            {showCorrectAnswer && question.correct_answer?.athlete_id && (
                 <CorrectAnswer>
                     <AthleteLabel
                         selected={question.correct_answer.athlete_id}

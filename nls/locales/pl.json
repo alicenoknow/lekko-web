@@ -63,6 +63,7 @@
         "submitAnswer": "Zatwierdź odpowiedź",
         "submitCorrectAnswer": "Ustaw poprawną odpowiedź",
         "createError": "Nie udało się stworzyć wydarzenia.",
+        "removeError": "Nie udało się usunąć wydarzenia.",
         "save": "Zapisz",
         "edit": "Szczegóły wydarzenia",
         "questions": "Pytania"
@@ -91,5 +92,13 @@
     "searchText": "Szukaj",
     "loading": "Ładowanie...",
     "loadMore": "Więcej",
-    "rankingError": "Nie udało się załadować rankingu."
+    "errors": {
+        "answerUpdate": "Nie udało się przesłać odpowiedzi",
+        "rankingError": "Nie udało się załadować rankingu",
+        "questionDelete": "Nie udało się usunąć pytania",
+        "questionAdd": "Nie udało się dodać pytania",
+        "eventUpdate": "Nie udało się przesłać wydarzenia",
+        "questionUpdate": "Nie udało się przesłać pytania",
+        "errorMessage": "Coś poszło nie tak spróbuj ponownie później"
+    }
 }

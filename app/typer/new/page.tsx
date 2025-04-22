@@ -11,15 +11,16 @@ import { createEvent } from '@/app/api/events';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { AdminOnly } from '@/components/auth/AdminOnly';
 import { queryClient } from '@/context/QueryProvider';
+import { useErrorStore } from '@/store/error';
 
 function CreateEventPage() {
     const router = useRouter();
     const { token } = usePrivateUserContext();
+    const { showErrorDialog } = useErrorStore();
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [deadline, setDeadline] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
 
     const isFormInvalid = !name || !deadline;
 
@@ -30,7 +31,7 @@ function CreateEventPage() {
                 name,
                 formattedDeadline,
                 description || null,
-                token!
+                token
             );
         },
         onSuccess: (data) => {
@@ -39,12 +40,11 @@ function CreateEventPage() {
         },
         onError: (err) => {
             console.error('Create event error:', err.message);
-            setErrorMessage(txt.events.createError);
+            showErrorDialog(txt.events.createError);
         },
     });
 
     const handleSubmit = useCallback(() => {
-        setErrorMessage('');
         mutation.mutate();
     }, [mutation]);
 
@@ -77,14 +77,9 @@ function CreateEventPage() {
                 onChange={(e) => setDeadline(e.target.value)}
                 required
             />
-
             {isFormInvalid && (
                 <ErrorMessage errorMessage={txt.forms.fillAllInfo} />
             )}
-            {!isFormInvalid && errorMessage && (
-                <ErrorMessage errorMessage={errorMessage} />
-            )}
-
             <ActionButton
                 label={txt.forms.send}
                 onClick={handleSubmit}

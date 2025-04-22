@@ -13,11 +13,13 @@ import { useRouter } from 'next/navigation';
 import { queryClient } from '@/context/QueryProvider';
 import EventCard from '@/components/event/EventCard';
 import AddEvent from '@/components/event/AddEvent';
+import { useErrorStore } from '@/store/error';
 
 export default function EventsPage() {
     const router = useRouter();
     const [page, setPage] = useState(1);
     const { token } = usePrivateUserContext();
+    const { showErrorDialog } = useErrorStore();
 
     const {
         data: events,
@@ -36,7 +38,10 @@ export default function EventsPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['events'] });
         },
-        onError: () => console.error('Cannot remove event.'),
+        onError: () => {
+            console.error('Cannot remove event.');
+            showErrorDialog(txt.events.removeError);
+        },
     });
 
     const handleOpen = useCallback(

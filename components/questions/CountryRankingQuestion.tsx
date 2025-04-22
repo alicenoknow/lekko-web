@@ -7,12 +7,12 @@ import { isAdmin } from '@/lib/admin';
 import { RANKING } from '@/lib/ranking';
 import CountryDropdown from '../forms/CountryDropdown';
 import CorrectAnswer from './common/CorrectAnswer';
+import CountryLabel from '../forms/CountryLabel';
 import {
     CountryRankingAnswer,
     CountryRankingAnswerContent,
 } from '@/types/answers';
 import { CountryRankingQuestion as CountryRankingQuestionType } from '@/types/questions';
-import CountryLabel from '../forms/CountryLabel';
 
 interface Props {
     question: CountryRankingQuestionType;
@@ -28,12 +28,13 @@ export default function CountryRankingQuestion({
     onAnswerChanged,
 }: Props) {
     const { user } = usePrivateUserContext();
+
     const [selectedCountries, setSelectedCountries] = useState<
         (string | null)[]
     >([
-        answer?.content?.country_one || null,
-        answer?.content?.country_two || null,
-        answer?.content?.country_three || null,
+        answer?.content?.country_one ?? null,
+        answer?.content?.country_two ?? null,
+        answer?.content?.country_three ?? null,
     ]);
 
     useEffect(() => {
@@ -43,24 +44,39 @@ export default function CountryRankingQuestion({
             answer?.content?.country_three
         ) {
             setSelectedCountries([
-                answer?.content?.country_one,
-                answer?.content?.country_two,
-                answer?.content?.country_three,
+                answer.content.country_one,
+                answer.content.country_two,
+                answer.content.country_three,
             ]);
         }
-    }, [
-        answer?.content?.country_one,
-        answer?.content?.country_two,
-        answer?.content?.country_three,
-    ]);
+    }, [answer?.content]);
 
     useEffect(() => {
-        onAnswerChanged({
-            country_one: selectedCountries[0],
-            country_two: selectedCountries[1],
-            country_three: selectedCountries[2],
+        const [one, two, three] = selectedCountries;
+
+        if (
+            one &&
+            two &&
+            three &&
+            (one !== answer?.content?.country_one ||
+                two !== answer?.content?.country_two ||
+                three !== answer?.content?.country_three)
+        ) {
+            onAnswerChanged({
+                country_one: one,
+                country_two: two,
+                country_three: three,
+            });
+        }
+    }, [selectedCountries, answer?.content, onAnswerChanged]);
+
+    const handleSelect = (index: number, value: string | null) => {
+        setSelectedCountries((prev) => {
+            const next = [...prev];
+            next[index] = value;
+            return next;
         });
-    }, [selectedCountries, onAnswerChanged]);
+    };
 
     const showCorrectAnswers = isPastDeadline || isAdmin(user);
 
@@ -72,32 +88,27 @@ export default function CountryRankingQuestion({
                     label={i === 0 ? txt.forms.yourAnswer : ''}
                     emoji={RANKING[i]}
                     selected={country}
-                    onSelect={(value) =>
-                        setSelectedCountries((prev) => {
-                            const next = [...prev];
-                            next[i] = value;
-                            return next;
-                        })
-                    }
+                    onSelect={(value) => handleSelect(i, value)}
                     disabled={isPastDeadline}
                 />
             ))}
             {showCorrectAnswers && question.correct_answer && (
                 <CorrectAnswer>
-                    {[
-                        question.correct_answer.country_one,
-                        question.correct_answer.country_two,
-                        question.correct_answer.country_three,
-                    ].map(
-                        (country, i) =>
-                            country && (
-                                <CountryLabel
-                                    key={i}
-                                    emoji={RANKING[i]}
-                                    code={country}
-                                    isLarge
-                                />
-                            )
+                    {(
+                        [
+                            question.correct_answer.country_one,
+                            question.correct_answer.country_two,
+                            question.correct_answer.country_three,
+                        ] as const
+                    ).map((country, i) =>
+                        country ? (
+                            <CountryLabel
+                                key={i}
+                                emoji={RANKING[i]}
+                                code={country}
+                                isLarge
+                            />
+                        ) : null
                     )}
                 </CorrectAnswer>
             )}
