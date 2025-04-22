@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import QuestionHeader from './common/QuestionHeader';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
 import AthleteQuestion from './AthleteQuestion';
@@ -38,8 +38,14 @@ export default function QuestionRenderer({
     const [isModified, setIsModified] = useState(false);
 
     const [answerPayload, setAnswerPayload] = useState<AnswerContent | null>(
-        answer?.content ?? null
+        null
     );
+
+    useEffect(() => {
+        if (answer?.content) {
+            setAnswerPayload(answer.content);
+        }
+    }, [answer?.content]);
 
     const handleSubmit = useCallback(() => {
         if (!answerPayload) return;

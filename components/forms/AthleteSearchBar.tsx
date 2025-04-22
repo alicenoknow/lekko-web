@@ -171,5 +171,4 @@ function useDebouncedValue<T>(value: T, delay: number): T {
 
 // TODO handle mutations errors
 // TODO caching
-// TODO linter typescript
 // TODO test all

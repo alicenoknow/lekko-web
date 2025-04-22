@@ -29,6 +29,12 @@ export default function CountryQuestion({
     );
 
     useEffect(() => {
+        if (answer?.content?.country) {
+            setSelectedCountry(answer.content.country);
+        }
+    }, [answer?.content?.country]);
+
+    useEffect(() => {
         onAnswerChanged({ country: selectedCountry });
     }, [selectedCountry, onAnswerChanged]);
 

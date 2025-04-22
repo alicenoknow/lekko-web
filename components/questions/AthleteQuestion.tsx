@@ -29,6 +29,12 @@ export default function AthleteQuestion({
     );
 
     useEffect(() => {
+        if (answer?.content?.athlete_id) {
+            setSelectedId(answer.content.athlete_id);
+        }
+    }, [answer?.content?.athlete_id]);
+
+    useEffect(() => {
         if (selectedId !== null) {
             onAnswerChanged({ athlete_id: selectedId });
         }

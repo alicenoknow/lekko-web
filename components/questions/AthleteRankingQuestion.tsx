@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import AthleteSearchBar from '../forms/AthleteSearchBar';
 import AthleteLabel from '../forms/AthleteLabel';
 import { RANKING, getAthleteRankingKey } from '@/lib/ranking';
@@ -32,6 +32,24 @@ export default function AthleteRankingQuestion({
         answer?.content?.athlete_id_one || null,
         answer?.content?.athlete_id_two || null,
         answer?.content?.athlete_id_three || null,
+    ]);
+
+    useEffect(() => {
+        if (
+            answer?.content?.athlete_id_one &&
+            answer?.content?.athlete_id_two &&
+            answer?.content?.athlete_id_three
+        ) {
+            setSelectedIds([
+                answer.content.athlete_id_one,
+                answer.content.athlete_id_two,
+                answer.content.athlete_id_three,
+            ]);
+        }
+    }, [
+        answer?.content?.athlete_id_one,
+        answer?.content?.athlete_id_two,
+        answer?.content?.athlete_id_three,
     ]);
 
     const handleSelect = useCallback((index: number, id: number | null) => {

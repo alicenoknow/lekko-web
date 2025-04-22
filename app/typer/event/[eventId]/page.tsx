@@ -23,19 +23,13 @@ export default function EventDetailPage() {
     const { eventQuery, questionsQuery, answersQuery, isPastDeadline } =
         useEventDetails(token, eventId, page);
 
-    const { onSubmit: onAnswerSubmit, isLoading: isSubmitting } =
-        useAnswerSubmit(token, user.sub);
+    const { onSubmit: onAnswerSubmit } = useAnswerSubmit(token, user.sub);
 
     const event = eventQuery.data;
     const questions = questionsQuery.data?.data || [];
     const answers = answersQuery.data?.data || [];
 
-    if (
-        eventQuery.isLoading ||
-        questionsQuery.isLoading ||
-        answersQuery.isLoading ||
-        isSubmitting
-    ) {
+    if (eventQuery.isLoading || questionsQuery.isLoading) {
         return <Spinner />;
     }
 

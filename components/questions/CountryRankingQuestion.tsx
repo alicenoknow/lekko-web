@@ -37,6 +37,24 @@ export default function CountryRankingQuestion({
     ]);
 
     useEffect(() => {
+        if (
+            answer?.content?.country_one &&
+            answer?.content?.country_two &&
+            answer?.content?.country_three
+        ) {
+            setSelectedCountries([
+                answer?.content?.country_one,
+                answer?.content?.country_two,
+                answer?.content?.country_three,
+            ]);
+        }
+    }, [
+        answer?.content?.country_one,
+        answer?.content?.country_two,
+        answer?.content?.country_three,
+    ]);
+
+    useEffect(() => {
         onAnswerChanged({
             country_one: selectedCountries[0],
             country_two: selectedCountries[1],
