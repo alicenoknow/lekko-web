@@ -49,6 +49,11 @@ export default function EventsPage() {
         [router]
     );
 
+    const handleAdminOpen = useCallback(
+        (id: number) => router.push(`/typer/event/${id}/admin`),
+        [router]
+    );
+
     const handleAdd = useCallback(() => router.push('/typer/new'), [router]);
 
     if (isLoading || isDeleting) return <Spinner />;
@@ -69,6 +74,7 @@ export default function EventsPage() {
                     key={event.id}
                     event={event}
                     onEdit={() => handleOpen(event.id)}
+                    onAdminEdit={() => handleAdminOpen(event.id)}
                     onDelete={() => deleteEventMutation(event.id)}
                     isDeleting={isDeleting}
                 />

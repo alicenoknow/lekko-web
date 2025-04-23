@@ -5,15 +5,23 @@ import { AdminOnly } from '@/components/auth/AdminOnly';
 import { TyperEvent } from '@/types/events';
 import { txt } from '@/nls/texts';
 import React from 'react';
+import ActionButton from '../buttons/ActionButton';
 
 interface Props {
     event: TyperEvent;
     onEdit: () => void;
+    onAdminEdit: () => void;
     onDelete: () => void;
     isDeleting: boolean;
 }
 
-function EventCard({ event, onEdit, onDelete, isDeleting }: Props) {
+function EventCard({
+    event,
+    onEdit,
+    onAdminEdit,
+    onDelete,
+    isDeleting,
+}: Props) {
     return (
         <div className='flex flex-col rounded-md border bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between'>
             <div className='flex flex-col text-left'>
@@ -27,7 +35,13 @@ function EventCard({ event, onEdit, onDelete, isDeleting }: Props) {
                 </p>
             </div>
             <div className='mt-4 flex items-center gap-4 md:ml-6 md:mt-0'>
-                <ActionIcon label={<FaEdit size={30} />} onClick={onEdit} />
+                <ActionButton label={txt.events.open} onClick={onEdit} />
+                <AdminOnly>
+                    <ActionIcon
+                        label={<FaEdit size={30} />}
+                        onClick={onAdminEdit}
+                    />
+                </AdminOnly>
                 <AdminOnly>
                     <ActionIcon
                         label={<TiDelete size={30} />}

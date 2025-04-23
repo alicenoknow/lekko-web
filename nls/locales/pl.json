@@ -46,7 +46,7 @@
     },
     "home": {
         "title": "Lekkoatletawka",
-        "joinFb": "Dołącz"
+        "joinFb": "Dołącz do nas na FB"
     },
     "user": {
         "logOut": "Wyloguj się"
@@ -66,7 +66,8 @@
         "removeError": "Nie udało się usunąć wydarzenia.",
         "save": "Zapisz",
         "edit": "Szczegóły wydarzenia",
-        "questions": "Pytania"
+        "questions": "Pytania",
+        "open": "Odpowiedz"
     },
     "questions": {
         "modalTitle": "Edytuj pytanie",
