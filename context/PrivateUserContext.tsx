@@ -4,6 +4,7 @@ import { createContext, useContext } from 'react';
 interface PrivateUserContextValue {
   user: User;
   token: string;
+  logout: () => void;
 }
 
 export const PrivateUserContext = createContext<PrivateUserContextValue | null>(null);

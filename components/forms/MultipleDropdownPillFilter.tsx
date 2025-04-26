@@ -58,7 +58,7 @@ function MultipleDropdownPillFilter({
                     <ListboxButton
                         className={`flex min-h-[44px] w-full flex-wrap items-center justify-between gap-2 rounded-md border px-4 py-2 text-sm shadow-sm focus:outline-none ${
                             disabled
-                                ? 'cursor-not-allowed bg-gray-100 text-gray-400'
+                                ? 'cursor-not-allowed bg-lightGray/25 text-lightGray'
                                 : 'bg-white'
                         }`}
                     >

@@ -81,7 +81,7 @@ function DropdownField({
                     <ListboxButton
                         className={`flex w-full items-center justify-between border px-4 py-2 text-sm shadow-sm focus:outline-none md:p-4 md:text-lg ${
                             disabled
-                                ? 'bg-gray-100 text-gray-400'
+                                ? 'bg-lightGray/25 text-lightGray'
                                 : 'bg-white text-primaryDark'
                         }`}
                     >
@@ -92,7 +92,7 @@ function DropdownField({
                     <ListboxOptions className='absolute z-50 mt-1 max-h-60 w-full overflow-auto border bg-white text-sm shadow-lg focus:outline-none'>
                         <ListboxOption
                             key='none'
-                            value={NO_SELECTION} // Use our constant instead of undefined
+                            value={NO_SELECTION}
                             className='cursor-pointer px-4 py-2'
                         >
                             {({ selected }) => (

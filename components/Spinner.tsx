@@ -16,7 +16,7 @@ const Spinner = ({ isInline = false }: SpinnerProps) => {
             <div role='status'>
                 <svg
                     aria-hidden='true'
-                    className={`h-8 w-8 animate-spin fill-accentLight text-gray-200 dark:text-primaryDark`}
+                    className={`h-8 w-8 animate-spin fill-accentLight text-lightGray dark:text-primaryDark`}
                     viewBox='0 0 100 101'
                     fill='none'
                     xmlns='http://www.w3.org/2000/svg'

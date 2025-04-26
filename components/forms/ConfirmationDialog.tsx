@@ -59,7 +59,7 @@ export default function ConfirmationDialog({
                             <div className='flex flex-col items-center gap-4'>
                                 <FaExclamationTriangle
                                     size={40}
-                                    className='text-red-600'
+                                    className='text-darkRed'
                                 />
                                 <DialogTitle
                                     as='h3'
@@ -68,7 +68,7 @@ export default function ConfirmationDialog({
                                     {title}
                                 </DialogTitle>
                                 {description && (
-                                    <p className='text-center text-sm text-gray-600'>
+                                    <p className='text-center text-sm text-primaryDark'>
                                         {description}
                                     </p>
                                 )}

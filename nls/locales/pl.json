@@ -51,7 +51,8 @@
         "joinFb": "Dołącz do nas na FB"
     },
     "user": {
-        "logOut": "Wyloguj się"
+        "login": "Zaloguj się",
+        "logout": "Wyloguj się"
     },
     "events": {
         "title": "Wydarzenia",

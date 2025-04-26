@@ -117,7 +117,7 @@ function RegisterForm() {
                 required
             />
             {registered ? (
-                <p className='text-lg font-semibold uppercase text-green-700'>
+                <p className='text-lg font-semibold uppercase text-darkGreen'>
                     {txt.register.success}
                 </p>
             ) : (

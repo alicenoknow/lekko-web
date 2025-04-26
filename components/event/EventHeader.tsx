@@ -29,9 +29,8 @@ export default function EventHeader({ event }: { event: EventDetail }) {
     );
 }
 
-// TODO colors
 // TODO banner
-// TODO (backend also) add question types for float (e.g. 3seconds, 34.5 meters)
-// TODO logout on navbar
-// TODO handle publishing of event
-// TODO BE total points
+
+// TODO BE + FE add question types for float (e.g. 3seconds, 34.5 meters)
+// TODO BE + FE handle publishing of event
+// TODO BE + FE total points

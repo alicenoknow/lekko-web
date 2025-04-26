@@ -49,7 +49,7 @@ export default function ErrorDialog() {
                             <div className='flex flex-col items-center gap-4'>
                                 <FaExclamationTriangle
                                     size={40}
-                                    className='text-red-600'
+                                    className='text-darkRed'
                                 />
                                 <DialogTitle
                                     as='h3'

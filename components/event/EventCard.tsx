@@ -27,7 +27,7 @@ function EventCard({
             <div className='flex flex-col text-left'>
                 <h2 className='font-semibold md:text-xl'>{event.name}</h2>
                 {event.description && (
-                    <p className='mt-1 text-gray-600'>{event.description}</p>
+                    <p className='mt-1 text-primaryDark'>{event.description}</p>
                 )}
                 <p className='mt-2 text-sm'>
                     {txt.events.deadline}:{' '}

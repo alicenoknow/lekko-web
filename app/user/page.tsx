@@ -24,7 +24,7 @@ export default function UserPage() {
                 <p className='mb-12 text-2xl font-bold uppercase tracking-tight text-primaryDark'>
                     Hej {user?.username ?? ''}!
                 </p>
-                <ActionButton label={txt.user.logOut} onClick={handleLogout} />
+                <ActionButton label={txt.user.logout} onClick={handleLogout} />
             </main>
         </PrivateContent>
     );

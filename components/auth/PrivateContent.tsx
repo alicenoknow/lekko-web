@@ -15,7 +15,7 @@ export function PrivateContent({
     redirect?: boolean;
 }) {
     const router = useRouter();
-    const { user, token, hydrated } = useUserStore();
+    const { user, token, hydrated, logout } = useUserStore();
 
     useEffect(() => {
         if (hydrated && (!user || !token) && redirect) {
@@ -26,7 +26,7 @@ export function PrivateContent({
     if (!hydrated || !user || !token) return fallback;
 
     return (
-        <PrivateUserContext.Provider value={{ user, token }}>
+        <PrivateUserContext.Provider value={{ user, token, logout }}>
             {children}
         </PrivateUserContext.Provider>
     );
