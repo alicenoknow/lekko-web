@@ -30,17 +30,6 @@ function MultipleDropdownPillFilter({
     disabled = false,
     onSelect,
 }: Props) {
-    const getLabel = (): React.ReactNode => {
-        if (Array.isArray(selected)) {
-            return selected.length > 0
-                ? `${txt.forms.selected} ${selected.length}`
-                : txt.forms.all;
-        }
-        return (
-            options.find((o) => o.value === selected)?.label ?? txt.forms.all
-        );
-    };
-
     const handleSelect = useCallback(
         (value: string[]) => {
             if (value.some((v) => v === undefined)) {
@@ -51,6 +40,10 @@ function MultipleDropdownPillFilter({
         },
         [onSelect]
     );
+
+    const selectedLabels = options
+        .filter((opt) => selected.includes(opt.value))
+        .map((opt) => opt.label);
 
     return (
         <div className='flex w-full flex-col gap-1'>
@@ -63,16 +56,29 @@ function MultipleDropdownPillFilter({
             >
                 <div className='relative inline-block w-full text-left'>
                     <ListboxButton
-                        className={`flex w-full items-center justify-between border px-4 py-2 text-sm shadow-sm focus:outline-none ${
+                        className={`flex min-h-[44px] w-full flex-wrap items-center justify-between gap-2 rounded-md border px-4 py-2 text-sm shadow-sm focus:outline-none ${
                             disabled
                                 ? 'cursor-not-allowed bg-gray-100 text-gray-400'
                                 : 'bg-white'
                         }`}
                     >
-                        {getLabel()}
-                        <FaChevronDown className='ml-2 h-4 w-4' />
+                        <div className='flex flex-wrap items-center gap-2 overflow-hidden'>
+                            {selected.length > 0 ? (
+                                selectedLabels.map((label, idx) => (
+                                    <span
+                                        key={idx}
+                                        className='whitespace-nowrap rounded-full bg-primaryLight px-2 py-1 text-xs font-semibold text-primaryDark'
+                                    >
+                                        {label}
+                                    </span>
+                                ))
+                            ) : (
+                                <span>{txt.forms.all}</span>
+                            )}
+                        </div>
+                        <FaChevronDown className='ml-auto h-4 w-4 shrink-0' />
                     </ListboxButton>
-                    <ListboxOptions className='absolute z-50 mt-1 max-h-60 w-full overflow-auto border bg-white text-sm shadow-lg focus:outline-none'>
+                    <ListboxOptions className='absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-white text-sm shadow-lg focus:outline-none'>
                         <ListboxOption
                             value={undefined}
                             key='all'

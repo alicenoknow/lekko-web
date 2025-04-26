@@ -14,6 +14,8 @@ const config: Config = {
         accentDark: '#2a2b68',
         absoluteBlack: '#000',
         lightGreen: '#93fc8d',
+        lightYellow: '#fff2a9',
+        lightRed: '#ffaaaa',
         lightGray: '#717171',
       },
     },

@@ -31,15 +31,7 @@ export default function EventHeader({ event }: { event: EventDetail }) {
 
 // TODO colors
 // TODO banner
-// TODO pills
-// TODO close search bar
-// TODO hide correct answer on question create
-// TODO delete confirmation
-// TODO red background for invalid answer
 // TODO (backend also) add question types for float (e.g. 3seconds, 34.5 meters)
-// TODO logout on navbar + better placement of nav items
+// TODO logout on navbar
 // TODO handle publishing of event
-// TODO change edit button to sth like "Odpowiedz!"
-// TODO flags edit ranking athlete center
-// TODO save button after error
 // TODO BE total points

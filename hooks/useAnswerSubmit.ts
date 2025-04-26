@@ -6,7 +6,7 @@ import { queryClient } from '@/context/QueryProvider';
 import { useErrorStore } from '@/store/error';
 import { txt } from '@/nls/texts';
 
-export function useAnswerSubmit(token: string, userId: number) {
+export function useAnswerSubmit(token: string, userId: number, setIsModified: (isModified: boolean) => void) {
     const { showErrorDialog } = useErrorStore();
 
     const create = useMutation({
@@ -38,6 +38,7 @@ export function useAnswerSubmit(token: string, userId: number) {
             } else {
                 update.mutate({ id: answer.id, questionId: answer.question_id, content: answer.content });
             }
+            setIsModified(false);
         },
         [create, update]
     );

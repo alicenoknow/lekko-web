@@ -100,7 +100,10 @@ export default function AthleteRankingQuestion({
                 );
             })}
             {showCorrectAnswers && (
-                <CorrectAnswer>
+                <CorrectAnswer
+                    maxPoints={question.points}
+                    grantedPoints={answer?.points}
+                >
                     {RANKING.map((emoji, i) => (
                         <AthleteLabel
                             key={i}

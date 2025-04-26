@@ -10,7 +10,7 @@ import { queryClient } from '@/context/QueryProvider';
 import { useErrorStore } from '@/store/error';
 import { txt } from '@/nls/texts';
 
-export function useEventAdmin(token: string, eventId: number) {
+export function useEventAdmin(token: string, eventId: number, setEventModified: (isModified: boolean) => void) {
     const { showErrorDialog } = useErrorStore();
 
     const updateEventQuery = useMutation({
@@ -20,10 +20,12 @@ export function useEventAdmin(token: string, eventId: number) {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['event', eventId] });
+            setEventModified(false);
         },
         onError: () => {
             console.error("Cannot update event.")
             showErrorDialog(txt.errors.eventUpdate);
+            setEventModified(true);
         },
     });
 

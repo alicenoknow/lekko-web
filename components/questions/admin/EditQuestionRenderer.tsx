@@ -110,7 +110,7 @@ export default function EditQuestionRenderer({
                 onContentChange={setContent}
                 onPointsChange={setPoints}
             />
-            {renderQuestionComponent()}
+            {question.id >= 0 && renderQuestionComponent()}
             <QuestionFooterButtons
                 disableSubmit={isFormInvalid}
                 isLoading={isSubmitting}

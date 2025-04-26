@@ -54,7 +54,10 @@ export default function AthleteQuestion({
                 />
             )}
             {showCorrectAnswer && question.correct_answer?.athlete_id && (
-                <CorrectAnswer>
+                <CorrectAnswer
+                    maxPoints={question.points}
+                    grantedPoints={answer?.points}
+                >
                     <AthleteLabel
                         selected={question.correct_answer.athlete_id}
                     />

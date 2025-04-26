@@ -10,20 +10,17 @@ import Pagination from '@/components/buttons/Pagination';
 import QuestionRenderer from '@/components/questions/QuestionRenderer';
 import { Question } from '@/types/questions';
 import { Answer } from '@/types/answers';
-import { useAnswerSubmit } from '@/hooks/useAnswerSubmit';
 import { useEventDetails } from '@/hooks/useEventDetails';
 import EventHeader from '@/components/event/EventHeader';
 
 export default function EventDetailPage() {
-    const { token, user } = usePrivateUserContext();
+    const { token } = usePrivateUserContext();
     const { eventId: eventIdParam } = useParams<{ eventId: string }>();
     const eventId = parseInt(eventIdParam, 10);
     const [page, setPage] = useState(1);
 
     const { eventQuery, questionsQuery, answersQuery, isPastDeadline } =
         useEventDetails(token, eventId, page);
-
-    const { onSubmit: onAnswerSubmit } = useAnswerSubmit(token, user.sub);
 
     const event = eventQuery.data;
     const questions = questionsQuery.data?.data || [];
@@ -56,7 +53,6 @@ export default function EventDetailPage() {
                             answer={answers.find(
                                 (a: Answer) => a.question_id === q.id
                             )}
-                            onSubmit={onAnswerSubmit}
                             isPastDeadline={isPastDeadline}
                         />
                     ))}

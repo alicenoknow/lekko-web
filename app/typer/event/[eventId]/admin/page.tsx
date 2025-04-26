@@ -17,12 +17,16 @@ import { toLocalDatetimeInputFormat } from '@/lib/dateUtils';
 import { useEventDetails } from '@/hooks/useEventDetails';
 import { useEventAdmin } from '@/hooks/useEventAdmin';
 import { useAnswerSubmit } from '@/hooks/useAnswerSubmit';
+import ConfirmationDialog from '@/components/forms/ConfirmationDialog';
 
 export default function EventDetailAdminPage() {
     const { eventId: eventIdParam } = useParams<{ eventId: string }>();
     const eventId = parseInt(eventIdParam, 10);
     const { token, user } = usePrivateUserContext();
     const [page, setPage] = useState(1);
+    const [isConfirmationOpen, setConfirmationOpen] = useState(false);
+    const [questionToDelete, setQuestionToDelete] = useState<number | null>(null);
+    const [isEventModified, setEventModified] = useState(false);
 
     const { eventQuery, questionsQuery, answersQuery, isPastDeadline } =
         useEventDetails(token, eventId, page);
@@ -32,16 +36,13 @@ export default function EventDetailAdminPage() {
         addQuestionQuery,
         modifyQuestionQuery,
         deleteQuestionQuery,
-    } = useEventAdmin(token, eventId);
-
-    const { onSubmit: onAnswerSubmit } = useAnswerSubmit(token, user.sub);
+    } = useEventAdmin(token, eventId, setEventModified);
 
     const [form, setForm] = useState({
         name: '',
         description: '',
         deadline: '',
     });
-    const [isEventModified, setEventModified] = useState(false);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isOpenModal, setOpenModal] = useState(false);
     const [selectedType, setSelectedType] = useState<QuestionType>('athlete');
@@ -105,6 +106,24 @@ export default function EventDetailAdminPage() {
         [deleteQuestionQuery]
     );
 
+    const handleDeleteRequest = useCallback((id: number) => {
+        setQuestionToDelete(id);
+        setConfirmationOpen(true);
+    }, []);
+
+    const handleConfirmDelete = useCallback(() => {
+        if (questionToDelete !== null) {
+            onQuestionDelete(questionToDelete);
+        }
+        setConfirmationOpen(false);
+        setQuestionToDelete(null);
+    }, [questionToDelete, onQuestionDelete]);
+
+    const handleCancelDelete = useCallback(() => {
+        setConfirmationOpen(false);
+        setQuestionToDelete(null);
+    }, []);
+
     if (
         eventQuery.isLoading ||
         questionsQuery.isLoading ||
@@ -167,11 +186,11 @@ export default function EventDetailAdminPage() {
             <h2 className='pt-8 text-xl font-bold md:text-3xl'>
                 {txt.events.questions}
             </h2>
-            <QuestionTypeSelector
+            {!isPastDeadline && <QuestionTypeSelector
                 selected={selectedType}
                 setSelected={setSelectedType}
                 onAdd={onNewQuestion}
-            />
+            />}
             {questions.map((q: Question) => (
                 <QuestionRenderer
                     key={q.id}
@@ -183,7 +202,6 @@ export default function EventDetailAdminPage() {
                         setCurrentQuestion(q);
                         setOpenModal(true);
                     }}
-                    onSubmit={onAnswerSubmit}
                     isPastDeadline={isPastDeadline}
                 />
             ))}
@@ -198,7 +216,16 @@ export default function EventDetailAdminPage() {
                 setOpen={setOpenModal}
                 question={currentQuestion}
                 onSubmit={onQuestionSubmit}
-                onDelete={onQuestionDelete}
+                onDelete={handleDeleteRequest}
+            />
+            <ConfirmationDialog
+                isOpen={isConfirmationOpen}
+                title={txt.questions.deleteQuestion}
+                description={txt.questions.deleteConfirm}
+                onConfirm={handleConfirmDelete}
+                onCancel={handleCancelDelete}
+                confirmLabel={txt.forms.confirm}
+                cancelLabel={txt.forms.cancel}
             />
         </>
     );

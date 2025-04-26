@@ -13,7 +13,7 @@ export function NavBarMenu() {
             return (
                 <Link
                     href={link}
-                    className='ml-8 mt-4 block hover:text-lightGray md:mt-0 md:inline-block lg:ml-10'
+                    className='mt-4 block hover:text-lightGray md:mt-0 md:inline-block'
                 >
                     {title}
                 </Link>
@@ -24,7 +24,7 @@ export function NavBarMenu() {
 
     return (
         <>
-            <div className='z-[4] block md:hidden'>
+            <div className='z-[4] ml-auto block md:hidden'>
                 <button
                     onClick={(event) => {
                         event.stopPropagation();
@@ -36,9 +36,9 @@ export function NavBarMenu() {
                 </button>
             </div>
             <div
-                className={`z-[4] ${isOpen ? 'block' : 'hidden'} block w-full flex-grow md:flex md:w-auto md:items-center`}
+                className={`z-[4] ${isOpen ? 'block' : 'hidden'} w-full flex-grow md:flex md:w-auto md:items-center`}
             >
-                <div className='text-lg font-semibold uppercase text-primaryDark md:flex-grow'>
+                <div className='ml-auto flex flex-col gap-10 text-lg font-semibold uppercase text-primaryDark md:flex-row md:items-center md:gap-6'>
                     <NavButton title={txt.typer} link='/typer' />
                     <NavButton title={txt.ranking.title} link='/ranking' />
                     <NavButton title={txt.account} link='/user' />

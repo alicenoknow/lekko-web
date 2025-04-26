@@ -14,10 +14,13 @@ import { queryClient } from '@/context/QueryProvider';
 import EventCard from '@/components/event/EventCard';
 import AddEvent from '@/components/event/AddEvent';
 import { useErrorStore } from '@/store/error';
+import ConfirmationDialog from '@/components/forms/ConfirmationDialog';
 
 export default function EventsPage() {
     const router = useRouter();
     const [page, setPage] = useState(1);
+    const [isConfirmationOpen, setConfirmationOpen] = useState(false);
+    const [eventToDelete, setEventToDelete] = useState<number | null>(null);
     const { token } = usePrivateUserContext();
     const { showErrorDialog } = useErrorStore();
 
@@ -56,6 +59,24 @@ export default function EventsPage() {
 
     const handleAdd = useCallback(() => router.push('/typer/new'), [router]);
 
+    const handleDeleteRequest = useCallback((id: number) => {
+        setEventToDelete(id);
+        setConfirmationOpen(true);
+    }, []);
+
+    const handleConfirmDelete = useCallback(() => {
+        if (eventToDelete !== null) {
+            deleteEventMutation(eventToDelete);
+        }
+        setConfirmationOpen(false);
+        setEventToDelete(null);
+    }, [eventToDelete, deleteEventMutation]);
+
+    const handleCancelDelete = useCallback(() => {
+        setConfirmationOpen(false);
+        setEventToDelete(null);
+    }, []);
+
     if (isLoading || isDeleting) return <Spinner />;
     if (isError || !events || !events.data || events.data.length === 0) {
         return <ErrorMessage errorMessage={txt.events.notFound} />;
@@ -75,7 +96,7 @@ export default function EventsPage() {
                     event={event}
                     onEdit={() => handleOpen(event.id)}
                     onAdminEdit={() => handleAdminOpen(event.id)}
-                    onDelete={() => deleteEventMutation(event.id)}
+                    onDelete={() => handleDeleteRequest(event.id)}
                     isDeleting={isDeleting}
                 />
             ))}
@@ -85,6 +106,15 @@ export default function EventsPage() {
                     changePage={setPage}
                 />
             )}
+            <ConfirmationDialog
+                isOpen={isConfirmationOpen}
+                title={txt.events.delete}
+                description={txt.events.deleteConfirm}
+                onConfirm={handleConfirmDelete}
+                onCancel={handleCancelDelete}
+                confirmLabel={txt.forms.confirm}
+                cancelLabel={txt.forms.cancel}
+            />
         </>
     );
 }

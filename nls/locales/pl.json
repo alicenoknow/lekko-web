@@ -42,7 +42,9 @@
         "select": "Wybierz",
         "save": "Zapisz",
         "saved": "Zapisano",
-        "edit": "Edytuj"
+        "edit": "Edytuj",
+        "confirm": "Tak",
+        "cancel": "Nie"
     },
     "home": {
         "title": "Lekkoatletawka",
@@ -67,7 +69,9 @@
         "save": "Zapisz",
         "edit": "Szczegóły wydarzenia",
         "questions": "Pytania",
-        "open": "Odpowiedz"
+        "open": "Odpowiedz",
+        "delete": "Usuwanie wydarzenia",
+        "deleteConfirm": "Czy na pewno chcesz usunąć wydarzenie?"
     },
     "questions": {
         "modalTitle": "Edytuj pytanie",
@@ -82,7 +86,9 @@
             "countryRank": "Kraj: ranking"
         },
         "content": "Pytanie",
-        "points": "Punkty"
+        "points": "Punkty",
+        "deleteQuestion": "Usuwanie pytania",
+        "deleteConfirm": "Czy na pewno chcesz usunąć pytanie?"
     },
     "fetchErrorText": "Nie udało się wczytać danych. Spórbuj ponownie.",
     "goToEvent": "Otwórz",

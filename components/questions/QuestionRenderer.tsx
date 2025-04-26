@@ -18,12 +18,13 @@ import {
 } from '@/types/answers';
 
 import { Question } from '@/types/questions';
+import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { useAnswerSubmit } from '@/hooks/useAnswerSubmit';
 
 interface Props {
     question: Question;
     answer: Answer | undefined;
     isPastDeadline: boolean;
-    onSubmit: (answer: Answer) => void;
     onEdit?: () => void;
 }
 
@@ -31,15 +32,15 @@ export default function QuestionRenderer({
     question,
     answer,
     isPastDeadline,
-    onSubmit,
     onEdit,
 }: Props) {
+    const { token, user } = usePrivateUserContext();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isModified, setIsModified] = useState(false);
-
     const [answerPayload, setAnswerPayload] = useState<AnswerContent | null>(
         null
     );
+    const { onSubmit } = useAnswerSubmit(token, user.sub, setIsModified);
 
     useEffect(() => {
         if (answer?.content) {
@@ -56,7 +57,6 @@ export default function QuestionRenderer({
             content: answerPayload,
         });
         setIsSubmitting(false);
-        setIsModified(false);
     }, [answerPayload, onSubmit, answer?.id, question.id]);
 
     const handleAnswerChanged = useCallback((content: AnswerContent) => {

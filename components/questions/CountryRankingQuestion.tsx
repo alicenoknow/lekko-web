@@ -93,7 +93,10 @@ export default function CountryRankingQuestion({
                 />
             ))}
             {showCorrectAnswers && question.correct_answer && (
-                <CorrectAnswer>
+                <CorrectAnswer
+                    maxPoints={question.points}
+                    grantedPoints={answer?.points}
+                >
                     {(
                         [
                             question.correct_answer.country_one,

@@ -49,7 +49,10 @@ export default function CountryQuestion({
                 disabled={isPastDeadline}
             />
             {showCorrectAnswer && question.correct_answer?.country && (
-                <CorrectAnswer>
+                <CorrectAnswer
+                    maxPoints={question.points}
+                    grantedPoints={answer?.points}
+                >
                     <CountryLabel
                         code={question.correct_answer.country}
                         isLarge

@@ -36,13 +36,13 @@ const FormField: React.FC<FormFieldProps> = ({
     inputRef,
 }) => {
     return (
-        <div className='mb-4 flex w-full items-start gap-4'>
-            {emoji && <span className='text-2xl'>{emoji}</span>}
-            <div className='flex w-full flex-row items-center gap-8'>
+        <div className='mb-4 flex w-full items-center gap-4'>
+            {emoji && <span className='text-3xl'>{emoji}</span>}
+            <div className='flex w-full flex-col gap-2 md:flex-row md:items-center md:gap-8'>
                 {label && (
                     <label
                         htmlFor={id}
-                        className='mb-1 text-sm font-bold uppercase text-primaryDark md:text-lg'
+                        className='text-sm font-bold uppercase text-primaryDark md:text-lg'
                     >
                         {label}
                         {required && (
@@ -61,7 +61,6 @@ const FormField: React.FC<FormFieldProps> = ({
                         required={required}
                         placeholder={placeholder}
                         rows={rows}
-                        autoComplete='off'
                     />
                 ) : (
                     <input
@@ -74,7 +73,6 @@ const FormField: React.FC<FormFieldProps> = ({
                         required={required}
                         placeholder={placeholder}
                         type={type}
-                        autoComplete='off'
                     />
                 )}
             </div>
