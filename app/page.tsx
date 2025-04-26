@@ -2,8 +2,9 @@ import Banner from '@/components/banner/Banner';
 
 export default function Home() {
     return (
-        <main className='items-center p-24'>
-            <Banner />
-        </main>
+      <main className="flex flex-col items-center w-full flex-grow bg-lightRed">
+        <Banner />
+      </main>
     );
-}
+  }
+  

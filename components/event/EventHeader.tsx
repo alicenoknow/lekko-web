@@ -29,8 +29,6 @@ export default function EventHeader({ event }: { event: EventDetail }) {
     );
 }
 
-// TODO banner
-
 // TODO BE + FE add question types for float (e.g. 3seconds, 34.5 meters)
 // TODO BE + FE handle publishing of event
 // TODO BE + FE total points

@@ -19,7 +19,7 @@ const LinkButton: React.FC<LinkButtonProps> = ({
         <Link href={link} passHref>
             <button
                 disabled={disabled || loading}
-                className={`select-none border-2 border-black bg-primaryLight p-4 text-xl font-extrabold uppercase hover:cursor-pointer md:px-10 ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-accentLight'}`}
+                className={`select-none border-2 border-black bg-primaryLight p-4 text-lg font-extrabold uppercase hover:cursor-pointer md:px-10 md:text-3xl ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-accentLight'}`}
             >
                 {loading ? (
                     <Spinner isInline />
