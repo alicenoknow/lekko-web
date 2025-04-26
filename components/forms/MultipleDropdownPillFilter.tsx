@@ -8,7 +8,7 @@ import {
 } from '@headlessui/react';
 import { FaChevronDown, FaCheck } from 'react-icons/fa';
 import { txt } from '@/nls/texts';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 export interface Option {
     label: React.ReactNode;
@@ -18,12 +18,12 @@ export interface Option {
 interface Props {
     label?: string;
     options: Option[];
-    selected: string | null;
+    selected: string[];
     disabled?: boolean;
-    onSelect: (value: string | null) => void;
+    onSelect: (value: string[]) => void;
 }
 
-function DropdownPillFilter({
+function MultipleDropdownPillFilter({
     label,
     options,
     selected,
@@ -41,11 +41,26 @@ function DropdownPillFilter({
         );
     };
 
+    const handleSelect = useCallback(
+        (value: string[]) => {
+            if (value.some((v) => v === undefined)) {
+                onSelect([]);
+                return;
+            }
+            onSelect(value);
+        },
+        [onSelect]
+    );
+
     return (
         <div className='flex w-full flex-col gap-1'>
             {label && <span className='text-sm font-semibold'>{label}</span>}
-
-            <Listbox value={selected} onChange={onSelect} disabled={disabled}>
+            <Listbox
+                value={selected}
+                onChange={handleSelect}
+                disabled={disabled}
+                multiple
+            >
                 <div className='relative inline-block w-full text-left'>
                     <ListboxButton
                         className={`flex w-full items-center justify-between border px-4 py-2 text-sm shadow-sm focus:outline-none ${
@@ -95,4 +110,4 @@ function DropdownPillFilter({
     );
 }
 
-export default React.memo(DropdownPillFilter);
+export default React.memo(MultipleDropdownPillFilter);

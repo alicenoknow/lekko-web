@@ -32,8 +32,6 @@ export default function EventHeader({ event }: { event: EventDetail }) {
 // TODO colors
 // TODO banner
 // TODO pills
-// TODO search on filters (just after entering 1 there should be some results)
-// TODO flags in search bar
 // TODO close search bar
 // TODO hide correct answer on question create
 // TODO delete confirmation

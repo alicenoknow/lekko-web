@@ -5,6 +5,7 @@ import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import CountryLabel from './CountryLabel';
 import { fetchAthleteById } from '@/app/api/athletes';
 import React from 'react';
+import { Athlete } from '@/types/athletes';
 
 interface Props {
     selected: number | null;
@@ -33,13 +34,25 @@ function AthleteLabel({ selected, label, emoji }: Props) {
                     {label}:
                 </p>
             )}
-            <div className='flex items-center gap-2 text-lg uppercase'>
-                {emoji && <span className='text-3xl'>{emoji}</span>}
-                <strong>
-                    {athlete.first_name} {athlete.last_name}
-                </strong>
-                <CountryLabel code={athlete.country ?? ''} />
-            </div>
+            <InnerAthleteLabel athlete={athlete} emoji={emoji} />
+        </div>
+    );
+}
+
+export function InnerAthleteLabel({
+    athlete,
+    emoji,
+}: {
+    athlete: Athlete;
+    emoji?: string;
+}) {
+    return (
+        <div className='flex items-center gap-2 text-lg uppercase'>
+            {emoji && <span className='text-3xl'>{emoji}</span>}
+            <strong>
+                {athlete.first_name} {athlete.last_name}
+            </strong>
+            <CountryLabel code={athlete.country ?? ''} />
         </div>
     );
 }

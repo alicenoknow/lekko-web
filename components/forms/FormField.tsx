@@ -8,6 +8,9 @@ interface FormFieldProps {
     onChange: (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => void;
+    onFocus?: (
+        e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => void;
     label?: string;
     type?: string;
     required?: boolean;
@@ -15,12 +18,14 @@ interface FormFieldProps {
     rows?: number;
     emoji?: string;
     placeholder?: string;
+    inputRef?: React.Ref<HTMLInputElement | HTMLTextAreaElement>;
 }
 
 const FormField: React.FC<FormFieldProps> = ({
     id,
     value,
     onChange,
+    onFocus,
     label,
     type = 'text',
     required = false,
@@ -28,9 +33,8 @@ const FormField: React.FC<FormFieldProps> = ({
     rows = 4,
     emoji,
     placeholder,
+    inputRef,
 }) => {
-    const InputComponent = multiline ? 'textarea' : 'input';
-
     return (
         <div className='mb-4 flex w-full items-start gap-4'>
             {emoji && <span className='text-2xl'>{emoji}</span>}
@@ -46,17 +50,33 @@ const FormField: React.FC<FormFieldProps> = ({
                         )}
                     </label>
                 )}
-                <InputComponent
-                    id={id}
-                    className='w-full border p-2 text-sm text-primaryDark md:p-4 md:text-lg'
-                    value={value}
-                    onChange={onChange}
-                    required={required}
-                    placeholder={placeholder}
-                    rows={multiline ? rows : undefined}
-                    type={!multiline ? type : undefined}
-                    autoComplete='off'
-                />
+                {multiline ? (
+                    <textarea
+                        id={id}
+                        ref={inputRef as React.Ref<HTMLTextAreaElement>}
+                        className='w-full border p-2 text-sm text-primaryDark md:p-4 md:text-lg'
+                        value={value}
+                        onChange={onChange}
+                        onFocus={onFocus}
+                        required={required}
+                        placeholder={placeholder}
+                        rows={rows}
+                        autoComplete='off'
+                    />
+                ) : (
+                    <input
+                        id={id}
+                        ref={inputRef as React.Ref<HTMLInputElement>}
+                        className='w-full border p-2 text-sm text-primaryDark md:p-4 md:text-lg'
+                        value={value}
+                        onChange={onChange}
+                        onFocus={onFocus}
+                        required={required}
+                        placeholder={placeholder}
+                        type={type}
+                        autoComplete='off'
+                    />
+                )}
             </div>
         </div>
     );

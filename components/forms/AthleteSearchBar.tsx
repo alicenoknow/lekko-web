@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import FormField from '@/components/forms/FormField';
 import { txt } from '@/nls/texts';
-import AthleteLabel from './AthleteLabel';
+import AthleteLabel, { InnerAthleteLabel } from './AthleteLabel';
 import AthleteSearchFilter from './AthleteSearchFilter';
 import { fetchAthletes } from '@/app/api/athletes';
 import { Athlete } from '@/types/athletes';
@@ -31,7 +31,10 @@ export default function AthleteSearchBar({
     const [page, setPage] = useState<number>(1);
     const [athletes, setAthletes] = useState<Athlete[]>([]);
     const [hasMore, setHasMore] = useState(true);
+    const [inputFocused, setInputFocused] = useState(false);
 
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const searchInputRef = useRef<HTMLInputElement>(null);
     const debouncedSearch = useDebouncedValue(search, 500);
 
     const { data: athletesData, isFetching } = useQuery({
@@ -52,7 +55,12 @@ export default function AthleteSearchBar({
                 gender,
                 page
             ),
-        enabled: !!token && !!debouncedSearch,
+        enabled:
+            !!token &&
+            (!!debouncedSearch ||
+                disciplines.length > 0 ||
+                !!country ||
+                !!gender),
         staleTime: 60 * 60 * 1000,
     });
 
@@ -68,6 +76,24 @@ export default function AthleteSearchBar({
         setHasMore(!athletesData.pagination_info?.is_last_page);
     }, [athletesData, page]);
 
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (
+                dropdownRef.current &&
+                searchInputRef.current &&
+                !dropdownRef.current.contains(event.target as Node) &&
+                !searchInputRef.current.contains(event.target as Node)
+            ) {
+                setInputFocused(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     const dropdownOptions = useMemo(
         () =>
             athletes.map((athlete) => (
@@ -76,10 +102,11 @@ export default function AthleteSearchBar({
                     onClick={() => {
                         onSelect(athlete.id);
                         setSearch('');
+                        setInputFocused(false);
                     }}
                     className='cursor-pointer p-2 hover:bg-accentLight'
                 >
-                    {athlete.first_name} {athlete.last_name} ({athlete.country})
+                    <InnerAthleteLabel athlete={athlete} />
                 </div>
             )),
         [athletes, onSelect]
@@ -128,6 +155,8 @@ export default function AthleteSearchBar({
                             id='search-athlete'
                             type='text'
                             value={search}
+                            inputRef={searchInputRef}
+                            onFocus={() => setInputFocused(true)}
                             onChange={(e) => {
                                 setSearch(e.target.value);
                                 setPage(1);
@@ -137,8 +166,11 @@ export default function AthleteSearchBar({
                             emoji={emoji}
                         />
 
-                        {athletes.length > 0 && (
-                            <div className='absolute left-0 top-full z-[999] mt-1 max-h-60 w-full overflow-y-auto border bg-white shadow-lg'>
+                        {athletes.length > 0 && inputFocused && (
+                            <div
+                                ref={dropdownRef}
+                                className='absolute left-0 top-full z-[999] mt-1 max-h-60 w-full overflow-y-auto border bg-white shadow-lg'
+                            >
                                 {dropdownOptions}
                                 {hasMore && (
                                     <button

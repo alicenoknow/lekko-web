@@ -8,6 +8,7 @@ import CountryLabel from './CountryLabel';
 import DropdownPillFilter from './DropdownPillFilter';
 import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { fetchDisciplines } from '@/app/api/disciplines';
+import MultipleDropdownPillFilter from './MultipleDropdownPillFilter';
 
 interface Props {
     disciplines: string[];
@@ -55,7 +56,7 @@ export default function AthleteSearchFilter({
     return (
         <div className='mb-4 flex flex-row gap-2'>
             {allDisciplines?.data && (
-                <DropdownPillFilter
+                <MultipleDropdownPillFilter
                     label={txt.forms.discipline}
                     options={allDisciplines.data.map((d) => ({
                         value: d.id.toString(),
@@ -63,7 +64,6 @@ export default function AthleteSearchFilter({
                     }))}
                     selected={disciplines}
                     onSelect={onDisciplinesChanged}
-                    multiple
                 />
             )}
             <DropdownPillFilter
