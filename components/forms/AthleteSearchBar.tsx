@@ -97,7 +97,7 @@ export default function AthleteSearchBar({
     const dropdownOptions = useMemo(
         () =>
             athletes.map((athlete) => (
-                <div
+                <button
                     key={athlete.id}
                     onClick={() => {
                         onSelect(athlete.id);
@@ -107,7 +107,7 @@ export default function AthleteSearchBar({
                     className='cursor-pointer p-2 hover:bg-accentLight'
                 >
                     <InnerAthleteLabel athlete={athlete} />
-                </div>
+                </button>
             )),
         [athletes, onSelect]
     );
