@@ -41,3 +41,6 @@ export default function EventHeader({ event }: { event: EventDetail }) {
 // TODO fix disciplines dropdown + search action
 // TODO add dash instead of 0 when no points for answer
 // TODO hide possibility to answer if editing as admin
+// TODO events param active = true
+// TODO mobile view of navbar
+//
