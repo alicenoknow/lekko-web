@@ -32,3 +32,12 @@ export default function EventHeader({ event }: { event: EventDetail }) {
 // TODO BE + FE add question types for float (e.g. 3seconds, 34.5 meters)
 // TODO BE + FE handle publishing of event
 // TODO BE + FE total points
+// TODO distinguish current user in rankning (unique username)
+// TODO search bar disabled instead of label
+// TODO dropdown disabled colors
+// TODO add seperate sections for active/past events (+ different text for buttons)
+// TODO change date format (like polish one)
+// TODO fix style in search bar of answer for "athlete" question
+// TODO fix disciplines dropdown + search action
+// TODO add dash instead of 0 when no points for answer
+// TODO hide possibility to answer if editing as admin

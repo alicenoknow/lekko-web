@@ -18,4 +18,5 @@ export type AthletesParams = {
     discipline_ids?: string;
     country?: string;
     gender?: string;
+    order_by?: string;
 } 
