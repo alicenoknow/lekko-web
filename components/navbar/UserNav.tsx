@@ -8,7 +8,7 @@ import { usePrivateUserContext } from '@/context/PrivateUserContext';
 import { PrivateContent } from '../auth/PrivateContent';
 import NavButton from './NavButton';
 
-const UserNav = memo(() => {
+const UserNav = memo(function UserNav() {
     const { user, logout } = usePrivateUserContext();
     const router = useRouter();
 
