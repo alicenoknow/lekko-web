@@ -11,7 +11,7 @@ HOST_PORT=3000
 
 # === BUILD IMAGE ===
 echo "🔧 Building Docker image..."
-docker build -t $IMAGE_NAME .
+docker build --platform linux/amd64 -t $IMAGE_NAME .
 
 # === STREAM IMAGE & DEPLOY ON REMOTE ===
 echo "🚀 Sending image to server and starting container..."
