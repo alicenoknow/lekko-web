@@ -1,7 +1,6 @@
 import { PrivateContent } from '@/components/auth/PrivateContent';
-import ErrorDialog from '@/components/error/ErrorDialog';
+import LazyErrorDialog from '@/components/error/LazyErrorDialog';
 import Spinner from '@/components/Spinner';
-import QueryProvider from '@/context/QueryProvider';
 
 export default function TyperLayout({
     children,
@@ -9,13 +8,11 @@ export default function TyperLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <QueryProvider>
-            <PrivateContent redirect fallback={<Spinner />}>
-                <div className='flex min-h-screen justify-center p-6'>
-                    <div className='w-full max-w-4xl space-y-6'>{children}</div>
-                </div>
-                <ErrorDialog />
-            </PrivateContent>
-        </QueryProvider>
+        <PrivateContent redirect fallback={<Spinner />}>
+            <div className='flex min-h-screen justify-center p-6'>
+                <div className='w-full max-w-4xl space-y-6'>{children}</div>
+            </div>
+            <LazyErrorDialog />
+        </PrivateContent>
     );
 }

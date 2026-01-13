@@ -1,6 +1,5 @@
 'use client';
 
-import { PrivateUserContext } from '@/context/PrivateUserContext';
 import { useUserStore } from '@/store/user';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -15,7 +14,7 @@ export function PrivateContent({
     redirect?: boolean;
 }) {
     const router = useRouter();
-    const { user, token, hydrated, logout } = useUserStore();
+    const { user, token, hydrated } = useUserStore();
 
     useEffect(() => {
         if (hydrated && (!user || !token) && redirect) {
@@ -25,9 +24,5 @@ export function PrivateContent({
 
     if (!hydrated || !user || !token) return fallback;
 
-    return (
-        <PrivateUserContext.Provider value={{ user, token, logout }}>
-            {children}
-        </PrivateUserContext.Provider>
-    );
+    return <>{children}</>;
 }

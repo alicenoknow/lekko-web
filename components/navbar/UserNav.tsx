@@ -4,18 +4,21 @@ import { txt } from '@/nls/texts';
 import { memo } from 'react';
 import Avatar from '../ranking/Avatar';
 import { useRouter } from 'next/navigation';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { useUserStore } from '@/store/user';
 import { PrivateContent } from '../auth/PrivateContent';
 import NavButton from './NavButton';
 
 const UserNav = memo(function UserNav() {
-    const { user, logout } = usePrivateUserContext();
+    const { user, logout } = useUserStore();
     const router = useRouter();
 
     const handleLogout = () => {
         logout();
         router.replace('/user/login');
     };
+
+    if (!user) return null;
+
     return (
         <div className='flex items-center gap-4'>
             <Avatar username={user.username} size={36} />

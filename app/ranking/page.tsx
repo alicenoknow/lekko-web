@@ -1,10 +1,11 @@
 'use client';
 
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { fetchEvents } from '../api/events';
-import { fetchRankingFromEvent } from '../api/ranking';
+import { fetchEvents } from '@/lib/api/events';
+import { fetchRankingFromEvent } from '@/lib/api/ranking';
+import { TyperEvent } from '@/types/events';
 import DropdownField from '@/components/forms/DropdownField';
 import UserRank from '@/components/ranking/UserRank';
 import Spinner from '@/components/Spinner';
@@ -16,7 +17,7 @@ import Pagination from '@/components/buttons/Pagination';
 export default function Ranking() {
     const [eventId, setEventId] = useState<string | null>(null);
     const [page, setPage] = useState(1);
-    const { token } = usePrivateUserContext();
+    const { token } = useAuthenticatedUser();
 
     const {
         data: events,
@@ -42,7 +43,7 @@ export default function Ranking() {
 
     const eventsOptions = useMemo(
         () =>
-            events?.data.map((event) => ({
+            events?.data.map((event: TyperEvent) => ({
                 label: <Label label={event.name} />,
                 value: String(event.id),
             })) ?? [],
@@ -67,14 +68,19 @@ export default function Ranking() {
                     onSelect={setEventId}
                 />
             </div>
-            {ranking?.data.map((rank, i) => (
-                <UserRank
-                    key={i}
-                    index={i + 1}
-                    username={rank.username}
-                    points={rank.total_points}
-                />
-            ))}
+            {ranking?.data.map(
+                (
+                    rank: { username: string; total_points: number },
+                    i: number
+                ) => (
+                    <UserRank
+                        key={i}
+                        index={i + 1}
+                        username={rank.username}
+                        points={rank.total_points}
+                    />
+                )
+            )}
             <Pagination
                 pagination={ranking.pagination_info}
                 changePage={setPage}

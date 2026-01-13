@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import Spinner from '@/components/Spinner';
 import { txt } from '@/nls/texts';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
@@ -16,16 +16,18 @@ import { Question, QuestionType } from '@/types/questions';
 import { toLocalDatetimeInputFormat } from '@/lib/dateUtils';
 import { useEventDetails } from '@/hooks/useEventDetails';
 import { useEventAdmin } from '@/hooks/useEventAdmin';
-import { useAnswerSubmit } from '@/hooks/useAnswerSubmit';
+// import { useAnswerSubmit } from '@/hooks/useAnswerSubmit'; // Currently unused
 import ConfirmationDialog from '@/components/forms/ConfirmationDialog';
 
 export default function EventDetailAdminPage() {
     const { eventId: eventIdParam } = useParams<{ eventId: string }>();
     const eventId = parseInt(eventIdParam, 10);
-    const { token, user } = usePrivateUserContext();
+    const { token } = useAuthenticatedUser();
     const [page, setPage] = useState(1);
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
-    const [questionToDelete, setQuestionToDelete] = useState<number | null>(null);
+    const [questionToDelete, setQuestionToDelete] = useState<number | null>(
+        null
+    );
     const [isEventModified, setEventModified] = useState(false);
 
     const { eventQuery, questionsQuery, answersQuery, isPastDeadline } =
@@ -186,11 +188,13 @@ export default function EventDetailAdminPage() {
             <h2 className='pt-8 text-xl font-bold md:text-3xl'>
                 {txt.events.questions}
             </h2>
-            {!isPastDeadline && <QuestionTypeSelector
-                selected={selectedType}
-                setSelected={setSelectedType}
-                onAdd={onNewQuestion}
-            />}
+            {!isPastDeadline && (
+                <QuestionTypeSelector
+                    selected={selectedType}
+                    setSelected={setSelectedType}
+                    onAdd={onNewQuestion}
+                />
+            )}
             {questions.map((q: Question) => (
                 <QuestionRenderer
                     key={q.id}

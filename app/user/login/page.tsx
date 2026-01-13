@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 
 import { useUserStore } from '@/store/user';
-import { loginUser, LoginData } from '@/app/api/auth';
+import { loginUser, LoginData } from '@/lib/api/auth';
 
 import { txt } from '@/nls/texts';
 import FormField from '@/components/forms/FormField';

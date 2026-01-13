@@ -30,10 +30,9 @@ const CorrectAnswer = memo(function CorrectAnswer({
         return 'bg-lightRed';
     }, [grantedPoints, maxPoints]);
 
-
     return (
         <section className={`mb-4 rounded p-4 ${backgroundClass}`}>
-            <div className="md:text-md mb-4 text-sm font-bold uppercase text-primaryDark">
+            <div className='md:text-md mb-4 text-sm font-bold uppercase text-primaryDark'>
                 {txt.forms.correctAnswer}:
             </div>
             {children}

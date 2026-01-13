@@ -3,27 +3,41 @@ import {
     createQuestion,
     deleteQuestion,
     updateQuestion,
-} from '@/app/api/questions';
-import { updateEvent } from '@/app/api/events';
+} from '@/lib/api/questions';
+import { updateEvent } from '@/lib/api/events';
 import { Question } from '@/types/questions';
 import { queryClient } from '@/context/QueryProvider';
 import { useErrorStore } from '@/store/error';
 import { txt } from '@/nls/texts';
 
-export function useEventAdmin(token: string, eventId: number, setEventModified: (isModified: boolean) => void) {
+export function useEventAdmin(
+    token: string,
+    eventId: number,
+    setEventModified: (isModified: boolean) => void
+) {
     const { showErrorDialog } = useErrorStore();
 
     const updateEventQuery = useMutation({
-        mutationFn: (form: { name: string; description: string; deadline: string }) => {
+        mutationFn: (form: {
+            name: string;
+            description: string;
+            deadline: string;
+        }) => {
             const deadline = new Date(form.deadline).toISOString();
-            return updateEvent(eventId, token, form.name, form.description, deadline);
+            return updateEvent(
+                eventId,
+                token,
+                form.name,
+                form.description,
+                deadline
+            );
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['event', eventId] });
             setEventModified(false);
         },
         onError: () => {
-            console.error("Cannot update event.")
+            console.error('Cannot update event.');
             showErrorDialog(txt.errors.eventUpdate);
             setEventModified(true);
         },
@@ -45,7 +59,7 @@ export function useEventAdmin(token: string, eventId: number, setEventModified: 
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
         },
         onError: () => {
-            console.error("Cannot add question.")
+            console.error('Cannot add question.');
             showErrorDialog(txt.errors.questionAdd);
         },
     });
@@ -66,7 +80,7 @@ export function useEventAdmin(token: string, eventId: number, setEventModified: 
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
         },
         onError: () => {
-            console.error("Cannot update question.")
+            console.error('Cannot update question.');
             showErrorDialog(txt.errors.questionUpdate);
         },
     });
@@ -77,7 +91,7 @@ export function useEventAdmin(token: string, eventId: number, setEventModified: 
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
         },
         onError: () => {
-            console.error("Cannot remove question.")
+            console.error('Cannot remove question.');
             showErrorDialog(txt.errors.questionDelete);
         },
     });

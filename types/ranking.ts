@@ -1,4 +1,4 @@
-import { PaginationInfo } from "./pagination";
+import { PaginationInfo } from './pagination';
 
 interface UserRank {
     username: string;

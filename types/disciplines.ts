@@ -1,4 +1,4 @@
-import { PaginationInfo } from "./pagination";
+import { PaginationInfo } from './pagination';
 
 export interface Discipline {
     id: number;

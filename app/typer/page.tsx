@@ -2,8 +2,8 @@
 
 import { useCallback, useState } from 'react';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
-import { deleteEvent, fetchEvents } from '@/app/api/events';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { deleteEvent, fetchEvents } from '@/lib/api/events';
+import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import Spinner from '@/components/Spinner';
 import { txt } from '@/nls/texts';
 import Pagination from '@/components/buttons/Pagination';
@@ -12,16 +12,16 @@ import { AdminOnly } from '@/components/auth/AdminOnly';
 import { useRouter } from 'next/navigation';
 import { queryClient } from '@/context/QueryProvider';
 import EventCard from '@/components/event/EventCard';
-import AddEvent from '@/components/event/AddEvent';
+import LazyAddEvent from '@/components/event/LazyAddEvent';
 import { useErrorStore } from '@/store/error';
-import ConfirmationDialog from '@/components/forms/ConfirmationDialog';
+import LazyConfirmationDialog from '@/components/forms/LazyConfirmationDialog';
 
 export default function EventsPage() {
     const router = useRouter();
     const [page, setPage] = useState(1);
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
     const [eventToDelete, setEventToDelete] = useState<number | null>(null);
-    const { token } = usePrivateUserContext();
+    const { token } = useAuthenticatedUser();
     const { showErrorDialog } = useErrorStore();
 
     const {
@@ -87,7 +87,7 @@ export default function EventsPage() {
             <div className='mb-4 mt-6 flex items-center justify-between'>
                 <span className='text-3xl font-bold'>{txt.events.title}</span>
                 <AdminOnly>
-                    <AddEvent onEventAdd={handleAdd} />
+                    <LazyAddEvent onEventAdd={handleAdd} />
                 </AdminOnly>
             </div>
             {events.data.map((event) => (
@@ -106,7 +106,7 @@ export default function EventsPage() {
                     changePage={setPage}
                 />
             )}
-            <ConfirmationDialog
+            <LazyConfirmationDialog
                 isOpen={isConfirmationOpen}
                 title={txt.events.delete}
                 description={txt.events.deleteConfirm}

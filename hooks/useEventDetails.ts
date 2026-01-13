@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { fetchEventById } from '@/app/api/events';
-import { fetchQuestionsFromEvent } from '@/app/api/questions';
-import { fetchAnswers } from '@/app/api/answers';
+import { fetchEventById } from '@/lib/api/events';
+import { fetchQuestionsFromEvent } from '@/lib/api/questions';
+import { fetchAnswers } from '@/lib/api/answers';
 
 export function useEventDetails(token: string, eventId: number, page: number) {
     const eventQuery = useQuery({

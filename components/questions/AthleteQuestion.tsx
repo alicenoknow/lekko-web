@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { txt } from '@/nls/texts';
 import AthleteSearchBar from '@/components/forms/AthleteSearchBar';
 import AthleteLabel from '../forms/AthleteLabel';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import { isAdmin } from '@/lib/admin';
 import CorrectAnswer from './common/CorrectAnswer';
 import { AthleteAnswer, AthleteAnswerContent } from '@/types/answers';
@@ -23,7 +23,7 @@ export default function AthleteQuestion({
     isPastDeadline,
     onAnswerChanged,
 }: Props) {
-    const { user } = usePrivateUserContext();
+    const { user } = useAuthenticatedUser();
     const [selectedId, setSelectedId] = useState<number | null>(null);
 
     useEffect(() => {

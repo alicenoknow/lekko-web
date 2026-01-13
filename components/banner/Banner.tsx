@@ -1,9 +1,13 @@
 import React, { memo } from 'react';
 import { txt } from '@/nls/texts';
-import LinkButton from '../buttons/LinkButton';
+import ExternalLinkButton from '../buttons/ExternalLinkButton';
 import RunningTrack from './RunningTrack';
 
-const LEKKO_FB = 'https://www.facebook.com/groups/715213372162917/';
+const EXTERNAL_LINKS = {
+    facebook:
+        process.env.NEXT_PUBLIC_FACEBOOK_URL ||
+        'https://www.facebook.com/groups/715213372162917/',
+} as const;
 
 const Banner: React.FC = () => {
     return (
@@ -12,7 +16,10 @@ const Banner: React.FC = () => {
                 <span className='max-w-4xl text-3xl font-bold uppercase tracking-widest md:text-7xl'>
                     {txt.home.title}
                 </span>
-                <LinkButton label={txt.home.joinFb} link={LEKKO_FB} />
+                <ExternalLinkButton
+                    label={txt.home.joinFb}
+                    link={EXTERNAL_LINKS.facebook}
+                />
             </div>
             <RunningTrack />
         </div>

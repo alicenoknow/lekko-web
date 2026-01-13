@@ -18,7 +18,7 @@ import {
 } from '@/types/answers';
 
 import { Question } from '@/types/questions';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import { useAnswerSubmit } from '@/hooks/useAnswerSubmit';
 
 interface Props {
@@ -34,7 +34,7 @@ export default function QuestionRenderer({
     isPastDeadline,
     onEdit,
 }: Props) {
-    const { token, user } = usePrivateUserContext();
+    const { token, user } = useAuthenticatedUser();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isModified, setIsModified] = useState(false);
     const [answerPayload, setAnswerPayload] = useState<AnswerContent | null>(

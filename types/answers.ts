@@ -1,5 +1,4 @@
-import { PaginationInfo } from "./pagination";
-
+import { PaginationInfo } from './pagination';
 
 export interface Answer {
     id: number;
@@ -13,19 +12,19 @@ export interface Answer {
 
 export interface AthleteAnswer extends Answer {
     content: AthleteAnswerContent | null;
-};
+}
 
 export interface AthleteRankingAnswer extends Answer {
     content: AthleteRankingAnswerContent | null;
-};
+}
 
 export interface CountryAnswer extends Answer {
     content: CountryAnswerContent | null;
-};
+}
 
 export interface CountryRankingAnswer extends Answer {
     content: CountryRankingAnswerContent | null;
-};
+}
 
 export type AnswersParams = {
     question_ids?: string;
@@ -39,7 +38,6 @@ export type AnswersResponse = {
 export type CreateAnswerResponse = Answer;
 
 export type UpdateAnswerResponse = Answer;
-
 
 export interface AthleteAnswerContent {
     athlete_id: number | null;
@@ -66,10 +64,9 @@ export type AnswerContentMap = {
     athletes_three: AthleteRankingAnswerContent;
     country: CountryAnswerContent;
     countries_three: CountryRankingAnswerContent;
-  };
-  
-  export type AnswerContentByType<T extends keyof AnswerContentMap> = AnswerContentMap[T];
+};
 
-  export type AnswerContent = AnswerContentMap[keyof AnswerContentMap];
+export type AnswerContentByType<T extends keyof AnswerContentMap> =
+    AnswerContentMap[T];
 
-  
+export type AnswerContent = AnswerContentMap[keyof AnswerContentMap];

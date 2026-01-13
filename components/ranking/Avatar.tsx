@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
 
 interface AvatarProps {
@@ -11,13 +11,13 @@ interface AvatarProps {
     style?: React.CSSProperties;
 }
 
-export default function Avatar({
+const Avatar = React.memo<AvatarProps>(function Avatar({
     username,
     size = 40,
     className = '',
     rounded = true,
     style = {},
-}: AvatarProps) {
+}) {
     const avatarSvg = useMemo(() => {
         const safeUsername = username?.toString() || '';
 
@@ -78,4 +78,6 @@ export default function Avatar({
             unoptimized
         />
     );
-}
+});
+
+export default Avatar;

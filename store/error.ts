@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 interface ErrorStore {
-    isDialogVisible: boolean
+    isDialogVisible: boolean;
     errorMessage: string;
     showErrorDialog: (msg?: string) => void;
     hideErrorDialog: () => void;

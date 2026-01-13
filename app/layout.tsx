@@ -4,6 +4,8 @@ import './globals.css';
 import Footer from '@/components/Footer';
 import NavBar from '@/components/navbar/NavBar';
 import { HydrateUser } from '@/components/auth/HydrateUser';
+import QueryProvider from '@/context/QueryProvider';
+import { ErrorBoundary } from '@/components/error/ErrorBoundary';
 
 const font = Nunito({ subsets: ['latin'] });
 
@@ -20,12 +22,16 @@ export default function RootLayout({
     return (
         <html lang='pl'>
             <body className={font.className}>
-                <div className='flex min-h-screen flex-col justify-between'>
-                    <HydrateUser />
-                    <NavBar />
-                    {children}
-                    <Footer />
-                </div>
+                <ErrorBoundary>
+                    <QueryProvider>
+                        <div className='flex min-h-screen flex-col justify-between'>
+                            <HydrateUser />
+                            <NavBar />
+                            {children}
+                            <Footer />
+                        </div>
+                    </QueryProvider>
+                </ErrorBoundary>
             </body>
         </html>
     );

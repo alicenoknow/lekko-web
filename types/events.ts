@@ -1,5 +1,5 @@
-import { EmptyResponse } from "@/app/api/common";
-import { PaginationInfo } from "./pagination";
+import { EmptyResponse } from '@/lib/api/common';
+import { PaginationInfo } from './pagination';
 
 export interface EventsData {
     data: readonly TyperEvent[];

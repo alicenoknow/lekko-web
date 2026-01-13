@@ -7,15 +7,15 @@ import { txt } from '@/nls/texts';
 import FormField from '@/components/forms/FormField';
 import ActionButton from '@/components/buttons/ActionButton';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
-import { createEvent } from '@/app/api/events';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { createEvent } from '@/lib/api/events';
+import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import { AdminOnly } from '@/components/auth/AdminOnly';
 import { queryClient } from '@/context/QueryProvider';
 import { useErrorStore } from '@/store/error';
 
 function CreateEventPage() {
     const router = useRouter();
-    const { token } = usePrivateUserContext();
+    const { token } = useAuthenticatedUser();
     const { showErrorDialog } = useErrorStore();
 
     const [name, setName] = useState('');

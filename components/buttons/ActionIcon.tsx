@@ -8,12 +8,12 @@ interface ActionIconProps {
     onClick: () => void;
 }
 
-const ActionIcon: React.FC<ActionIconProps> = ({
+const ActionIcon = React.memo<ActionIconProps>(function ActionIcon({
     disabled,
     loading,
     label,
     onClick,
-}) => {
+}) {
     return (
         <button
             aria-label={`${label} button`}
@@ -28,6 +28,6 @@ const ActionIcon: React.FC<ActionIconProps> = ({
             )}
         </button>
     );
-};
+});
 
 export default ActionIcon;

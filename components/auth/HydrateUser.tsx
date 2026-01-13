@@ -2,15 +2,18 @@
 
 import { useEffect } from 'react';
 import { useUserStore } from '@/store/user';
+import { useTokenMonitor } from '@/hooks/useTokenMonitor';
 
 export const HydrateUser = () => {
-    const { setUserFromToken, setHydrated } = useUserStore();
+    const { setHydrated } = useUserStore();
+
+    // Monitor token expiry and handle automatic logout
+    useTokenMonitor();
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) setUserFromToken(token);
+        // The setHydrated function now handles secure token restoration internally
         setHydrated();
-    }, [setUserFromToken, setHydrated]);
+    }, [setHydrated]);
 
     return null;
 };

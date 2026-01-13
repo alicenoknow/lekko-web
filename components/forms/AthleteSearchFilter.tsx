@@ -6,8 +6,8 @@ import { txt } from '@/nls/texts';
 import { useQuery } from '@tanstack/react-query';
 import CountryLabel from './CountryLabel';
 import DropdownPillFilter from './DropdownPillFilter';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
-import { fetchDisciplines } from '@/app/api/disciplines';
+import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
+import { fetchDisciplines } from '@/lib/api/disciplines';
 import MultipleDropdownPillFilter from './MultipleDropdownPillFilter';
 
 interface Props {
@@ -27,7 +27,7 @@ export default function AthleteSearchFilter({
     onCountryChanged,
     onGenderChanged,
 }: Props) {
-    const { token } = usePrivateUserContext();
+    const { token } = useAuthenticatedUser();
 
     const { data: allDisciplines } = useQuery({
         queryKey: ['disciplines'],

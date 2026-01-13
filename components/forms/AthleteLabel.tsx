@@ -1,9 +1,9 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import CountryLabel from './CountryLabel';
-import { fetchAthleteById } from '@/app/api/athletes';
+import { fetchAthleteById } from '@/lib/api/athletes';
 import React from 'react';
 import { Athlete } from '@/types/athletes';
 
@@ -14,7 +14,7 @@ interface Props {
 }
 
 function AthleteLabel({ selected, label, emoji }: Props) {
-    const { token } = usePrivateUserContext();
+    const { token } = useAuthenticatedUser();
 
     const shouldFetch = !!token && !!selected;
 

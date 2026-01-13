@@ -32,6 +32,7 @@ export default function EventHeader({ event }: { event: EventDetail }) {
 // TODO BE + FE add question types for float (e.g. 3seconds, 34.5 meters)
 // TODO BE + FE handle publishing of event
 // TODO BE + FE total points
+// TODO BE refresh token
 // TODO distinguish current user in rankning (unique username)
 // TODO search bar disabled instead of label
 // TODO dropdown disabled colors
@@ -43,4 +44,4 @@ export default function EventHeader({ event }: { event: EventDetail }) {
 // TODO hide possibility to answer if editing as admin
 // TODO events param active = true
 // TODO mobile view of navbar
-//
+// TODO test plan

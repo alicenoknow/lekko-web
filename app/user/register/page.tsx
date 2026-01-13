@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 
-import { registerUser } from '@/app/api/auth';
+import { registerUser } from '@/lib/api/auth';
 import { txt } from '@/nls/texts';
 import FormField from '@/components/forms/FormField';
 import ActionButton from '@/components/buttons/ActionButton';

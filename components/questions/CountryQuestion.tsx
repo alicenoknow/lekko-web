@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { txt } from '@/nls/texts';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import { isAdmin } from '@/lib/admin';
 import CountryDropdown from '../forms/CountryDropdown';
 import CorrectAnswer from './common/CorrectAnswer';
@@ -23,7 +23,7 @@ export default function CountryQuestion({
     isPastDeadline,
     onAnswerChanged,
 }: Props) {
-    const { user } = usePrivateUserContext();
+    const { user } = useAuthenticatedUser();
     const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
     useEffect(() => {

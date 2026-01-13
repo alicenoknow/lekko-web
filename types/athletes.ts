@@ -1,4 +1,4 @@
-import { PaginationInfo } from "./pagination";
+import { PaginationInfo } from './pagination';
 
 export type Athlete = {
     id: number;
@@ -19,4 +19,4 @@ export type AthletesParams = {
     country?: string;
     gender?: string;
     order_by?: string;
-} 
+};

@@ -7,7 +7,7 @@ import { RANKING, getAthleteRankingKey } from '@/lib/ranking';
 import { txt } from '@/nls/texts';
 import CorrectAnswer from './common/CorrectAnswer';
 import { isAdmin } from '@/lib/admin';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import {
     AthleteRankingAnswer,
     AthleteRankingAnswerContent,
@@ -27,7 +27,7 @@ export default function AthleteRankingQuestion({
     isPastDeadline,
     onAnswerChanged,
 }: Props) {
-    const { user } = usePrivateUserContext();
+    const { user } = useAuthenticatedUser();
     const [selectedIds, setSelectedIds] = useState<(number | null)[]>([
         null,
         null,

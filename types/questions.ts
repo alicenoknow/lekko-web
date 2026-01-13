@@ -1,6 +1,11 @@
-import { EmptyResponse } from "@/app/api/common";
-import { PaginationInfo } from "./pagination";
-import { AthleteAnswerContent, AthleteRankingAnswerContent, CountryAnswerContent, CountryRankingAnswerContent } from "./answers";
+import { EmptyResponse } from '@/lib/api/common';
+import { PaginationInfo } from './pagination';
+import {
+    AthleteAnswerContent,
+    AthleteRankingAnswerContent,
+    CountryAnswerContent,
+    CountryRankingAnswerContent,
+} from './answers';
 
 export interface Questions {
     data: Question[];
@@ -49,4 +54,3 @@ export type CreateQuestionResponse = Question;
 export type UpdateQuestionResponse = Question;
 
 export type DeleteQuestionResponse = EmptyResponse;
-

@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import Spinner from '@/components/Spinner';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
 import { txt } from '@/nls/texts';
@@ -14,7 +14,7 @@ import { useEventDetails } from '@/hooks/useEventDetails';
 import EventHeader from '@/components/event/EventHeader';
 
 export default function EventDetailPage() {
-    const { token } = usePrivateUserContext();
+    const { token } = useAuthenticatedUser();
     const { eventId: eventIdParam } = useParams<{ eventId: string }>();
     const eventId = parseInt(eventIdParam, 10);
     const [page, setPage] = useState(1);

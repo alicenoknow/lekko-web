@@ -8,12 +8,12 @@ interface ActionButtonProps {
     onClick: () => void;
 }
 
-const ActionButton: React.FC<ActionButtonProps> = ({
+const ActionButton = React.memo<ActionButtonProps>(function ActionButton({
     disabled,
     loading,
     label,
     onClick,
-}) => {
+}) {
     return (
         <button
             disabled={disabled || loading}
@@ -27,6 +27,6 @@ const ActionButton: React.FC<ActionButtonProps> = ({
             )}
         </button>
     );
-};
+});
 
 export default ActionButton;

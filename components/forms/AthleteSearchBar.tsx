@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { usePrivateUserContext } from '@/context/PrivateUserContext';
+import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import FormField from '@/components/forms/FormField';
 import { txt } from '@/nls/texts';
 import AthleteLabel, { InnerAthleteLabel } from './AthleteLabel';
 import AthleteSearchFilter from './AthleteSearchFilter';
-import { fetchAthletes } from '@/app/api/athletes';
+import { fetchAthletes } from '@/lib/api/athletes';
 import { Athlete } from '@/types/athletes';
 
 interface Props {
@@ -23,7 +23,7 @@ export default function AthleteSearchBar({
     emoji,
     onSelect,
 }: Props) {
-    const { token } = usePrivateUserContext();
+    const { token } = useAuthenticatedUser();
     const [search, setSearch] = useState('');
     const [disciplines, setDisciplines] = useState<string[]>([]);
     const [country, setCountry] = useState<string | null>(null);

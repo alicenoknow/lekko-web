@@ -3,4 +3,4 @@ export interface User {
     roles: string[];
     exp: number;
     username: string;
-  }
+}
