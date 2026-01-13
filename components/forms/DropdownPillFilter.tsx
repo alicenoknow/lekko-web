@@ -50,7 +50,7 @@ function DropdownPillFilter({
                     <ListboxButton
                         className={`flex w-full items-center justify-between border px-4 py-2 text-sm shadow-sm focus:outline-none ${
                             disabled
-                                ? 'cursor-not-allowed bg-gray-100 text-lightGray'
+                                ? 'text-light-gray cursor-not-allowed bg-gray-100'
                                 : 'bg-white'
                         }`}
                     >
@@ -67,7 +67,7 @@ function DropdownPillFilter({
                                 <div className='flex items-center justify-between'>
                                     <span>{txt.forms.all}</span>
                                     {selected && (
-                                        <FaCheck className='h-4 w-4 text-primaryDark' />
+                                        <FaCheck className='text-primary-dark h-4 w-4' />
                                     )}
                                 </div>
                             )}
@@ -82,7 +82,7 @@ function DropdownPillFilter({
                                     <div className='flex items-center justify-between'>
                                         <span>{label}</span>
                                         {selected && (
-                                            <FaCheck className='h-4 w-4 text-primaryDark' />
+                                            <FaCheck className='text-primary-dark h-4 w-4' />
                                         )}
                                     </div>
                                 )}

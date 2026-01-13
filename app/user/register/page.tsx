@@ -81,7 +81,7 @@ function RegisterForm() {
 
     return (
         <div className='m-auto flex max-w-md flex-col space-y-6 p-4'>
-            <h1 className='text-2xl font-bold uppercase tracking-tight text-primaryDark'>
+            <h1 className='text-2xl font-bold uppercase tracking-tight text-primary-dark'>
                 {txt.register.header}
             </h1>
             <FormField
@@ -117,7 +117,7 @@ function RegisterForm() {
                 required
             />
             {registered ? (
-                <p className='text-lg font-semibold uppercase text-darkGreen'>
+                <p className='text-lg font-semibold uppercase text-dark-green'>
                     {txt.register.success}
                 </p>
             ) : (

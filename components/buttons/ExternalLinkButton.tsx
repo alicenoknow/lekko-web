@@ -19,7 +19,7 @@ const ExternalLinkButton: React.FC<ExternalLinkButtonProps> = ({
             href={link}
             target='_blank'
             rel='noopener noreferrer'
-            className={`inline-block select-none border-2 border-black bg-primaryLight p-4 text-lg font-extrabold uppercase hover:cursor-pointer md:px-10 md:text-3xl ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-accentLight'}`}
+            className={`bg-primary-light inline-block border-2 border-black p-4 text-lg font-extrabold uppercase select-none hover:cursor-pointer md:px-10 md:text-3xl ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-accent-light'}`}
         >
             {loading ? (
                 <Spinner isInline />

@@ -21,7 +21,7 @@ export default function UserPage() {
         <PrivateContent redirect fallback={<Spinner />}>
             <main className='flex flex-col items-center justify-center gap-y-8 p-24'>
                 <Avatar username={user?.username} size={60} />
-                <p className='mb-12 text-2xl font-bold uppercase tracking-tight text-primaryDark'>
+                <p className='text-primary-dark mb-12 text-2xl font-bold tracking-tight uppercase'>
                     Hej {user?.username ?? ''}!
                 </p>
                 <ActionButton label={txt.user.logout} onClick={handleLogout} />

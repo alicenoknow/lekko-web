@@ -58,7 +58,7 @@ function MultipleDropdownPillFilter({
                     <ListboxButton
                         className={`flex min-h-[44px] w-full flex-wrap items-center justify-between gap-2 rounded-md border px-4 py-2 text-sm shadow-sm focus:outline-none ${
                             disabled
-                                ? 'cursor-not-allowed bg-lightGray/25 text-lightGray'
+                                ? 'bg-light-gray/25 text-light-gray cursor-not-allowed'
                                 : 'bg-white'
                         }`}
                     >
@@ -67,7 +67,7 @@ function MultipleDropdownPillFilter({
                                 selectedLabels.map((label, idx) => (
                                     <span
                                         key={idx}
-                                        className='whitespace-nowrap rounded-full bg-primaryLight px-2 py-1 text-xs font-semibold text-primaryDark'
+                                        className='bg-primary-light text-primary-dark rounded-full px-2 py-1 text-xs font-semibold whitespace-nowrap'
                                     >
                                         {label}
                                     </span>
@@ -88,7 +88,7 @@ function MultipleDropdownPillFilter({
                                 <div className='flex items-center justify-between'>
                                     <span>{txt.forms.all}</span>
                                     {selected && (
-                                        <FaCheck className='h-4 w-4 text-primaryDark' />
+                                        <FaCheck className='text-primary-dark h-4 w-4' />
                                     )}
                                 </div>
                             )}
@@ -103,7 +103,7 @@ function MultipleDropdownPillFilter({
                                     <div className='flex items-center justify-between'>
                                         <span>{label}</span>
                                         {selected && (
-                                            <FaCheck className='h-4 w-4 text-primaryDark' />
+                                            <FaCheck className='text-primary-dark h-4 w-4' />
                                         )}
                                     </div>
                                 )}

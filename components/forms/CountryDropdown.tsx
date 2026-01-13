@@ -26,7 +26,7 @@ export default function CountryDropdown({
     return (
         <div className='relative w-full'>
             {label && (
-                <p className='md:text-md my-4 text-sm font-bold uppercase text-primaryDark'>
+                <p className='md:text-md text-primary-dark my-4 text-sm font-bold uppercase'>
                     {label}:
                 </p>
             )}

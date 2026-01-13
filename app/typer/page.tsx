@@ -84,7 +84,7 @@ export default function EventsPage() {
 
     return (
         <>
-            <div className='mb-4 mt-6 flex items-center justify-between'>
+            <div className='mt-6 mb-4 flex items-center justify-between'>
                 <span className='text-3xl font-bold'>{txt.events.title}</span>
                 <AdminOnly>
                     <LazyAddEvent onEventAdd={handleAdd} />

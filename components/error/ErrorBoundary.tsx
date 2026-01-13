@@ -24,12 +24,12 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
     error,
     resetError,
 }) => (
-    <div className='flex min-h-screen items-center justify-center bg-lightRed p-4'>
+    <div className='bg-light-red flex min-h-screen items-center justify-center p-4'>
         <div className='w-full max-w-lg rounded-lg bg-white p-8 shadow-xl'>
             <div className='flex flex-col items-center gap-6 text-center'>
-                <FaExclamationTriangle size={48} className='text-darkRed' />
+                <FaExclamationTriangle size={48} className='text-dark-red' />
                 <div>
-                    <h1 className='mb-2 text-2xl font-bold text-primaryDark'>
+                    <h1 className='text-primary-dark mb-2 text-2xl font-bold'>
                         Oops! Something went wrong
                     </h1>
                     <p className='mb-4 text-gray-600'>
@@ -40,7 +40,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
                             <summary className='cursor-pointer font-medium'>
                                 Error Details
                             </summary>
-                            <pre className='mt-2 whitespace-pre-wrap break-words text-red-600'>
+                            <pre className='mt-2 break-words whitespace-pre-wrap text-red-600'>
                                 {error.message}
                                 {error.stack}
                             </pre>
@@ -50,14 +50,14 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
                 <div className='flex gap-4'>
                     <button
                         onClick={resetError}
-                        className='flex items-center gap-2 rounded bg-primaryDark px-4 py-2 text-white hover:bg-opacity-90'
+                        className='bg-primary-dark hover:bg-opacity-90 flex items-center gap-2 rounded px-4 py-2 text-white'
                     >
                         <FaRedo size={16} />
                         Try Again
                     </button>
                     <button
                         onClick={() => (window.location.href = '/')}
-                        className='rounded border border-primaryDark px-4 py-2 text-primaryDark hover:bg-gray-50'
+                        className='border-primary-dark text-primary-dark rounded border px-4 py-2 hover:bg-gray-50'
                     >
                         Go Home
                     </button>

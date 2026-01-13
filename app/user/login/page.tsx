@@ -44,7 +44,7 @@ function LoginPage() {
 
     return (
         <div className='m-auto flex w-full max-w-md flex-col justify-center space-y-6 p-4'>
-            <h1 className='text-2xl font-bold uppercase tracking-tight text-primaryDark'>
+            <h1 className='text-2xl font-bold uppercase tracking-tight text-primary-dark'>
                 {txt.login.header}
             </h1>
             <FormField

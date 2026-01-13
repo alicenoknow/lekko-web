@@ -27,14 +27,16 @@ function EventCard({
             <div className='flex flex-col text-left'>
                 <h2 className='font-semibold md:text-xl'>{event.name}</h2>
                 {event.description && (
-                    <p className='mt-1 text-primaryDark'>{event.description}</p>
+                    <p className='text-primary-dark mt-1'>
+                        {event.description}
+                    </p>
                 )}
                 <p className='mt-2 text-sm'>
                     {txt.events.deadline}:{' '}
                     {new Date(event.deadline).toLocaleString()}
                 </p>
             </div>
-            <div className='mt-4 flex items-center gap-4 md:ml-6 md:mt-0'>
+            <div className='mt-4 flex items-center gap-4 md:mt-0 md:ml-6'>
                 <ActionButton label={txt.events.open} onClick={onEdit} />
                 <AdminOnly>
                     <ActionIcon

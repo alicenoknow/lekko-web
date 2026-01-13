@@ -12,7 +12,7 @@ const NavButton: React.FC<NavButtonProps> = ({ title, link }) => {
     return (
         <Link
             href={link}
-            className='mt-4 block hover:text-lightGray md:mt-0 md:inline-block'
+            className='hover:text-light-gray mt-4 block md:mt-0 md:inline-block'
         >
             {title}
         </Link>

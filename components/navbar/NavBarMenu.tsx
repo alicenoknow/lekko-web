@@ -17,7 +17,7 @@ export function NavBarMenu() {
                         event.stopPropagation();
                         setIsOpen(!isOpen);
                     }}
-                    className='z-[4] flex items-center rounded border-2 border-primaryDark px-2 py-2 text-primaryDark hover:border-lightGray hover:text-lightGray'
+                    className='border-primary-dark text-primary-dark hover:border-light-gray hover:text-light-gray z-[4] flex items-center rounded border-2 px-2 py-2'
                 >
                     <MenuLogo />
                 </button>
@@ -25,7 +25,7 @@ export function NavBarMenu() {
             <div
                 className={`z-[4] ${isOpen ? 'block' : 'hidden'} w-full flex-grow md:flex md:w-auto md:items-center`}
             >
-                <div className='ml-auto flex flex-col gap-10 text-lg font-semibold uppercase text-primaryDark md:flex-row md:items-center md:gap-6'>
+                <div className='text-primary-dark ml-auto flex flex-col gap-10 text-lg font-semibold uppercase md:flex-row md:items-center md:gap-6'>
                     <NavButton title={txt.typer} link='/typer' />
                     <NavButton title={txt.ranking.title} link='/ranking' />
                     <UserNav />

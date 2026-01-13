@@ -16,23 +16,23 @@ const CorrectAnswer = memo(function CorrectAnswer({
 }: CorrectAnswerProps) {
     const backgroundClass = useMemo(() => {
         if (maxPoints === undefined) {
-            return 'bg-lightGreen';
+            return 'bg-light-green';
         }
         if (grantedPoints !== undefined) {
             if (grantedPoints === maxPoints) {
-                return 'bg-lightGreen';
+                return 'bg-light-green';
             } else if (grantedPoints > 0 && grantedPoints < maxPoints) {
-                return 'bg-lightYellow';
+                return 'bg-light-yellow';
             } else if (grantedPoints === 0) {
-                return 'bg-lightRed';
+                return 'bg-light-red';
             }
         }
-        return 'bg-lightRed';
+        return 'bg-light-red';
     }, [grantedPoints, maxPoints]);
 
     return (
         <section className={`mb-4 rounded p-4 ${backgroundClass}`}>
-            <div className='md:text-md mb-4 text-sm font-bold uppercase text-primaryDark'>
+            <div className='md:text-md mb-4 text-sm font-bold uppercase text-primary-dark'>
                 {txt.forms.correctAnswer}:
             </div>
             {children}

@@ -1,6 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+    --color-primary-light: #edf4f8;
+    --color-primary-dark: #223239;
+    --color-accent-light: #e1ff1c;
+    --color-accent-dark: #2a2b68;
+    --color-absolute-black: #000;
+    --color-light-green: #93fc8d;
+    --color-light-yellow: #fff2a9;
+    --color-light-red: #ffaaaa;
+    --color-dark-red: #d32412;
+    --color-dark-green: #13962d;
+    --color-light-gray: #717171;
+}
 
 :root {
     --stroke-color: #000;
@@ -11,12 +23,12 @@ body {
     padding: 0;
     overflow-x: hidden;
     text-align: center;
-    @apply bg-primaryLight text-primaryDark;
+    @apply bg-primary-light text-primary-dark;
 }
 
 @layer utilities {
     .text-blur {
-        @apply z-0 text-absoluteBlack blur-[8px];
+        @apply z-0 text-absolute-black blur-[8px];
         -webkit-filter: blur(8px);
     }
 

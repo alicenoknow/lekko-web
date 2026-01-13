@@ -8,10 +8,10 @@ interface Props {
 export default function Points({ maxPoints, grantedPoints }: Props) {
     return (
         <div
-            className='flex h-12 items-center justify-center bg-accentLight px-3'
+            className='flex h-12 items-center justify-center bg-accent-light px-3'
             aria-label='Points awarded'
         >
-            <div className='flex flex-row items-center justify-center gap-2 text-center text-primaryDark'>
+            <div className='flex flex-row items-center justify-center gap-2 text-center text-primary-dark'>
                 <div className='text-xl font-bold'>
                     {grantedPoints !== undefined ? (
                         <>

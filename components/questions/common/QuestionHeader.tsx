@@ -9,7 +9,7 @@ interface Props {
 export default function QuestionHeader({ content, maxPoints, points }: Props) {
     return (
         <div className='flex flex-row justify-between'>
-            <div className='my-4 text-sm font-bold uppercase text-primaryDark md:text-lg'>
+            <div className='my-4 text-sm font-bold uppercase text-primary-dark md:text-lg'>
                 {content}
             </div>
             <Points maxPoints={maxPoints} grantedPoints={points} />

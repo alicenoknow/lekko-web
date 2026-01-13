@@ -42,7 +42,7 @@ const FormField: React.FC<FormFieldProps> = ({
                 {label && (
                     <label
                         htmlFor={id}
-                        className='text-sm font-bold uppercase text-primaryDark md:text-lg'
+                        className='text-primary-dark text-sm font-bold uppercase md:text-lg'
                     >
                         {label}
                         {required && (
@@ -54,7 +54,7 @@ const FormField: React.FC<FormFieldProps> = ({
                     <textarea
                         id={id}
                         ref={inputRef as React.Ref<HTMLTextAreaElement>}
-                        className='w-full border p-2 text-sm text-primaryDark md:p-4 md:text-lg'
+                        className='text-primary-dark w-full border p-2 text-sm md:p-4 md:text-lg'
                         value={value}
                         onChange={onChange}
                         onFocus={onFocus}
@@ -66,7 +66,7 @@ const FormField: React.FC<FormFieldProps> = ({
                     <input
                         id={id}
                         ref={inputRef as React.Ref<HTMLInputElement>}
-                        className='w-full border p-2 text-sm text-primaryDark md:p-4 md:text-lg'
+                        className='text-primary-dark w-full border p-2 text-sm md:p-4 md:text-lg'
                         value={value}
                         onChange={onChange}
                         onFocus={onFocus}

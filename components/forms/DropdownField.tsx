@@ -67,7 +67,7 @@ function DropdownField({
     return (
         <div className='flex w-full flex-col gap-1'>
             {label && (
-                <span className='md:text-md text-sm font-bold uppercase text-primaryDark'>
+                <span className='md:text-md text-primary-dark text-sm font-bold uppercase'>
                     {label}
                 </span>
             )}
@@ -81,8 +81,8 @@ function DropdownField({
                     <ListboxButton
                         className={`flex w-full items-center justify-between border px-4 py-2 text-sm shadow-sm focus:outline-none md:p-4 md:text-lg ${
                             disabled
-                                ? 'bg-lightGray/25 text-lightGray'
-                                : 'bg-white text-primaryDark'
+                                ? 'bg-light-gray/25 text-light-gray'
+                                : 'text-primary-dark bg-white'
                         }`}
                     >
                         {getSelectedLabel()}
@@ -99,7 +99,7 @@ function DropdownField({
                                 <div className='flex items-center justify-between'>
                                     <span>{placeholder}</span>
                                     {selected && (
-                                        <FaCheck className='h-4 w-4 text-primaryDark' />
+                                        <FaCheck className='text-primary-dark h-4 w-4' />
                                     )}
                                 </div>
                             )}
@@ -114,7 +114,7 @@ function DropdownField({
                                     <div className='flex items-center justify-between'>
                                         <span>{label}</span>
                                         {selected && (
-                                            <FaCheck className='h-4 w-4 text-primaryDark' />
+                                            <FaCheck className='text-primary-dark h-4 w-4' />
                                         )}
                                     </div>
                                 )}

@@ -42,7 +42,7 @@ export default function ConfirmationDialog({
                     leaveFrom='opacity-100'
                     leaveTo='opacity-0'
                 >
-                    <div className='fixed inset-0 bg-black bg-opacity-25' />
+                    <div className='bg-opacity-25 fixed inset-0 bg-black' />
                 </TransitionChild>
 
                 <div className='fixed inset-0 flex items-center justify-center p-4'>
@@ -59,16 +59,16 @@ export default function ConfirmationDialog({
                             <div className='flex flex-col items-center gap-4'>
                                 <FaExclamationTriangle
                                     size={40}
-                                    className='text-darkRed'
+                                    className='text-dark-red'
                                 />
                                 <DialogTitle
                                     as='h3'
-                                    className='text-center text-lg font-semibold text-primaryDark'
+                                    className='text-primary-dark text-center text-lg font-semibold'
                                 >
                                     {title}
                                 </DialogTitle>
                                 {description && (
-                                    <p className='text-center text-sm text-primaryDark'>
+                                    <p className='text-primary-dark text-center text-sm'>
                                         {description}
                                     </p>
                                 )}

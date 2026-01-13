@@ -24,7 +24,7 @@ function QuestionTypeSelector({ selected, setSelected, onAdd }: Props) {
         <div className='mx-auto flex max-w-sm flex-col gap-4 sm:flex-row sm:items-center sm:gap-6'>
             <select
                 aria-label='select question type'
-                className='border-r-8 border-transparent p-2 text-sm text-primaryDark md:p-4 md:text-xl'
+                className='border-r-8 border-transparent p-2 text-sm text-primary-dark md:p-4 md:text-xl'
                 value={selected}
                 onChange={(e) => {
                     setSelected(e.target.value as QuestionType);

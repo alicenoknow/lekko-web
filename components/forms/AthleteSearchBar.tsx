@@ -104,7 +104,7 @@ export default function AthleteSearchBar({
                         setSearch('');
                         setInputFocused(false);
                     }}
-                    className='cursor-pointer p-2 hover:bg-accentLight'
+                    className='hover:bg-accent-light cursor-pointer p-2'
                 >
                     <InnerAthleteLabel athlete={athlete} />
                 </button>
@@ -116,17 +116,17 @@ export default function AthleteSearchBar({
         <div className='relative flex w-full flex-row justify-center gap-2'>
             <div className='w-full'>
                 {label && (
-                    <p className='md:text-md mb-2 text-sm font-bold uppercase text-primaryDark'>
+                    <p className='md:text-md text-primary-dark mb-2 text-sm font-bold uppercase'>
                         {label}:
                     </p>
                 )}
 
                 {selected ? (
-                    <div className='mb-4 flex items-center justify-between border bg-white px-2 text-sm text-primaryDark md:px-4 md:py-2 md:text-lg'>
+                    <div className='text-primary-dark mb-4 flex items-center justify-between border bg-white px-2 text-sm md:px-4 md:py-2 md:text-lg'>
                         <AthleteLabel emoji={emoji} selected={selected} />
                         <button
                             onClick={() => onSelect(null)}
-                            className='text-md font-semibold uppercase text-accentDark'
+                            className='text-md text-accent-dark font-semibold uppercase'
                         >
                             {txt.forms.change}
                         </button>
@@ -169,12 +169,12 @@ export default function AthleteSearchBar({
                         {athletes.length > 0 && inputFocused && (
                             <div
                                 ref={dropdownRef}
-                                className='absolute left-0 top-full z-[999] mt-1 max-h-60 w-full overflow-y-auto border bg-white shadow-lg'
+                                className='absolute top-full left-0 z-[999] mt-1 max-h-60 w-full overflow-y-auto border bg-white shadow-lg'
                             >
                                 {dropdownOptions}
                                 {hasMore && (
                                     <button
-                                        className='w-full p-2 text-sm font-semibold text-primaryDark hover:bg-accentLight'
+                                        className='text-primary-dark hover:bg-accent-light w-full p-2 text-sm font-semibold'
                                         onClick={() => setPage((p) => p + 1)}
                                         disabled={isFetching}
                                     >

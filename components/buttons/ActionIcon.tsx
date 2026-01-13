@@ -18,7 +18,7 @@ const ActionIcon = React.memo<ActionIconProps>(function ActionIcon({
         <button
             aria-label={`${label} button`}
             disabled={disabled || loading}
-            className={`border-1 border-grey select-none bg-primaryLight p-2 text-xl font-extrabold uppercase hover:cursor-pointer ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-accentLight'}`}
+            className={`border-grey bg-primary-light border-1 p-2 text-xl font-extrabold uppercase select-none hover:cursor-pointer ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-accent-light'}`}
             onClick={onClick}
         >
             {loading ? (

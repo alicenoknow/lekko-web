@@ -30,7 +30,7 @@ function AthleteLabel({ selected, label, emoji }: Props) {
     return (
         <div className='my-2 flex flex-col gap-2'>
             {label && (
-                <p className='md:text-md text-sm font-bold uppercase text-primaryDark'>
+                <p className='md:text-md text-primary-dark text-sm font-bold uppercase'>
                     {label}:
                 </p>
             )}
