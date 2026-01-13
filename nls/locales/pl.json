@@ -107,6 +107,13 @@
         "questionAdd": "Nie udało się dodać pytania",
         "eventUpdate": "Nie udało się przesłać wydarzenia",
         "questionUpdate": "Nie udało się przesłać pytania",
-        "errorMessage": "Coś poszło nie tak spróbuj ponownie później"
+        "errorMessage": "Coś poszło nie tak spróbuj ponownie później",
+        "generic": "Błąd. Spróbuj ponownie później.",
+        "validation": "Wprowadzono niepoprawne dane.",
+        "email": "Podany email jest niepoprawny.",
+        "requiredFields": "Wszystkie pola są wymagane.",
+        "badRequest": "Nieprawidłowe żądanie.",
+        "badLogin": "Błąd logowania.",
+        "badAuth": "Błąd uwierzytelniania."
     }
 }

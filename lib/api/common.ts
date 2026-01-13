@@ -7,6 +7,7 @@ import {
     ApiError,
 } from '@/types/errors';
 import { logger } from '@/lib/logger';
+import { txt } from '@/nls/texts';
 
 export type EmptyResponse = Record<string, never>;
 
@@ -22,33 +23,25 @@ export function getAuthConfig(token: string): AuthConfig {
     };
 }
 
-const GENERIC_ERROR_MESSAGE = 'Błąd. Spróbuj ponownie później.';
-const GENERIC_VALIDATION_ERROR_MESSAGE = 'Wprowadzono niepoprawne dane.';
-const EMAIL_ERROR_MESSAGE = 'Podany email jest niepoprawny.';
-const REQUIRED_FIELDS_ERROR_MESSAGE = 'Wszystkie pola są wymagane.';
-const BAD_REQUEST_ERROR_MESSAGE = 'Nieprawidłowe żądanie.';
-const BAD_LOGIN_ERROR_MESSAGE = 'Błąd logowania.';
-const BAD_AUTH_ERROR_MESSAGE = 'Błąd uwierzytelniania.';
-
 export function handleError(
     data?: ValidationApiError | ApiError | null
 ): string {
     if (!data) {
         logger.error('Empty error data received from API');
-        return GENERIC_ERROR_MESSAGE;
+        return txt.errors.generic;
     }
     switch (data?.error_type) {
         case ValidationErrorType.ValidationError:
             return handleValidationApiError(data as ValidationApiError);
         case ErrorType.BadRequest:
-            return BAD_REQUEST_ERROR_MESSAGE;
+            return txt.errors.badRequest;
         case ErrorType.LoginError:
-            return BAD_LOGIN_ERROR_MESSAGE;
+            return txt.errors.badLogin;
         case ErrorType.AuthError:
-            return BAD_AUTH_ERROR_MESSAGE;
+            return txt.errors.badAuth;
         case ErrorType.InternalServerError:
         default:
-            return GENERIC_ERROR_MESSAGE;
+            return txt.errors.generic;
     }
 }
 
@@ -57,12 +50,12 @@ export function handleValidationApiError(error: ValidationApiError): string {
     for (const errorDetail of error.details) {
         switch (errorDetail.error_type) {
             case ValidationErrorDetailsType.Required:
-                return REQUIRED_FIELDS_ERROR_MESSAGE;
+                return txt.errors.requiredFields;
             case ValidationErrorDetailsType.Email:
-                return EMAIL_ERROR_MESSAGE;
+                return txt.errors.email;
         }
     }
-    return GENERIC_VALIDATION_ERROR_MESSAGE;
+    return txt.errors.validation;
 }
 
 export function isApiError(error: unknown): error is ApiErrorType {
