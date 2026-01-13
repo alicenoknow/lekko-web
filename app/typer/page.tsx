@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { deleteEvent, fetchEvents } from '@/lib/api/events';
 import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
@@ -15,6 +15,7 @@ import EventCard from '@/components/event/EventCard';
 import LazyAddEvent from '@/components/event/LazyAddEvent';
 import { useErrorStore } from '@/store/error';
 import LazyConfirmationDialog from '@/components/forms/LazyConfirmationDialog';
+import { EventsData, TyperEvent } from '@/types/events';
 
 export default function EventsPage() {
     const router = useRouter();
@@ -77,10 +78,16 @@ export default function EventsPage() {
         setEventToDelete(null);
     }, []);
 
+    const shouldShowEvents = useCallback(
+        (events: EventsData | undefined): events is EventsData => {
+            return (
+                !isError && !!events && events.data && events.data.length !== 0
+            );
+        },
+        [isError]
+    );
+
     if (isLoading || isDeleting) return <Spinner />;
-    if (isError || !events || !events.data || events.data.length === 0) {
-        return <ErrorMessage errorMessage={txt.events.notFound} />;
-    }
 
     return (
         <>
@@ -90,16 +97,20 @@ export default function EventsPage() {
                     <LazyAddEvent onEventAdd={handleAdd} />
                 </AdminOnly>
             </div>
-            {events.data.map((event) => (
-                <EventCard
-                    key={event.id}
-                    event={event}
-                    onEdit={() => handleOpen(event.id)}
-                    onAdminEdit={() => handleAdminOpen(event.id)}
-                    onDelete={() => handleDeleteRequest(event.id)}
-                    isDeleting={isDeleting}
-                />
-            ))}
+            {shouldShowEvents(events) ? (
+                events.data.map((event) => (
+                    <EventCard
+                        key={event.id}
+                        event={event}
+                        onEdit={() => handleOpen(event.id)}
+                        onAdminEdit={() => handleAdminOpen(event.id)}
+                        onDelete={() => handleDeleteRequest(event.id)}
+                        isDeleting={isDeleting}
+                    />
+                ))
+            ) : (
+                <ErrorMessage errorMessage={txt.events.notFound} />
+            )}
             {events?.pagination_info && (
                 <Pagination
                     pagination={events.pagination_info}

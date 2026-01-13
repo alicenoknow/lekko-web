@@ -45,3 +45,4 @@ export default function EventHeader({ event }: { event: EventDetail }) {
 // TODO events param active = true
 // TODO mobile view of navbar
 // TODO test plan
+// TODO kiedy ranking pusty dodaj info ze nie ma jeszcze nic
