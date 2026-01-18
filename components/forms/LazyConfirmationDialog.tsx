@@ -28,7 +28,7 @@ export default function LazyConfirmationDialog(
         <Suspense
             fallback={
                 <div className='bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black'>
-                    <div className='rounded-lg bg-white p-8'>
+                    <div className='bg-white p-8'>
                         <Spinner />
                     </div>
                 </div>

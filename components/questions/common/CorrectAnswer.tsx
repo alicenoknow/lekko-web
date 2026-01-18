@@ -31,7 +31,7 @@ const CorrectAnswer = memo(function CorrectAnswer({
     }, [grantedPoints, maxPoints]);
 
     return (
-        <section className={`mb-4 rounded p-4 ${backgroundClass}`}>
+        <section className={`mb-4 p-4 ${backgroundClass}`}>
             <div className='md:text-md mb-4 text-sm font-bold uppercase text-primary-dark'>
                 {txt.forms.correctAnswer}:
             </div>

@@ -23,7 +23,7 @@ function EventCard({
     isDeleting,
 }: Props) {
     return (
-        <div className='flex flex-col rounded-md border bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between'>
+        <div className='flex flex-col border bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between'>
             <div className='flex flex-col text-left'>
                 <h2 className='font-semibold md:text-xl'>{event.name}</h2>
                 {event.description && (

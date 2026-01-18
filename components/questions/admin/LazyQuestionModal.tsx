@@ -25,7 +25,7 @@ export default function LazyQuestionModal(props: LazyQuestionModalProps) {
         <Suspense
             fallback={
                 <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-                    <div className='rounded-lg bg-white p-8'>
+                    <div className='bg-white p-8'>
                         <Spinner />
                     </div>
                 </div>

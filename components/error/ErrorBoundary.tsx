@@ -25,7 +25,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
     resetError,
 }) => (
     <div className='bg-light-red flex min-h-screen items-center justify-center p-4'>
-        <div className='w-full max-w-lg rounded-lg bg-white p-8 shadow-xl'>
+        <div className='w-full max-w-lg bg-white p-8 shadow-xl'>
             <div className='flex flex-col items-center gap-6 text-center'>
                 <FaExclamationTriangle size={48} className='text-dark-red' />
                 <div>
@@ -36,7 +36,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
                         {txt.errors.errorMessage}
                     </p>
                     {process.env.NODE_ENV === 'development' && (
-                        <details className='mb-4 rounded bg-gray-100 p-3 text-left text-sm'>
+                        <details className='mb-4 bg-gray-100 p-3 text-left text-sm'>
                             <summary className='cursor-pointer font-medium'>
                                 Error Details
                             </summary>
@@ -50,14 +50,14 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
                 <div className='flex gap-4'>
                     <button
                         onClick={resetError}
-                        className='bg-primary-dark hover:bg-opacity-90 flex items-center gap-2 rounded px-4 py-2 text-white'
+                        className='bg-primary-dark hover:bg-opacity-90 flex items-center gap-2 px-4 py-2 text-white'
                     >
                         <FaRedo size={16} />
                         Try Again
                     </button>
                     <button
                         onClick={() => (window.location.href = '/')}
-                        className='border-primary-dark text-primary-dark rounded border px-4 py-2 hover:bg-gray-50'
+                        className='border-primary-dark text-primary-dark border px-4 py-2 hover:bg-gray-50'
                     >
                         Go Home
                     </button>
