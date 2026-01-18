@@ -59,7 +59,7 @@ export default function Ranking() {
     return (
         <>
             <span className='text-3xl font-bold'>{txt.ranking.title}</span>
-            <div className='flex flex-row gap-4'>
+            <div className='mt-4 flex flex-row gap-4'>
                 <Label label={txt.ranking.selectEvent} />
                 <DropdownField
                     options={eventsOptions}
