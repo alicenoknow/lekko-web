@@ -20,7 +20,7 @@ export function useAnswerSubmit(
         }: {
             questionId: number;
             content: AnswerContent;
-        }) => createAnswer(token, questionId, userId, content),
+        }) => createAnswer(token, questionId, content, userId),
         onSuccess: () =>
             queryClient.invalidateQueries({ queryKey: ['answers'] }),
         onError: () => {
@@ -38,7 +38,7 @@ export function useAnswerSubmit(
             id: number;
             questionId: number;
             content: AnswerContent;
-        }) => updateAnswer(token, id, questionId, userId, content),
+        }) => updateAnswer(token, id, content, questionId, userId),
         onSuccess: () =>
             queryClient.invalidateQueries({ queryKey: ['answers'] }),
         onError: () => {

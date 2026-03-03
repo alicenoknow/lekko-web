@@ -35,7 +35,7 @@ function CreateEventPage() {
             );
         },
         onSuccess: (data) => {
-            router.replace(`/typer/event/${data.id}`);
+            router.replace(`/typer/event/${data.id}/admin`);
             queryClient.invalidateQueries({ queryKey: ['events'] });
         },
         onError: (err) => {

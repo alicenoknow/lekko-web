@@ -69,8 +69,8 @@ export function useEventAdmin(
             return updateQuestion(
                 token,
                 question.id,
-                question.event_id!,
                 question.type,
+                question.event_id,
                 question.content,
                 question.points,
                 question.correct_answer

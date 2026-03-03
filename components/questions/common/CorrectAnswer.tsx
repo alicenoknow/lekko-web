@@ -2,11 +2,12 @@
 
 import { txt } from '@/nls/texts';
 import { ReactNode, memo, useMemo } from 'react';
+import { FaCheckCircle, FaTimesCircle, FaMinusCircle } from 'react-icons/fa';
 
 interface CorrectAnswerProps {
     children: ReactNode;
-    grantedPoints?: number;
-    maxPoints?: number;
+    grantedPoints?: number | undefined;
+    maxPoints?: number | undefined;
 }
 
 const CorrectAnswer = memo(function CorrectAnswer({
@@ -14,28 +15,58 @@ const CorrectAnswer = memo(function CorrectAnswer({
     grantedPoints,
     maxPoints,
 }: CorrectAnswerProps) {
-    const backgroundClass = useMemo(() => {
+    const { backgroundClass, borderClass, iconColor, icon } = useMemo(() => {
         if (maxPoints === undefined) {
-            return 'bg-light-green';
+            return {
+                backgroundClass: 'bg-light-green',
+                borderClass: 'border-dark-green',
+                iconColor: 'text-dark-green',
+                icon: <FaCheckCircle />,
+            };
         }
         if (grantedPoints !== undefined) {
             if (grantedPoints === maxPoints) {
-                return 'bg-light-green';
+                return {
+                    backgroundClass: 'bg-light-green',
+                    borderClass: 'border-dark-green',
+                    iconColor: 'text-dark-green',
+                    icon: <FaCheckCircle />,
+                };
             } else if (grantedPoints > 0 && grantedPoints < maxPoints) {
-                return 'bg-light-yellow';
+                return {
+                    backgroundClass: 'bg-light-yellow',
+                    borderClass: 'border-yellow-600',
+                    iconColor: 'text-yellow-600',
+                    icon: <FaMinusCircle />,
+                };
             } else if (grantedPoints === 0) {
-                return 'bg-light-red';
+                return {
+                    backgroundClass: 'bg-light-red',
+                    borderClass: 'border-dark-red',
+                    iconColor: 'text-dark-red',
+                    icon: <FaTimesCircle />,
+                };
             }
         }
-        return 'bg-light-red';
+        return {
+            backgroundClass: 'bg-light-red',
+            borderClass: 'border-dark-red',
+            iconColor: 'text-dark-red',
+            icon: <FaTimesCircle />,
+        };
     }, [grantedPoints, maxPoints]);
 
     return (
-        <section className={`mb-4 p-4 ${backgroundClass}`}>
-            <div className='md:text-md mb-4 text-sm font-bold uppercase text-primary-dark'>
-                {txt.forms.correctAnswer}:
+        <section
+            className={`rounded-lg border-2 ${borderClass} ${backgroundClass} p-4 md:p-6`}
+        >
+            <div className='mb-4 flex items-center gap-3'>
+                <span className={`text-xl ${iconColor}`}>{icon}</span>
+                <div className='text-sm font-bold uppercase text-primary-dark md:text-base'>
+                    {txt.forms.correctAnswer}
+                </div>
             </div>
-            {children}
+            <div className='ml-8'>{children}</div>
         </section>
     );
 });

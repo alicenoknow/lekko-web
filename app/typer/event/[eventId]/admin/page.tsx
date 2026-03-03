@@ -209,9 +209,9 @@ export default function EventDetailAdminPage() {
                     isPastDeadline={isPastDeadline}
                 />
             ))}
-            {questionsQuery.data?.pagination_info && (
+            {questionsQuery.data && questionsQuery.data.total_count > questionsQuery.data.limit && (
                 <Pagination
-                    pagination={questionsQuery.data.pagination_info}
+                    pagination={questionsQuery.data}
                     changePage={setPage}
                 />
             )}

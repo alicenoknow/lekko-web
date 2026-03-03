@@ -8,11 +8,11 @@ interface Props {
 
 export default function QuestionHeader({ content, maxPoints, points }: Props) {
     return (
-        <div className='flex flex-row justify-between'>
-            <div className='my-4 text-sm font-bold uppercase text-primary-dark md:text-lg'>
+        <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+            <div className='text-lg font-bold text-primary-dark md:text-xl'>
                 {content}
             </div>
-            <Points maxPoints={maxPoints} grantedPoints={points} />
+            <Points maxPoints={maxPoints} {...(points !== undefined ? { grantedPoints: points } : {})} />
         </div>
     );
 }

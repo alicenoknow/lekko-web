@@ -46,8 +46,8 @@ const Avatar = React.memo<AvatarProps>(function Avatar({
         const parts = safeUsername.trim().split(/\s+/);
         const displayText =
             parts.length >= 2
-                ? `${parts[0][0]}${parts[1][0]}`.toUpperCase()
-                : (parts[0][0]?.toUpperCase() ?? '?');
+                ? `${parts[0]![0]}${parts[1]![0]}`.toUpperCase()
+                : (parts[0]![0]?.toUpperCase() ?? '?');
 
         const fontSize = displayText.length === 1 ? '45' : '38';
 

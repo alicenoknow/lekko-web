@@ -44,7 +44,8 @@
         "saved": "Zapisano",
         "edit": "Edytuj",
         "confirm": "Tak",
-        "cancel": "Nie"
+        "cancel": "Nie",
+        "filterHint": "Użyj filtrów powyżej, aby zawęzić wyniki wyszukiwania."
     },
     "home": {
         "title": "Lekkoatletawka",
@@ -72,7 +73,12 @@
         "questions": "Pytania",
         "open": "Odpowiedz",
         "delete": "Usuwanie wydarzenia",
-        "deleteConfirm": "Czy na pewno chcesz usunąć wydarzenie?"
+        "deleteConfirm": "Czy na pewno chcesz usunąć wydarzenie?",
+        "draft": "Szkic",
+        "publish": "Opublikuj",
+        "publishConfirm": "Czy na pewno chcesz opublikować wydarzenie?",
+        "unpublish": "Cofnij publikację",
+        "unpublishConfirm": "Czy na pewno chcesz cofnąć publikację?"
     },
     "questions": {
         "modalTitle": "Edytuj pytanie",
@@ -89,7 +95,8 @@
         "content": "Pytanie",
         "points": "Punkty",
         "deleteQuestion": "Usuwanie pytania",
-        "deleteConfirm": "Czy na pewno chcesz usunąć pytanie?"
+        "deleteConfirm": "Czy na pewno chcesz usunąć pytanie?",
+        "resolved": "To pytanie zostało już rozstrzygnięte. Nie możesz udzielić odpowiedzi."
     },
     "fetchErrorText": "Nie udało się wczytać danych. Spórbuj ponownie.",
     "goToEvent": "Otwórz",
@@ -106,6 +113,7 @@
         "questionDelete": "Nie udało się usunąć pytania",
         "questionAdd": "Nie udało się dodać pytania",
         "eventUpdate": "Nie udało się przesłać wydarzenia",
+        "eventStatusUpdate": "Nie udało się zmienić statusu wydarzenia",
         "questionUpdate": "Nie udało się przesłać pytania",
         "errorMessage": "Coś poszło nie tak spróbuj ponownie później",
         "generic": "Błąd. Spróbuj ponownie później.",

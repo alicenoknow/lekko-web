@@ -75,48 +75,79 @@ export default function AthleteRankingQuestion({
         }
     }, [selectedIds, answer?.content, onAnswerChanged]);
 
-    const showCorrectAnswers =
-        question.correct_answer && (isPastDeadline || isAdmin(user));
+    const admin = isAdmin(user);
+    const isResolved = !!question.correct_answer;
+    const isLocked = isPastDeadline || isResolved;
+    const hasAnswer = !!(
+        answer?.content?.athlete_id_one &&
+        answer?.content?.athlete_id_two &&
+        answer?.content?.athlete_id_three
+    );
+    const showCorrectAnswers = admin || (isLocked && !!question.correct_answer);
 
     return (
-        <>
-            {RANKING.map((emoji, i) => {
-                const label = i === 0 ? txt.forms.yourAnswer : undefined;
-                return isPastDeadline ? (
-                    <AthleteLabel
-                        key={i}
-                        emoji={emoji}
-                        label={label}
-                        selected={selectedIds[i]}
-                    />
+        <div className='flex flex-col gap-6'>
+            {!admin &&
+                (isLocked ? (
+                    hasAnswer ? (
+                        <div className='space-y-3'>
+                            {RANKING.map((emoji, i) => {
+                                const labelProp =
+                                    i === 0
+                                        ? { label: txt.forms.yourAnswer }
+                                        : {};
+                                return (
+                                    <AthleteLabel
+                                        key={i}
+                                        emoji={emoji}
+                                        {...labelProp}
+                                        selected={selectedIds[i] ?? null}
+                                    />
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <p className='text-grey text-sm'>
+                            {txt.questions.resolved}
+                        </p>
+                    )
                 ) : (
-                    <AthleteSearchBar
-                        key={i}
-                        emoji={emoji}
-                        label={label}
-                        selected={selectedIds[i]}
-                        onSelect={(val) => handleSelect(i, val)}
-                    />
-                );
-            })}
+                    <div className='space-y-3'>
+                        {RANKING.map((emoji, i) => {
+                            const labelProp =
+                                i === 0 ? { label: txt.forms.yourAnswer } : {};
+                            return (
+                                <AthleteSearchBar
+                                    key={i}
+                                    emoji={emoji}
+                                    {...labelProp}
+                                    selected={selectedIds[i] ?? null}
+                                    onSelect={(val) => handleSelect(i, val)}
+                                />
+                            );
+                        })}
+                    </div>
+                ))}
             {showCorrectAnswers && (
                 <CorrectAnswer
-                    maxPoints={question.points}
-                    grantedPoints={answer?.points}
+                    maxPoints={admin ? undefined : question.points}
+                    grantedPoints={admin ? undefined : answer?.points}
                 >
-                    {RANKING.map((emoji, i) => (
-                        <AthleteLabel
-                            key={i}
-                            emoji={emoji}
-                            selected={
-                                question.correct_answer?.[
-                                    getAthleteRankingKey(i)
-                                ] ?? null
-                            }
-                        />
-                    ))}
+                    <div className='space-y-3'>
+                        {RANKING.map((emoji, i) => (
+                            <AthleteLabel
+                                key={i}
+                                emoji={emoji}
+                                selected={
+                                    question.correct_answer?.[
+                                        getAthleteRankingKey(i)
+                                    ] ?? null
+                                }
+                            />
+                        ))}
+                    </div>
                 </CorrectAnswer>
             )}
-        </>
+        </div>
     );
 }

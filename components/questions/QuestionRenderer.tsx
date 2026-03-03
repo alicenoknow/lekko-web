@@ -109,20 +109,28 @@ export default function QuestionRenderer({
     }, [question, answer, isPastDeadline, handleAnswerChanged]);
 
     return (
-        <div className='flex w-full flex-col bg-white p-8'>
-            <QuestionHeader
-                content={question.content}
-                maxPoints={question.points}
-                points={answer?.points}
-            />
-            {renderQuestionComponent}
-            <QuestionFooterButtons
-                isSubmitting={isSubmitting}
-                isModified={isModified}
-                isPastDeadline={isPastDeadline}
-                onSubmit={handleSubmit}
-                onEdit={onEdit}
-            />
+        <div className='border-light-gray w-full overflow-hidden rounded-xl border bg-white shadow-sm transition-all duration-300 hover:shadow-md'>
+            <div className='border-light-gray border-b px-6 py-6 md:px-8 md:py-8'>
+                <QuestionHeader
+                    content={question.content}
+                    maxPoints={question.points}
+                    points={
+                        answer?.points_granted_at ? answer.points : undefined
+                    }
+                />
+            </div>
+            <div className='px-6 py-6 md:px-8 md:py-8'>
+                {renderQuestionComponent}
+            </div>
+            <div className='border-light-gray border-t px-6 py-4 md:px-8 md:py-6'>
+                <QuestionFooterButtons
+                    isSubmitting={isSubmitting}
+                    isModified={isModified}
+                    isPastDeadline={isPastDeadline}
+                    onSubmit={handleSubmit}
+                    {...(onEdit !== undefined ? { onEdit } : {})}
+                />
+            </div>
         </div>
     );
 }

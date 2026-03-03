@@ -1,5 +1,4 @@
 import { EmptyResponse } from '@/lib/api/common';
-import { PaginationInfo } from './pagination';
 import {
     AthleteAnswerContent,
     AthleteRankingAnswerContent,
@@ -9,7 +8,9 @@ import {
 
 export interface Questions {
     data: Question[];
-    pagination_info: PaginationInfo;
+    total_count: number;
+    page: number;
+    limit: number;
 }
 
 interface BaseQuestion {
@@ -41,11 +42,17 @@ export interface CountryRankingQuestion extends BaseQuestion {
     correct_answer?: CountryRankingAnswerContent;
 }
 
+export interface NumericValueQuestion extends BaseQuestion {
+    type: 'numeric_value';
+    correct_answer?: { value: number | null };
+}
+
 export type Question =
     | AthleteQuestion
     | AthleteRankingQuestion
     | CountryQuestion
-    | CountryRankingQuestion;
+    | CountryRankingQuestion
+    | NumericValueQuestion;
 
 export type QuestionType = Question['type'];
 

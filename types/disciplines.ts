@@ -1,5 +1,3 @@
-import { PaginationInfo } from './pagination';
-
 export interface Discipline {
     id: number;
     name: string;
@@ -8,5 +6,7 @@ export interface Discipline {
 
 export interface Disciplines {
     data: Discipline[];
-    pagination_info: PaginationInfo;
+    total_count: number;
+    page: number;
+    limit: number;
 }

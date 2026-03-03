@@ -34,7 +34,10 @@ function AthleteLabel({ selected, label, emoji }: Props) {
                     {label}:
                 </p>
             )}
-            <InnerAthleteLabel athlete={athlete} emoji={emoji} />
+            <InnerAthleteLabel
+                athlete={athlete}
+                {...(emoji !== undefined ? { emoji } : {})}
+            />
         </div>
     );
 }

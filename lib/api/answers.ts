@@ -29,8 +29,8 @@ export async function fetchAnswers(
 export async function createAnswer(
     token: string,
     question_id: number,
-    user_id: number,
-    content: AnswerContent
+    content: AnswerContent,
+    user_id: number
 ): Promise<CreateAnswerResponse> {
     const res = await axios.post(
         `${API_URL}/api/v1/users/me/answers`,
@@ -44,9 +44,9 @@ export async function createAnswer(
 export async function updateAnswer(
     token: string,
     id: number,
+    content: AnswerContent,
     question_id: number,
-    user_id: number,
-    content: AnswerContent
+    user_id: number
 ): Promise<UpdateAnswerResponse> {
     const res = await axios.put(
         `${API_URL}/api/v1/users/me/answers/${id}`,

@@ -73,7 +73,10 @@ export default function AthleteSearchBar({
             setAthletes((prev) => [...prev, ...athletesData.data]);
         }
 
-        setHasMore(!athletesData.pagination_info?.is_last_page);
+        const totalPages = Math.ceil(
+            athletesData.total_count / athletesData.limit
+        );
+        setHasMore(athletesData.page < totalPages);
     }, [athletesData, page]);
 
     useEffect(() => {
@@ -104,7 +107,7 @@ export default function AthleteSearchBar({
                         setSearch('');
                         setInputFocused(false);
                     }}
-                    className='hover:bg-accent-light cursor-pointer p-2'
+                    className='hover:bg-accent-light w-full cursor-pointer rounded-lg p-2 text-left'
                 >
                     <InnerAthleteLabel athlete={athlete} />
                 </button>
@@ -122,8 +125,11 @@ export default function AthleteSearchBar({
                 )}
 
                 {selected ? (
-                    <div className='text-primary-dark mb-4 flex items-center justify-between border bg-white px-2 text-sm md:px-4 md:py-2 md:text-lg'>
-                        <AthleteLabel emoji={emoji} selected={selected} />
+                    <div className='text-primary-dark mb-4 flex items-center justify-between rounded-lg border bg-white px-2 text-sm md:px-4 md:py-2 md:text-lg'>
+                        <AthleteLabel
+                            {...(emoji !== undefined ? { emoji } : {})}
+                            selected={selected}
+                        />
                         <button
                             onClick={() => onSelect(null)}
                             className='text-md text-accent-dark font-semibold uppercase'
@@ -151,6 +157,10 @@ export default function AthleteSearchBar({
                             }}
                         />
 
+                        <p className='text-grey mb-2 text-xs'>
+                            {txt.forms.filterHint}
+                        </p>
+
                         <FormField
                             id='search-athlete'
                             type='text'
@@ -169,7 +179,7 @@ export default function AthleteSearchBar({
                         {athletes.length > 0 && inputFocused && (
                             <div
                                 ref={dropdownRef}
-                                className='absolute top-full left-0 z-[999] mt-1 max-h-60 w-full overflow-y-auto border bg-white shadow-lg'
+                                className='absolute top-full left-0 z-[999] mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg'
                             >
                                 {dropdownOptions}
                                 {hasMore && (

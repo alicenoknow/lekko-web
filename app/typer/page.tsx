@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
-import { deleteEvent, fetchEvents } from '@/lib/api/events';
+import { deleteEvent, fetchEvents, setEventStatus } from '@/lib/api/events';
 import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import Spinner from '@/components/Spinner';
 import { txt } from '@/nls/texts';
@@ -22,6 +22,11 @@ export default function EventsPage() {
     const [page, setPage] = useState(1);
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
     const [eventToDelete, setEventToDelete] = useState<number | null>(null);
+    const [isStatusConfirmOpen, setStatusConfirmOpen] = useState(false);
+    const [eventToToggle, setEventToToggle] = useState<{
+        id: number;
+        status: 'draft' | 'published';
+    } | null>(null);
     const { token } = useAuthenticatedUser();
     const { showErrorDialog } = useErrorStore();
 
@@ -45,6 +50,27 @@ export default function EventsPage() {
         onError: () => {
             console.error('Cannot remove event.');
             showErrorDialog(txt.events.removeError);
+        },
+    });
+
+    const {
+        mutate: toggleStatusMutation,
+        isPending: isTogglingStatus,
+        variables: togglingStatusId,
+    } = useMutation({
+        mutationFn: ({
+            id,
+            status,
+        }: {
+            id: number;
+            status: 'draft' | 'published';
+        }) => setEventStatus(id, status, token),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['events'] });
+        },
+        onError: () => {
+            console.error('Cannot update event status.');
+            showErrorDialog(txt.errors.eventStatusUpdate);
         },
     });
 
@@ -78,6 +104,30 @@ export default function EventsPage() {
         setEventToDelete(null);
     }, []);
 
+    const handleToggleStatusRequest = useCallback(
+        (id: number, currentStatus: 'draft' | 'published') => {
+            setEventToToggle({
+                id,
+                status: currentStatus === 'draft' ? 'published' : 'draft',
+            });
+            setStatusConfirmOpen(true);
+        },
+        []
+    );
+
+    const handleConfirmToggleStatus = useCallback(() => {
+        if (eventToToggle) {
+            toggleStatusMutation(eventToToggle);
+        }
+        setStatusConfirmOpen(false);
+        setEventToToggle(null);
+    }, [eventToToggle, toggleStatusMutation]);
+
+    const handleCancelToggleStatus = useCallback(() => {
+        setStatusConfirmOpen(false);
+        setEventToToggle(null);
+    }, []);
+
     const shouldShowEvents = useCallback(
         (events: EventsData | undefined): events is EventsData => {
             return (
@@ -87,7 +137,7 @@ export default function EventsPage() {
         [isError]
     );
 
-    if (isLoading || isDeleting) return <Spinner />;
+    if (isLoading) return <Spinner />;
 
     return (
         <>
@@ -105,17 +155,21 @@ export default function EventsPage() {
                         onEdit={() => handleOpen(event.id)}
                         onAdminEdit={() => handleAdminOpen(event.id)}
                         onDelete={() => handleDeleteRequest(event.id)}
+                        onToggleStatus={() =>
+                            handleToggleStatusRequest(event.id, event.status)
+                        }
                         isDeleting={isDeleting}
+                        isTogglingStatus={
+                            isTogglingStatus &&
+                            togglingStatusId?.id === event.id
+                        }
                     />
                 ))
             ) : (
                 <ErrorMessage errorMessage={txt.events.notFound} />
             )}
-            {events?.pagination_info && (
-                <Pagination
-                    pagination={events.pagination_info}
-                    changePage={setPage}
-                />
+            {events && events.total_count > events.limit && (
+                <Pagination pagination={events} changePage={setPage} />
             )}
             <LazyConfirmationDialog
                 isOpen={isConfirmationOpen}
@@ -123,6 +177,23 @@ export default function EventsPage() {
                 description={txt.events.deleteConfirm}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelDelete}
+                confirmLabel={txt.forms.confirm}
+                cancelLabel={txt.forms.cancel}
+            />
+            <LazyConfirmationDialog
+                isOpen={isStatusConfirmOpen}
+                title={
+                    eventToToggle?.status === 'published'
+                        ? txt.events.publish
+                        : txt.events.unpublish
+                }
+                description={
+                    eventToToggle?.status === 'published'
+                        ? txt.events.publishConfirm
+                        : txt.events.unpublishConfirm
+                }
+                onConfirm={handleConfirmToggleStatus}
+                onCancel={handleCancelToggleStatus}
                 confirmLabel={txt.forms.confirm}
                 cancelLabel={txt.forms.cancel}
             />

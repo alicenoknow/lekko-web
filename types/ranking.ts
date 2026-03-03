@@ -1,11 +1,13 @@
-import { PaginationInfo } from './pagination';
-
-interface UserRank {
+export interface UserRank {
+    position: number;
+    user_id: number;
     username: string;
     total_points: number;
 }
 
 export interface Ranking {
     data: UserRank[];
-    pagination_info: PaginationInfo;
+    total_count: number;
+    page: number;
+    limit: number;
 }

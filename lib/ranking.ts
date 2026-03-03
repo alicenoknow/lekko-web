@@ -8,5 +8,5 @@ export const getAthleteRankingKey = (
         'athlete_id_two',
         'athlete_id_three',
     ] as const;
-    return keys[index];
+    return keys[index]!;
 };

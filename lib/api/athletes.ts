@@ -26,7 +26,7 @@ export async function fetchAthletes(
 ): Promise<Athletes> {
     const params: AthletesParams = {
         search,
-        page_no: page,
+        page,
     };
 
     if (discipline_ids && discipline_ids.length > 0) {
@@ -34,7 +34,6 @@ export async function fetchAthletes(
     }
     if (country) params.country = country;
     if (gender) params.gender = gender;
-    params.order_by = 'last_name';
 
     const res = await axios.get(`${API_URL}/api/v1/athletes`, {
         ...getAuthConfig(token),

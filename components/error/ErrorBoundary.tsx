@@ -77,7 +77,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
         return { hasError: true, error };
     }
 
-    componentDidCatch(error: Error) {
+    override componentDidCatch(error: Error) {
         logger.error('Error boundary caught an error', error);
     }
 
@@ -85,7 +85,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
         this.setState({ hasError: false, error: null });
     };
 
-    render() {
+    override render() {
         if (this.state.hasError && this.state.error) {
             const FallbackComponent =
                 this.props.fallback || DefaultErrorFallback;
@@ -106,7 +106,7 @@ export function withErrorBoundary<P extends object>(
     fallback?: React.ComponentType<ErrorFallbackProps>
 ) {
     const WrappedComponent = (props: P) => (
-        <ErrorBoundary fallback={fallback}>
+        <ErrorBoundary {...(fallback !== undefined ? { fallback } : {})}>
             <Component {...props} />
         </ErrorBoundary>
     );

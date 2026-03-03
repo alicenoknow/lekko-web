@@ -9,6 +9,8 @@ class SecureTokenStorage {
     private readonly STORAGE_KEY = 'secure_auth_token';
     private readonly INTEGRITY_KEY = 'token_integrity';
     private readonly EXPIRY_KEY = 'token_expiry';
+    private readonly REFRESH_TOKEN_KEY = 'secure_refresh_token';
+    private readonly REFRESH_AT_KEY = 'token_refresh_at';
 
     private encryptData(data: string): string {
         const key = this.generateKey();
@@ -100,9 +102,14 @@ class SecureTokenStorage {
             const integrity = this.calculateIntegrity(token);
             const expiry = payload.exp * 1000; // Convert to milliseconds
 
+            // Compute half-life refresh point: midpoint between issuedAt and expiry
+            const issuedAt = payload.iat ? payload.iat * 1000 : Date.now();
+            const refreshAt = issuedAt + (expiry - issuedAt) / 2;
+
             localStorage.setItem(this.STORAGE_KEY, encryptedToken);
             localStorage.setItem(this.INTEGRITY_KEY, integrity);
             localStorage.setItem(this.EXPIRY_KEY, expiry.toString());
+            localStorage.setItem(this.REFRESH_AT_KEY, refreshAt.toString());
 
             return true;
         } catch (error) {
@@ -184,6 +191,8 @@ class SecureTokenStorage {
             localStorage.removeItem(this.STORAGE_KEY);
             localStorage.removeItem(this.INTEGRITY_KEY);
             localStorage.removeItem(this.EXPIRY_KEY);
+            localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+            localStorage.removeItem(this.REFRESH_AT_KEY);
         } catch (error) {
             logger.error('Failed to clear token storage', error);
         }
@@ -223,12 +232,56 @@ class SecureTokenStorage {
         return expiry - Date.now() < fiveMinutes;
     }
 
-    private extractJWTPayload(token: string): { exp?: number } | null {
+    /**
+     * Store the refresh token (encrypted)
+     */
+    setRefreshToken(token: string): void {
+        try {
+            if (typeof window === 'undefined') return;
+            const encrypted = this.encryptData(token);
+            localStorage.setItem(this.REFRESH_TOKEN_KEY, encrypted);
+        } catch (error) {
+            logger.error('Failed to store refresh token', error);
+        }
+    }
+
+    /**
+     * Retrieve the refresh token
+     */
+    getRefreshToken(): string | null {
+        try {
+            if (typeof window === 'undefined') return null;
+            const encrypted = localStorage.getItem(this.REFRESH_TOKEN_KEY);
+            if (!encrypted) return null;
+            return this.decryptData(encrypted);
+        } catch {
+            return null;
+        }
+    }
+
+    /**
+     * Returns true when the current time has passed the midpoint between
+     * token issuance and expiry — i.e. it is time to proactively refresh.
+     */
+    isTokenAtHalfLife(): boolean {
+        try {
+            if (typeof window === 'undefined') return false;
+            const storedRefreshAt = localStorage.getItem(this.REFRESH_AT_KEY);
+            if (!storedRefreshAt) return false;
+            return Date.now() >= parseInt(storedRefreshAt, 10);
+        } catch {
+            return false;
+        }
+    }
+
+    private extractJWTPayload(
+        token: string
+    ): { exp?: number; iat?: number } | null {
         try {
             const parts = token.split('.');
             if (parts.length !== 3) return null;
 
-            const payload = JSON.parse(atob(parts[1]));
+            const payload = JSON.parse(atob(parts[1]!));
             return payload;
         } catch {
             return null;
@@ -241,8 +294,8 @@ class SecureTokenStorage {
             if (parts.length !== 3) return false;
 
             // Basic JWT structure validation
-            const header = JSON.parse(atob(parts[0]));
-            const payload = JSON.parse(atob(parts[1]));
+            const header = JSON.parse(atob(parts[0]!));
+            const payload = JSON.parse(atob(parts[1]!));
 
             return !!(header && payload && header.typ && payload.exp);
         } catch {

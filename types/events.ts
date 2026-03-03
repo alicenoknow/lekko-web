@@ -1,9 +1,10 @@
 import { EmptyResponse } from '@/lib/api/common';
-import { PaginationInfo } from './pagination';
 
 export interface EventsData {
     data: readonly TyperEvent[];
-    pagination_info: PaginationInfo;
+    total_count: number;
+    page: number;
+    limit: number;
 }
 
 export interface TyperEvent {
@@ -12,6 +13,7 @@ export interface TyperEvent {
     description: null | string;
     id: number;
     name: string;
+    status: 'draft' | 'published';
     updated_at: string;
 }
 
@@ -20,6 +22,7 @@ export interface EventDetail {
     name: string;
     description?: string;
     deadline: string;
+    status: 'draft' | 'published';
 }
 
 export type CreateEventResponse = {
@@ -28,9 +31,10 @@ export type CreateEventResponse = {
     description: string | null;
     id: number;
     name: string;
+    status: 'draft' | 'published';
     updated_at: string;
 };
 
-export type UpdateEventResponse = EmptyResponse;
+export type UpdateEventResponse = CreateEventResponse;
 
 export type DeleteEventResponse = EmptyResponse;

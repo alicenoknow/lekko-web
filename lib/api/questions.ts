@@ -16,7 +16,7 @@ export async function fetchQuestionsFromEvent(
     page: number = 1
 ): Promise<Questions> {
     const res = await axios.get(
-        `${API_URL}/api/v1/questions?event_id=${id}&page_no=${page}`,
+        `${API_URL}/api/v1/questions?event_id=${id}&page=${page}`,
         getAuthConfig(token)
     );
     if (isApiError(res.data)) throw handleError(res.data);
@@ -42,15 +42,15 @@ export async function createQuestion(
 export async function updateQuestion(
     token: string,
     id: number,
-    event_id: number,
     type: string,
+    event_id?: number,
     content?: string,
     points?: number,
     correct_answer?: AnswerContent
 ): Promise<UpdateQuestionResponse> {
     const res = await axios.put(
         `${API_URL}/api/v1/questions/${id}`,
-        { content, type, event_id, points, correct_answer },
+        { event_id, content, type, points, correct_answer },
         getAuthConfig(token)
     );
     if (isApiError(res.data)) throw handleError(res.data);

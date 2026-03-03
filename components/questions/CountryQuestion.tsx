@@ -38,20 +38,40 @@ export default function CountryQuestion({
         }
     }, [selectedCountry, answer?.content?.country, onAnswerChanged]);
 
-    const showCorrectAnswer = isPastDeadline || isAdmin(user);
+    const admin = isAdmin(user);
+    const isResolved = !!question.correct_answer;
+    const isLocked = isPastDeadline || isResolved;
+    const hasAnswer = !!answer?.content?.country;
+    const showCorrectAnswer = admin || isLocked;
 
     return (
-        <>
-            <CountryDropdown
-                label={txt.forms.yourAnswer}
-                selected={selectedCountry}
-                onSelect={setSelectedCountry}
-                disabled={isPastDeadline}
-            />
+        <div className='flex flex-col gap-6'>
+            {!admin &&
+                (isLocked ? (
+                    hasAnswer ? (
+                        <CountryDropdown
+                            label={txt.forms.yourAnswer}
+                            selected={selectedCountry}
+                            onSelect={setSelectedCountry}
+                            disabled
+                        />
+                    ) : (
+                        <p className='text-grey text-sm'>
+                            {txt.questions.resolved}
+                        </p>
+                    )
+                ) : (
+                    <CountryDropdown
+                        label={txt.forms.yourAnswer}
+                        selected={selectedCountry}
+                        onSelect={setSelectedCountry}
+                        disabled={isPastDeadline}
+                    />
+                ))}
             {showCorrectAnswer && question.correct_answer?.country && (
                 <CorrectAnswer
-                    maxPoints={question.points}
-                    grantedPoints={answer?.points}
+                    maxPoints={admin ? undefined : question.points}
+                    grantedPoints={admin ? undefined : answer?.points}
                 >
                     <CountryLabel
                         code={question.correct_answer.country}
@@ -59,6 +79,6 @@ export default function CountryQuestion({
                     />
                 </CorrectAnswer>
             )}
-        </>
+        </div>
     );
 }

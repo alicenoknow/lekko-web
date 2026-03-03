@@ -6,5 +6,10 @@
         "nextauth",
         "tailwindcss",
         "typer"
-    ]
+    ],
+    "builder.serverUrl": "http://localhost:3000",
+    "builder.command": "",
+    "builder.runDevServer": false,
+    "builder.autoDetectDevServer": true,
+    "builder.launchType": "editor"
 }

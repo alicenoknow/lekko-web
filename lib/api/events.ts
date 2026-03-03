@@ -15,7 +15,7 @@ export async function fetchEvents(
     page = 1
 ): Promise<EventsData> {
     const res = await axios.get(
-        `${API_URL}/api/v1/events?page_no=${page}`,
+        `${API_URL}/api/v1/events?page=${page}`,
         getAuthConfig(token)
     );
     if (isApiError(res.data)) throw handleError(res.data);
@@ -59,10 +59,26 @@ export async function updateEvent(
     const res = await axios.put(
         `${API_URL}/api/v1/events/${eventId}`,
         {
+            event_id: eventId,
             name,
             description,
             deadline,
         },
+        getAuthConfig(token)
+    );
+    if (isApiError(res.data)) throw handleError(res.data);
+    return res.data;
+}
+
+export async function setEventStatus(
+    eventId: number,
+    status: 'draft' | 'published',
+    token: string
+): Promise<UpdateEventResponse> {
+    const action = status === 'published' ? 'publish' : 'unpublish';
+    const res = await axios.post(
+        `${API_URL}/api/v1/events/${eventId}/${action}`,
+        undefined,
         getAuthConfig(token)
     );
     if (isApiError(res.data)) throw handleError(res.data);

@@ -17,7 +17,7 @@ export function NavBarMenu() {
                         event.stopPropagation();
                         setIsOpen(!isOpen);
                     }}
-                    className='border-primary-dark text-primary-dark hover:border-light-gray hover:text-light-gray z-[4] flex items-center rounded border-2 px-2 py-2'
+                    className='border-primary-dark text-primary-dark hover:border-grey hover:text-grey z-[4] flex items-center rounded border-2 px-2 py-2'
                 >
                     <MenuLogo />
                 </button>

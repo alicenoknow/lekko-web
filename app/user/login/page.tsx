@@ -28,7 +28,7 @@ function LoginPage() {
     const { mutate: login, isPending: isSubmitting } = useMutation({
         mutationFn: () => loginUser(email, password),
         onSuccess: (data: LoginData) => {
-            setUserFromToken(data.token);
+            setUserFromToken(data.access_token, data.refresh_token);
             router.replace('/user');
         },
         onError: () => setErrorMessage(txt.login.error),

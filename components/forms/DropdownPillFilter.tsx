@@ -59,20 +59,20 @@ function DropdownPillFilter({
                 {({ open }) => (
                     <div className='relative inline-block w-full text-left'>
                         <ListboxButton
-                            className={`flex min-h-12 w-full items-center justify-between border px-4 py-2 text-sm shadow-sm focus:outline-none ${
+                            className={`flex min-h-12 w-full items-center justify-between rounded-lg border px-4 py-2 text-sm shadow-sm focus:outline-none ${
                                 disabled
-                                    ? 'text-light-gray cursor-not-allowed bg-gray-100'
+                                    ? 'text-grey cursor-not-allowed bg-gray-100'
                                     : 'bg-white'
                             }`}
                         >
                             {getLabel()}
                             <FaChevronDown className='ml-2 h-4 w-4' />
                         </ListboxButton>
-                        <ListboxOptions className='absolute z-50 mt-1 max-h-60 w-full overflow-auto border bg-white text-sm shadow-lg focus:outline-none'>
+                        <ListboxOptions className='absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg border bg-white text-sm shadow-lg focus:outline-none'>
                             <ListboxOption
                                 value={NO_SELECTION}
                                 key='all'
-                                className='cursor-pointer px-4 py-2'
+                                className='cursor-pointer rounded px-4 py-2'
                             >
                                 {({ selected }) => (
                                     <div className='flex items-center justify-between'>
@@ -87,7 +87,7 @@ function DropdownPillFilter({
                                 <ListboxOption
                                     key={value}
                                     value={value}
-                                    className='cursor-pointer px-4 py-2 capitalize'
+                                    className='cursor-pointer rounded px-4 py-2 capitalize'
                                 >
                                     {({ selected }) => (
                                         <div className='flex items-center justify-between'>

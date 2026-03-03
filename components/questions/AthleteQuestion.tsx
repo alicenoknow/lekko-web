@@ -38,31 +38,43 @@ export default function AthleteQuestion({
         }
     }, [selectedId, answer?.content?.athlete_id, onAnswerChanged]);
 
-    const showCorrectAnswer = isPastDeadline || isAdmin(user);
+    const admin = isAdmin(user);
+    const isResolved = !!question.correct_answer;
+    const isLocked = isPastDeadline || isResolved;
+    const hasAnswer = !!answer?.content?.athlete_id;
+    const showCorrectAnswer = admin || isLocked;
+
     return (
-        <>
-            {isPastDeadline ? (
-                <AthleteLabel
-                    label={txt.forms.yourAnswer}
-                    selected={selectedId}
-                />
-            ) : (
-                <AthleteSearchBar
-                    label={txt.forms.yourAnswer}
-                    selected={selectedId}
-                    onSelect={setSelectedId}
-                />
-            )}
+        <div className='flex flex-col gap-6'>
+            {!admin &&
+                (isLocked ? (
+                    hasAnswer ? (
+                        <AthleteLabel
+                            label={txt.forms.yourAnswer}
+                            selected={selectedId}
+                        />
+                    ) : (
+                        <p className='text-grey text-sm'>
+                            {txt.questions.resolved}
+                        </p>
+                    )
+                ) : (
+                    <AthleteSearchBar
+                        label={txt.forms.yourAnswer}
+                        selected={selectedId}
+                        onSelect={setSelectedId}
+                    />
+                ))}
             {showCorrectAnswer && question.correct_answer?.athlete_id && (
                 <CorrectAnswer
-                    maxPoints={question.points}
-                    grantedPoints={answer?.points}
+                    maxPoints={admin ? undefined : question.points}
+                    grantedPoints={admin ? undefined : answer?.points}
                 >
                     <AthleteLabel
                         selected={question.correct_answer.athlete_id}
                     />
                 </CorrectAnswer>
             )}
-        </>
+        </div>
     );
 }

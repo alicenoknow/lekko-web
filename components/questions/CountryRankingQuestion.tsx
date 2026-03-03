@@ -78,43 +78,77 @@ export default function CountryRankingQuestion({
         });
     };
 
-    const showCorrectAnswers = isPastDeadline || isAdmin(user);
+    const admin = isAdmin(user);
+    const isResolved = !!question.correct_answer;
+    const isLocked = isPastDeadline || isResolved;
+    const hasAnswer = !!(
+        answer?.content?.country_one &&
+        answer?.content?.country_two &&
+        answer?.content?.country_three
+    );
+    const showCorrectAnswers = admin || (isLocked && !!question.correct_answer);
 
     return (
-        <>
-            {selectedCountries.map((country, i) => (
-                <CountryDropdown
-                    key={i}
-                    label={i === 0 ? txt.forms.yourAnswer : ''}
-                    emoji={RANKING[i]}
-                    selected={country}
-                    onSelect={(value) => handleSelect(i, value)}
-                    disabled={isPastDeadline}
-                />
-            ))}
+        <div className='flex flex-col gap-6'>
+            {!admin &&
+                (isLocked ? (
+                    hasAnswer ? (
+                        <div className='space-y-3'>
+                            {selectedCountries.map((country, i) => (
+                                <CountryDropdown
+                                    key={i}
+                                    label={i === 0 ? txt.forms.yourAnswer : ''}
+                                    emoji={RANKING[i] ?? ''}
+                                    selected={country}
+                                    onSelect={(value) => handleSelect(i, value)}
+                                    disabled
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <p className='text-grey text-sm'>
+                            {txt.questions.resolved}
+                        </p>
+                    )
+                ) : (
+                    <div className='space-y-3'>
+                        {selectedCountries.map((country, i) => (
+                            <CountryDropdown
+                                key={i}
+                                label={i === 0 ? txt.forms.yourAnswer : ''}
+                                emoji={RANKING[i] ?? ''}
+                                selected={country}
+                                onSelect={(value) => handleSelect(i, value)}
+                                disabled={isPastDeadline}
+                            />
+                        ))}
+                    </div>
+                ))}
             {showCorrectAnswers && question.correct_answer && (
                 <CorrectAnswer
-                    maxPoints={question.points}
-                    grantedPoints={answer?.points}
+                    maxPoints={admin ? undefined : question.points}
+                    grantedPoints={admin ? undefined : answer?.points}
                 >
-                    {(
-                        [
-                            question.correct_answer.country_one,
-                            question.correct_answer.country_two,
-                            question.correct_answer.country_three,
-                        ] as const
-                    ).map((country, i) =>
-                        country ? (
-                            <CountryLabel
-                                key={i}
-                                emoji={RANKING[i]}
-                                code={country}
-                                isLarge
-                            />
-                        ) : null
-                    )}
+                    <div className='space-y-3'>
+                        {(
+                            [
+                                question.correct_answer.country_one,
+                                question.correct_answer.country_two,
+                                question.correct_answer.country_three,
+                            ] as const
+                        ).map((country, i) =>
+                            country ? (
+                                <CountryLabel
+                                    key={i}
+                                    emoji={RANKING[i]!}
+                                    code={country}
+                                    isLarge
+                                />
+                            ) : null
+                        )}
+                    </div>
                 </CorrectAnswer>
             )}
-        </>
+        </div>
     );
 }

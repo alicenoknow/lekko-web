@@ -3,17 +3,19 @@ import { jwtDecode } from 'jwt-decode';
 import { User } from '@/types/user';
 import { logger } from '@/lib/logger';
 import { secureTokenStorage } from '@/lib/security/tokenStorage';
+import { refreshAccessToken } from '@/lib/api/auth';
 
 interface UserStore {
     user: User | null;
     token: string | null;
     hydrated: boolean;
     tokenExpiry: number | null;
-    setUserFromToken: (token: string) => void;
+    isRefreshing: boolean;
+    setUserFromToken: (accessToken: string, refreshToken?: string) => void;
     setHydrated: () => void;
     logout: () => void;
     checkTokenExpiry: () => boolean;
-    refreshTokenIfNeeded: () => void;
+    refreshTokenIfNeeded: () => Promise<void>;
 }
 
 export const useUserStore = create<UserStore>((set, get) => ({
@@ -21,10 +23,11 @@ export const useUserStore = create<UserStore>((set, get) => ({
     hydrated: false,
     token: null,
     tokenExpiry: null,
+    isRefreshing: false,
 
-    setUserFromToken: (token: string) => {
+    setUserFromToken: (accessToken: string, refreshToken?: string) => {
         try {
-            const payload = jwtDecode<User>(token);
+            const payload = jwtDecode<User>(accessToken);
 
             if (payload.exp && payload.exp * 1000 <= Date.now()) {
                 logger.warn('Attempted to set expired token');
@@ -32,15 +35,19 @@ export const useUserStore = create<UserStore>((set, get) => ({
                 return;
             }
 
-            const stored = secureTokenStorage.setToken(token);
+            const stored = secureTokenStorage.setToken(accessToken);
             if (!stored) {
                 logger.error('Failed to securely store token');
                 set({ user: null, token: null, tokenExpiry: null });
                 return;
             }
 
+            if (refreshToken) {
+                secureTokenStorage.setRefreshToken(refreshToken);
+            }
+
             const expiry = payload.exp ? payload.exp * 1000 : null;
-            set({ user: payload, token: token, tokenExpiry: expiry });
+            set({ user: payload, token: accessToken, tokenExpiry: expiry });
 
             logger.info('User authenticated successfully');
         } catch (err) {
@@ -106,12 +113,29 @@ export const useUserStore = create<UserStore>((set, get) => ({
         return true;
     },
 
-    refreshTokenIfNeeded: () => {
+    refreshTokenIfNeeded: async () => {
         const state = get();
-        if (secureTokenStorage.isTokenExpiringSoon()) {
-            logger.info('Token refresh needed - implement refresh logic here');
-            // TODO: Implement token refresh logic
-            // This would typically involve calling a refresh endpoint
+
+        if (!state.token || state.isRefreshing) return;
+        if (!secureTokenStorage.isTokenAtHalfLife()) return;
+
+        const storedRefreshToken = secureTokenStorage.getRefreshToken();
+        if (!storedRefreshToken) {
+            logger.warn('No refresh token available for refresh');
+            return;
+        }
+
+        set({ isRefreshing: true });
+        try {
+            logger.info('Refreshing token at half-life point');
+            const data = await refreshAccessToken(storedRefreshToken);
+            get().setUserFromToken(data.access_token, data.refresh_token);
+            logger.info('Token refreshed successfully');
+        } catch (error) {
+            logger.error('Failed to refresh token, logging out', error);
+            get().logout();
+        } finally {
+            set({ isRefreshing: false });
         }
     },
 }));

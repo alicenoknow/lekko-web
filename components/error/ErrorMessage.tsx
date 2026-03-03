@@ -12,4 +12,5 @@ export const ErrorMessage = (props: ErrorProps) => {
             </p>
         );
     }
+    return null;
 };

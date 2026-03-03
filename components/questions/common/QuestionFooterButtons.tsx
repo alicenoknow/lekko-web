@@ -20,20 +20,29 @@ export default function QuestionFooterButtons({
     onEdit,
 }: Props) {
     return (
-        <div className='mt-4 flex flex-row justify-evenly'>
-            <ActionButton
-                loading={isSubmitting}
-                label={
-                    isModified && !isPastDeadline
-                        ? txt.forms.save
-                        : txt.forms.saved
+        <div className='flex flex-col gap-3 md:flex-row md:justify-end md:gap-4'>
+            <AdminOnly
+                fallback={
+                    <ActionButton
+                        loading={isSubmitting}
+                        label={
+                            isModified && !isPastDeadline
+                                ? txt.forms.save
+                                : txt.forms.saved
+                        }
+                        onClick={onSubmit}
+                        disabled={!isModified || isFormInvalid || isPastDeadline}
+                    />
                 }
-                onClick={onSubmit}
-                disabled={!isModified || isFormInvalid || isPastDeadline}
-            />
+            >
+                {null}
+            </AdminOnly>
             <AdminOnly>
                 {onEdit && (
-                    <ActionButton label={txt.forms.edit} onClick={onEdit} />
+                    <ActionButton
+                        label={txt.forms.edit}
+                        onClick={onEdit}
+                    />
                 )}
             </AdminOnly>
         </div>

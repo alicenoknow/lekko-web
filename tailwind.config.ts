@@ -23,7 +23,9 @@ const config: Config = {
                 'dark-red': 'var(--color-dark-red)',
                 'dark-green': 'var(--color-dark-green)',
                 'light-gray': 'var(--color-light-gray)',
-                'grey': '#717171',
+                'grey': 'var(--color-grey)',
+                'blue-accent': 'var(--color-blue-accent)',
+                'blue-dark': 'var(--color-blue-dark)',
             },
             fontFamily: {
                 // Font is handled by Next.js font optimization in layout.tsx (Nunito)

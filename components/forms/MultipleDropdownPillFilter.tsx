@@ -56,9 +56,9 @@ function MultipleDropdownPillFilter({
             >
                 <div className='relative inline-block w-full text-left'>
                     <ListboxButton
-                        className={`flex min-h-12 w-full flex-wrap items-center justify-between gap-2 rounded-none border px-4 py-2 text-sm shadow-sm focus:outline-none ${
+                        className={`flex min-h-12 w-full flex-wrap items-center justify-between gap-2 rounded-lg border px-4 py-2 text-sm shadow-sm focus:outline-none ${
                             disabled
-                                ? 'bg-light-gray/25 text-light-gray cursor-not-allowed'
+                                ? 'bg-grey/25 text-grey cursor-not-allowed'
                                 : 'bg-white'
                         }`}
                     >
@@ -67,7 +67,7 @@ function MultipleDropdownPillFilter({
                                 selectedLabels.map((label, idx) => (
                                     <span
                                         key={idx}
-                                        className='bg-primary-light text-primary-dark px-2 py-1 text-xs font-semibold whitespace-nowrap'
+                                        className='bg-primary-light text-primary-dark rounded px-2 py-1 text-xs font-semibold whitespace-nowrap'
                                     >
                                         {label}
                                     </span>
@@ -78,11 +78,11 @@ function MultipleDropdownPillFilter({
                         </div>
                         <FaChevronDown className='ml-auto h-4 w-4 shrink-0' />
                     </ListboxButton>
-                    <ListboxOptions className='absolute z-50 mt-1 max-h-60 w-full overflow-auto border bg-white text-sm shadow-lg focus:outline-none'>
+                    <ListboxOptions className='absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg border bg-white text-sm shadow-lg focus:outline-none'>
                         <ListboxOption
                             value={undefined}
                             key='all'
-                            className='cursor-pointer px-4 py-2'
+                            className='cursor-pointer rounded px-4 py-2'
                         >
                             {({ selected }) => (
                                 <div className='flex items-center justify-between'>
@@ -97,7 +97,7 @@ function MultipleDropdownPillFilter({
                             <ListboxOption
                                 key={value}
                                 value={value}
-                                className='cursor-pointer px-4 py-2 capitalize'
+                                className='cursor-pointer rounded px-4 py-2 capitalize'
                             >
                                 {({ selected }) => (
                                     <div className='flex items-center justify-between'>

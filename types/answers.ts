@@ -1,10 +1,9 @@
-import { PaginationInfo } from './pagination';
-
 export interface Answer {
     id: number;
     question_id: number;
     user_id?: number;
     points?: number;
+    points_granted_at?: string | null;
     created_at?: string;
     updated_at?: string;
     content: AnswerContent | null;
@@ -32,7 +31,9 @@ export type AnswersParams = {
 
 export type AnswersResponse = {
     data: Answer[];
-    pagination: PaginationInfo;
+    total_count: number;
+    page: number;
+    limit: number;
 };
 
 export type CreateAnswerResponse = Answer;
@@ -64,6 +65,7 @@ export type AnswerContentMap = {
     athletes_three: AthleteRankingAnswerContent;
     country: CountryAnswerContent;
     countries_three: CountryRankingAnswerContent;
+    numeric_value: { value: number | null };
 };
 
 export type AnswerContentByType<T extends keyof AnswerContentMap> =
