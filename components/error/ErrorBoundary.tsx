@@ -27,13 +27,13 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({ resetError }) => (
         <div className='flex gap-4'>
             <button
                 onClick={resetError}
-                className='bg-primary-light rounded-lg border-2 border-black p-3 text-base font-extrabold uppercase select-none hover:cursor-pointer hover:bg-accent-light sm:px-6 sm:text-lg md:px-8 md:text-xl'
+                className='bg-primary-light hover:bg-accent-light rounded-lg border-2 border-black p-3 text-base font-extrabold uppercase select-none hover:cursor-pointer sm:px-6 sm:text-lg md:px-8 md:text-xl'
             >
                 {txt.errors.tryAgain}
             </button>
             <button
                 onClick={() => (window.location.href = '/')}
-                className='bg-primary-light rounded-lg border-2 border-black p-3 text-base font-extrabold uppercase select-none hover:cursor-pointer hover:bg-accent-light sm:px-6 sm:text-lg md:px-8 md:text-xl'
+                className='bg-primary-light hover:bg-accent-light rounded-lg border-2 border-black p-3 text-base font-extrabold uppercase select-none hover:cursor-pointer sm:px-6 sm:text-lg md:px-8 md:text-xl'
             >
                 {txt.errors.goHome}
             </button>

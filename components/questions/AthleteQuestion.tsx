@@ -77,7 +77,9 @@ export default function AthleteQuestion({
                 </CorrectAnswer>
             )}
             {admin && !question.correct_answer && (
-                <p className='text-grey text-sm'>{txt.questions.noCorrectAnswer}</p>
+                <p className='text-grey text-sm'>
+                    {txt.questions.noCorrectAnswer}
+                </p>
             )}
         </div>
     );

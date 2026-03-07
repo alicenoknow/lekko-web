@@ -16,7 +16,12 @@ function ConfirmRegistrationPage() {
     const token = searchParams.get('token');
     const { setUserFromToken } = useUserStore();
 
-    const { mutate: verify, isPending, isSuccess, isError } = useMutation({
+    const {
+        mutate: verify,
+        isPending,
+        isSuccess,
+        isError,
+    } = useMutation({
         mutationFn: () => verifyEmail(token!),
         onSuccess: (data: LoginData) => {
             setUserFromToken(data.access_token, data.refresh_token);
@@ -34,32 +39,38 @@ function ConfirmRegistrationPage() {
         <div className='bg-primary-light flex flex-1 items-center justify-center px-4 py-8 md:px-6 md:py-12'>
             <div className='w-full max-w-4xl'>
                 <div className='flex w-full flex-col space-y-6'>
-                    <h1 className='text-2xl font-bold uppercase tracking-tight text-primary-dark'>
+                    <h1 className='text-primary-dark text-2xl font-bold tracking-tight uppercase'>
                         {txt.confirmRegistration.header}
                     </h1>
                     {isPending && <Spinner />}
                     {!token && (
                         <>
-                            <p className='text-lg font-semibold uppercase text-red-600'>
+                            <p className='text-lg font-semibold text-red-600 uppercase'>
                                 {txt.confirmRegistration.missingToken}
                             </p>
                             <div className='mx-auto w-full max-w-xl'>
-                                <ActionButton label={txt.confirmRegistration.goHome} onClick={goHome} />
+                                <ActionButton
+                                    label={txt.confirmRegistration.goHome}
+                                    onClick={goHome}
+                                />
                             </div>
                         </>
                     )}
                     {isError && (
                         <>
-                            <p className='text-lg font-semibold uppercase text-red-600'>
+                            <p className='text-lg font-semibold text-red-600 uppercase'>
                                 {txt.confirmRegistration.error}
                             </p>
                             <div className='mx-auto w-full max-w-xl'>
-                                <ActionButton label={txt.confirmRegistration.goHome} onClick={goHome} />
+                                <ActionButton
+                                    label={txt.confirmRegistration.goHome}
+                                    onClick={goHome}
+                                />
                             </div>
                         </>
                     )}
                     {isSuccess && (
-                        <p className='text-lg font-semibold uppercase text-dark-green'>
+                        <p className='text-dark-green text-lg font-semibold uppercase'>
                             {txt.confirmRegistration.success}
                         </p>
                     )}
