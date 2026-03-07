@@ -118,6 +118,9 @@ export default function CountryRankingQuestion({
                         ))}
                     </div>
                 ))}
+            {showCorrectAnswers && !question.correct_answer && admin && (
+                <p className='text-grey text-sm'>{txt.questions.noCorrectAnswer}</p>
+            )}
             {showCorrectAnswers && question.correct_answer && (
                 <CorrectAnswer
                     maxPoints={admin ? undefined : question.points}

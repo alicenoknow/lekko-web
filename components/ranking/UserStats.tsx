@@ -1,8 +1,8 @@
 import { txt } from '@/nls/texts';
 
 interface UserStatsProps {
-    place?: number | null;
-    points?: number | null;
+    place?: number | null | undefined;
+    points?: number | null | undefined;
     showWhenEmpty?: boolean;
 }
 

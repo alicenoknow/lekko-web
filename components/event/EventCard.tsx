@@ -99,7 +99,7 @@ function EventCard({
                                         label={
                                             <FaClipboardList
                                                 size={24}
-                                                color={'#edf4f8'}
+                                                className='text-primary-light'
                                             />
                                         }
                                         onClick={onEdit}
@@ -109,7 +109,7 @@ function EventCard({
                                         label={
                                             <MdLeaderboard
                                                 size={24}
-                                                color={'#edf4f8'}
+                                                className='text-primary-light'
                                             />
                                         }
                                         onClick={onGoToRanking}
@@ -119,7 +119,7 @@ function EventCard({
                             ) : (
                                 <ActionIcon
                                     label={
-                                        <FaPen size={24} color={'#edf4f8'} />
+                                        <FaPen size={24} className='text-primary-light' />
                                     }
                                     onClick={onEdit}
                                     className={eventActionIconClass}
@@ -130,16 +130,16 @@ function EventCard({
                         {null}
 
                         <ActionIcon
-                            label={<FaEdit size={24} color={'#edf4f8'} />}
+                            label={<FaEdit size={24} className='text-primary-light' />}
                             onClick={onAdminEdit}
                             className={eventActionIconClass}
                         />
                         <ActionIcon
                             label={
                                 event.status === 'draft' ? (
-                                    <FaEye size={24} color={'#edf4f8'} />
+                                    <FaEye size={24} className='text-primary-light' />
                                 ) : (
-                                    <FaEyeSlash size={24} color={'#edf4f8'} />
+                                    <FaEyeSlash size={24} className='text-primary-light' />
                                 )
                             }
                             onClick={onToggleStatus}
@@ -149,7 +149,7 @@ function EventCard({
                         />
                         <ActionIcon
                             label={
-                                <FaTimesCircle size={24} color={'#ffaaaa'} />
+                                <FaTimesCircle size={24} className='text-light-red' />
                             }
                             onClick={onDelete}
                             loading={isDeleting}

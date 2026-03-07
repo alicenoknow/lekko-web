@@ -20,6 +20,13 @@
         "success": "Zarejestrowano pomyślnie.",
         "error": "Nie udało się zarejstrować."
     },
+    "confirmRegistration": {
+        "header": "Potwierdzenie rejestracji",
+        "success": "Konto zostało aktywowane. Trwa przekierowanie...",
+        "error": "Nie udało się potwierdzić rejestracji. Link może być nieprawidłowy lub wygasły.",
+        "missingToken": "Brak tokenu weryfikacyjnego.",
+        "goHome": "Wróć na stronę główną"
+    },
     "forms": {
         "fillAllInfo": "Wypełnij wszystkie pola",
         "username": "Nazwa",
@@ -47,7 +54,7 @@
         "saved": "Zapisano",
         "edit": "Edytuj",
         "confirm": "Tak",
-        "cancel": "Nie",
+        "cancel": "Anuluj",
         "filterHint": "Użyj filtrów powyżej, aby zawęzić wyniki wyszukiwania."
     },
     "home": {
@@ -105,7 +112,8 @@
         "deleteQuestion": "Usuwanie pytania",
         "deleteConfirm": "Czy na pewno chcesz usunąć pytanie?",
         "resolved": "To pytanie zostało już rozstrzygnięte. Nie możesz udzielić odpowiedzi.",
-        "unanswered": "Brak odpowiedzi"
+        "unanswered": "Brak odpowiedzi",
+        "noCorrectAnswer": "Nie dodano poprawnej odpowiedzi"
     },
     "fetchErrorText": "Nie udało się wczytać danych. Spórbuj ponownie.",
     "goToEvent": "Otwórz",
@@ -124,7 +132,9 @@
         "eventUpdate": "Nie udało się przesłać wydarzenia",
         "eventStatusUpdate": "Nie udało się zmienić statusu wydarzenia",
         "questionUpdate": "Nie udało się przesłać pytania",
-        "errorMessage": "Coś poszło nie tak spróbuj ponownie później",
+        "errorMessage": "Coś poszło nie tak, spróbuj ponownie później",
+        "tryAgain": "Spróbuj ponownie",
+        "goHome": "Wróć na stronę główną",
         "generic": "Błąd. Spróbuj ponownie później.",
         "validation": "Wprowadzono niepoprawne dane.",
         "email": "Podany email jest niepoprawny.",

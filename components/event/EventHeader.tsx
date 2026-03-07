@@ -6,8 +6,7 @@ import ActionButton from '../buttons/ActionButton';
 import { AdminOnly } from '../auth/AdminOnly';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
-import { FaTrophy } from 'react-icons/fa';
-import { FaClock, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaTrophy, FaClock, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import UserStats from '../ranking/UserStats';
 
 export default function EventHeader({
@@ -30,7 +29,6 @@ export default function EventHeader({
 
     return (
         <div className='border-light-gray rounded-xl border bg-white shadow-sm'>
-            {/* Always-visible header row */}
             <button
                 onClick={() => setIsOpen((o) => !o)}
                 className='flex w-full cursor-pointer items-center gap-4 px-6 py-4 md:px-8 md:py-5'
@@ -85,7 +83,6 @@ export default function EventHeader({
                                     <ActionButton
                                         label={txt.forms.edit}
                                         onClick={editEvent}
-                                        className='w-full md:w-auto'
                                     />
                                 </AdminOnly>
                             </div>

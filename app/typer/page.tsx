@@ -14,7 +14,7 @@ import { queryClient } from '@/context/QueryProvider';
 import EventCard from '@/components/event/EventCard';
 import LazyAddEvent from '@/components/event/LazyAddEvent';
 import { useErrorStore } from '@/store/error';
-import LazyConfirmationDialog from '@/components/forms/LazyConfirmationDialog';
+import ConfirmationDialog from '@/components/forms/ConfirmationDialog';
 import { EventsData } from '@/types/events';
 import { logger } from '@/lib/logger';
 
@@ -183,7 +183,7 @@ export default function EventsPage() {
             {events && events.total_count > events.limit && (
                 <Pagination pagination={events} changePage={setPage} />
             )}
-            <LazyConfirmationDialog
+            <ConfirmationDialog
                 isOpen={isConfirmationOpen}
                 title={txt.events.delete}
                 description={txt.events.deleteConfirm}
@@ -192,7 +192,7 @@ export default function EventsPage() {
                 confirmLabel={txt.forms.confirm}
                 cancelLabel={txt.forms.cancel}
             />
-            <LazyConfirmationDialog
+            <ConfirmationDialog
                 isOpen={isStatusConfirmOpen}
                 title={
                     eventToToggle?.status === 'published'

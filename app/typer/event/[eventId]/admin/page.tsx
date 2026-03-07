@@ -6,8 +6,10 @@ import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import Spinner from '@/components/Spinner';
 import { txt } from '@/nls/texts';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
-import Pagination from '@/components/buttons/Pagination';
 import ActionButton from '@/components/buttons/ActionButton';
+import ActionIcon from '@/components/buttons/ActionIcon';
+import QuestionsSideNav from '@/components/questions/QuestionsSideNav';
+import { FaArrowLeft, FaArrowRight, FaChevronDown } from 'react-icons/fa';
 import FormField from '@/components/forms/FormField';
 import QuestionTypeSelector from '@/components/questions/admin/QuestionTypeSelector';
 import QuestionModal from '@/components/questions/admin/QuestionModal';
@@ -23,22 +25,31 @@ export default function EventDetailAdminPage() {
     const { eventId: eventIdParam } = useParams<{ eventId: string }>();
     const eventId = parseInt(eventIdParam, 10);
     const { token } = useAuthenticatedUser();
-    const [page, setPage] = useState(1);
     const [isConfirmationOpen, setConfirmationOpen] = useState(false);
+    const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
+    const [isDetailsOpen, setDetailsOpen] = useState(true);
     const [questionToDelete, setQuestionToDelete] = useState<number | null>(
         null
     );
     const [isEventModified, setEventModified] = useState(false);
 
     const { eventQuery, questionsQuery, answersQuery, isPastDeadline } =
-        useEventDetails(token, eventId, page);
+        useEventDetails(token, eventId, 1);
+
+    const handleAddSuccess = useCallback((question: Question) => {
+        setQuestions((prev) => {
+            if (prev.some((q) => q.id === question.id)) return prev;
+            return [...prev, question];
+        });
+        setSelectedQuestionId(question.id);
+    }, []);
 
     const {
         updateEventQuery,
         addQuestionQuery,
         modifyQuestionQuery,
         deleteQuestionQuery,
-    } = useEventAdmin(token, eventId, setEventModified);
+    } = useEventAdmin(token, eventId, setEventModified, handleAddSuccess);
 
     const [form, setForm] = useState({
         name: '',
@@ -70,6 +81,25 @@ export default function EventDetailAdminPage() {
             setQuestions(questionsQuery.data.data);
         }
     }, [questionsQuery.data]);
+
+    useEffect(() => {
+        if (questions.length > 0 && selectedQuestionId === null) {
+            setSelectedQuestionId(questions[0]?.id ?? null);
+        }
+    }, [questions, selectedQuestionId]);
+
+    const selectedIndex = questions.findIndex((q) => q.id === selectedQuestionId);
+    const selectedNavQuestion = questions[selectedIndex] ?? null;
+
+    const handlePrevQuestion = useCallback(() => {
+        const prev = questions[selectedIndex - 1];
+        if (selectedIndex > 0 && prev) setSelectedQuestionId(prev.id);
+    }, [selectedIndex, questions]);
+
+    const handleNextQuestion = useCallback(() => {
+        const next = questions[selectedIndex + 1];
+        if (selectedIndex < questions.length - 1 && next) setSelectedQuestionId(next.id);
+    }, [selectedIndex, questions]);
 
     const onNewQuestion = useCallback(() => {
         setCurrentQuestion({
@@ -145,46 +175,62 @@ export default function EventDetailAdminPage() {
 
     return (
         <>
-            <h1 className='mt-6 text-xl font-bold md:text-3xl'>
-                {txt.events.edit}
-            </h1>
-            <FormField
-                label={txt.forms.name}
-                id='event-title'
-                type='text'
-                value={form.name}
-                onChange={(e) => {
-                    setForm({ ...form, name: e.target.value });
-                    setEventModified(true);
-                }}
-            />
-            <FormField
-                label={txt.forms.description}
-                id='event-description'
-                type='text'
-                multiline
-                value={form.description}
-                onChange={(e) => {
-                    setForm({ ...form, description: e.target.value });
-                    setEventModified(true);
-                }}
-            />
-            <FormField
-                label={txt.forms.deadline}
-                id='event-deadline'
-                type='datetime-local'
-                value={form.deadline}
-                onChange={(e) => {
-                    setForm({ ...form, deadline: e.target.value });
-                    setEventModified(true);
-                }}
-            />
-            <ActionButton
-                label={isEventModified ? txt.forms.save : txt.forms.saved}
-                onClick={() => updateEventQuery.mutate(form)}
-                loading={updateEventQuery.isPending}
-                disabled={!isEventModified}
-            />
+            <button
+                onClick={() => setDetailsOpen((v) => !v)}
+                className='mt-6 flex w-full items-center justify-between text-left'
+            >
+                <h1 className='text-xl font-bold md:text-3xl'>
+                    {txt.events.edit}
+                </h1>
+                <FaChevronDown
+                    className={`text-primary-dark transition-transform duration-300 ${
+                        isDetailsOpen ? 'rotate-180' : ''
+                    }`}
+                    size={20}
+                />
+            </button>
+            {isDetailsOpen && (
+                <div className='flex flex-col gap-2'>
+                    <FormField
+                        label={txt.forms.name}
+                        id='event-title'
+                        type='text'
+                        value={form.name}
+                        onChange={(e) => {
+                            setForm({ ...form, name: e.target.value });
+                            setEventModified(true);
+                        }}
+                    />
+                    <FormField
+                        label={txt.forms.description}
+                        id='event-description'
+                        type='text'
+                        multiline
+                        value={form.description}
+                        onChange={(e) => {
+                            setForm({ ...form, description: e.target.value });
+                            setEventModified(true);
+                        }}
+                    />
+                    <FormField
+                        label={txt.forms.deadline}
+                        id='event-deadline'
+                        type='datetime-local'
+                        value={form.deadline}
+                        onChange={(e) => {
+                            setForm({ ...form, deadline: e.target.value });
+                            setEventModified(true);
+                        }}
+                    />
+                    <ActionButton
+                        label={isEventModified ? txt.forms.save : txt.forms.saved}
+                        onClick={() => updateEventQuery.mutate(form)}
+                        loading={updateEventQuery.isPending}
+                        disabled={!isEventModified}
+                        className='w-auto'
+                    />
+                </div>
+            )}
             <h2 className='pt-8 text-xl font-bold md:text-3xl'>
                 {txt.events.questions}
             </h2>
@@ -195,25 +241,45 @@ export default function EventDetailAdminPage() {
                     onAdd={onNewQuestion}
                 />
             )}
-            {questions.map((q: Question) => (
-                <QuestionRenderer
-                    key={q.id}
-                    question={q}
-                    answer={answersQuery.data?.data.find(
-                        (a) => a.question_id === q.id
+            {questions.length === 0 ? (
+                <p>{txt.events.noQuestions}</p>
+            ) : (
+                <>
+                    <QuestionsSideNav
+                        questions={questions}
+                        answers={answersQuery.data?.data ?? []}
+                        currentQuestionId={selectedQuestionId}
+                        onNavigate={setSelectedQuestionId}
+                        adminMode
+                    />
+                    <div className='relative mb-3 flex h-12 items-center justify-center'>
+                        <div className='absolute right-0 flex items-center gap-4'>
+                            {selectedIndex > 0 && (
+                                <ActionIcon label={<FaArrowLeft className='text-primary-light' />} onClick={handlePrevQuestion} />
+                            )}
+                            <span className='px-2'>
+                                {selectedIndex + 1} / {questions.length}
+                            </span>
+                            {selectedIndex < questions.length - 1 && (
+                                <ActionIcon label={<FaArrowRight className='text-primary-light' />} onClick={handleNextQuestion} />
+                            )}
+                        </div>
+                    </div>
+                    {selectedNavQuestion && (
+                        <QuestionRenderer
+                            key={selectedNavQuestion.id}
+                            question={selectedNavQuestion}
+                            answer={answersQuery.data?.data.find(
+                                (a) => a.question_id === selectedNavQuestion.id
+                            )}
+                            onEdit={() => {
+                                setCurrentQuestion(selectedNavQuestion);
+                                setOpenModal(true);
+                            }}
+                            isPastDeadline={isPastDeadline}
+                        />
                     )}
-                    onEdit={() => {
-                        setCurrentQuestion(q);
-                        setOpenModal(true);
-                    }}
-                    isPastDeadline={isPastDeadline}
-                />
-            ))}
-            {questionsQuery.data && questionsQuery.data.total_count > questionsQuery.data.limit && (
-                <Pagination
-                    pagination={questionsQuery.data}
-                    changePage={setPage}
-                />
+                </>
             )}
             <QuestionModal
                 isOpen={isOpenModal}

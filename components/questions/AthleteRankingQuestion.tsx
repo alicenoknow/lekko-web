@@ -223,7 +223,10 @@ export default function AthleteRankingQuestion({
                         </div>
                     </div>
                 ))}
-            {showCorrectAnswers && (
+            {showCorrectAnswers && !question.correct_answer && admin && (
+                <p className='text-grey text-sm'>{txt.questions.noCorrectAnswer}</p>
+            )}
+            {showCorrectAnswers && question.correct_answer && (
                 <CorrectAnswer
                     maxPoints={admin ? undefined : question.points}
                     grantedPoints={admin ? undefined : answer?.points}

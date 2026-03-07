@@ -40,6 +40,7 @@ export default function QuestionFooterButtons({
                     <ActionButton
                         label={txt.forms.edit}
                         onClick={onEdit}
+                        className='w-auto px-16 py-4 text-xl md:px-20 md:text-2xl'
                     />
                 )}
             </AdminOnly>

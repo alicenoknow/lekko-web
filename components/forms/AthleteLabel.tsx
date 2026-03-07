@@ -29,7 +29,7 @@ function AthleteLabel({ selected, label, emoji, compact = false }: Props) {
     if (!shouldFetch || !athlete) return null;
 
     return (
-        <div className={`${compact ? '' : 'my-2'}flex flex-col gap-2`}>
+        <div className={`${compact ? '' : 'my-2 '}flex flex-col gap-2`}>
             {label && (
                 <p className='md:text-md text-primary-dark text-sm font-bold uppercase'>
                     {label}:

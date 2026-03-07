@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { COUNTRIES } from '@/lib/countries';
 import CountryLabel from './CountryLabel';
 import DropdownField from './DropdownField';
@@ -19,10 +20,14 @@ export default function CountryDropdown({
     emoji,
     disabled = false,
 }: Props) {
-    const countryOptions = Object.keys(COUNTRIES).map((code) => ({
-        value: code,
-        label: <CountryLabel code={code} />,
-    }));
+    const countryOptions = useMemo(
+        () =>
+            Object.keys(COUNTRIES).map((code) => ({
+                value: code,
+                label: <CountryLabel code={code} />,
+            })),
+        []
+    );
     return (
         <div className='relative w-full'>
             {label && (

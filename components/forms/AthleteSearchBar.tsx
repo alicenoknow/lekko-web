@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
+import { useDebounce } from '@/hooks/useDebounce';
 import FormField from '@/components/forms/FormField';
 import { txt } from '@/nls/texts';
 import AthleteLabel, { InnerAthleteLabel } from './AthleteLabel';
@@ -41,7 +42,7 @@ export default function AthleteSearchBar({
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLDivElement>(null);
     const [dropdownRect, setDropdownRect] = useState<DOMRect | null>(null);
-    const debouncedSearch = useDebouncedValue(search, 500);
+    const debouncedSearch = useDebounce(search, 500);
 
     const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
         useInfiniteQuery({
@@ -235,7 +236,6 @@ export default function AthleteSearchBar({
         );
     }
 
-    // New behavior: search bar always visible, selected shown below
     return (
         <div className='relative flex w-full flex-col gap-3'>
             {label && (
@@ -264,13 +264,4 @@ export default function AthleteSearchBar({
             )}
         </div>
     );
-}
-
-function useDebouncedValue<T>(value: T, delay: number): T {
-    const [debounced, setDebounced] = useState(value);
-    useEffect(() => {
-        const timeout = setTimeout(() => setDebounced(value), delay);
-        return () => clearTimeout(timeout);
-    }, [value, delay]);
-    return debounced;
 }

@@ -14,7 +14,8 @@ import { txt } from '@/nls/texts';
 export function useEventAdmin(
     token: string,
     eventId: number,
-    setEventModified: (isModified: boolean) => void
+    setEventModified: (isModified: boolean) => void,
+    onAddSuccess?: (question: Question) => void
 ) {
     const { showErrorDialog } = useErrorStore();
 
@@ -56,8 +57,9 @@ export function useEventAdmin(
         }) => {
             return createQuestion(token, eventId, type, content, points);
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
+            onAddSuccess?.(data);
         },
         onError: () => {
             logger.error('Cannot add question.');

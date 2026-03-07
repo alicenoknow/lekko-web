@@ -9,6 +9,7 @@ interface Props {
     answers: Answer[];
     currentQuestionId: number | null;
     onNavigate: (id: number) => void;
+    adminMode?: boolean;
 }
 
 type NavItemState = 'correct' | 'incorrect' | 'answered' | 'unanswered';
@@ -66,6 +67,7 @@ export default function QuestionsSideNav({
     answers,
     currentQuestionId,
     onNavigate,
+    adminMode = false,
 }: Props) {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const mobileScrollRef = useRef<HTMLDivElement>(null);
@@ -73,6 +75,9 @@ export default function QuestionsSideNav({
     const [showBottomFade, setShowBottomFade] = useState(false);
 
     const getState = (q: Question): NavItemState => {
+        if (adminMode) {
+            return q.correct_answer ? 'correct' : 'unanswered';
+        }
         const answer = answers.find(
             (a) => a.question_id === q.id && a.content !== null
         );
@@ -130,7 +135,7 @@ export default function QuestionsSideNav({
         };
 
         container.addEventListener('scroll', handleScroll);
-        handleScroll(); // Check initial state
+        handleScroll();
         return () => container.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -140,7 +145,6 @@ export default function QuestionsSideNav({
 
     return (
         <>
-            {/* Mobile: horizontal strip */}
             <div className='bg-primary-light sticky top-0 z-10 md:hidden'>
                 <div
                     ref={mobileScrollRef}
@@ -159,8 +163,6 @@ export default function QuestionsSideNav({
                     ))}
                 </div>
             </div>
-
-            {/* Desktop: fixed left sidebar */}
             <div className='fixed top-1/2 left-6 z-20 hidden w-56 -translate-y-1/2 md:flex'>
                 <div
                     ref={scrollContainerRef}

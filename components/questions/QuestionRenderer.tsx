@@ -131,11 +131,9 @@ export default function QuestionRenderer({
                 />
             </div>
             <div>
-                {(onEdit === undefined || answer) && (
-                    <div className='px-6 py-6 md:px-8 md:py-8'>
-                        {renderQuestionComponent}
-                    </div>
-                )}
+                <div className='px-6 py-6 md:px-8 md:py-8'>
+                    {renderQuestionComponent}
+                </div>
                 <div className='border-light-gray border-t px-6 py-4 md:px-8 md:py-6'>
                     <QuestionFooterButtons
                         isSubmitting={false}

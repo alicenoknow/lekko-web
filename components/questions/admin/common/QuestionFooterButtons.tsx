@@ -28,6 +28,7 @@ export default function QuestionFooterButtons({
                 loading={isLoading}
                 label={isNew ? txt.forms.cancel : txt.questions.delete}
                 onClick={onDelete}
+                className='bg-dark-red hover:bg-dark-red/70'
             />
         </div>
     );

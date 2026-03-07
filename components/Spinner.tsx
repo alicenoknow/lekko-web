@@ -1,5 +1,3 @@
-'use client';
-
 const Spinner = () => {
     return (
         <div className='flex items-center justify-center'>
