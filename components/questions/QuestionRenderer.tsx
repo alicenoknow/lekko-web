@@ -7,6 +7,7 @@ import AthleteQuestion from './AthleteQuestion';
 import AthleteRankingQuestion from './AthleteRankingQuestion';
 import CountryQuestion from './CountryQuestion';
 import CountryRankingQuestion from './CountryRankingQuestion';
+import NumericValueQuestion from './NumericValueQuestion';
 
 import {
     Answer,
@@ -15,6 +16,7 @@ import {
     AthleteRankingAnswer,
     CountryAnswer,
     CountryRankingAnswer,
+    NumericValueAnswer,
 } from '@/types/answers';
 
 import { Question } from '@/types/questions';
@@ -26,6 +28,7 @@ interface Props {
     answer: Answer | undefined;
     isPastDeadline: boolean;
     onEdit?: () => void;
+    onSaveSuccess?: () => void;
 }
 
 export default function QuestionRenderer({
@@ -33,14 +36,14 @@ export default function QuestionRenderer({
     answer,
     isPastDeadline,
     onEdit,
+    onSaveSuccess,
 }: Props) {
-    const { token, user } = useAuthenticatedUser();
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { token } = useAuthenticatedUser();
     const [isModified, setIsModified] = useState(false);
     const [answerPayload, setAnswerPayload] = useState<AnswerContent | null>(
         null
     );
-    const { onSubmit } = useAnswerSubmit(token, user.sub, setIsModified);
+    const { onSubmit } = useAnswerSubmit(token, setIsModified);
 
     useEffect(() => {
         if (answer?.content) {
@@ -50,14 +53,13 @@ export default function QuestionRenderer({
 
     const handleSubmit = useCallback(() => {
         if (!answerPayload) return;
-        setIsSubmitting(true);
         onSubmit({
             id: answer?.id ?? Date.now() * -1,
             question_id: question.id,
             content: answerPayload,
         });
-        setIsSubmitting(false);
-    }, [answerPayload, onSubmit, answer?.id, question.id]);
+        onSaveSuccess?.();
+    }, [answerPayload, onSubmit, answer?.id, question.id, onSaveSuccess]);
 
     const handleAnswerChanged = useCallback((content: AnswerContent) => {
         setAnswerPayload(content);
@@ -103,13 +105,21 @@ export default function QuestionRenderer({
                         {...sharedProps}
                     />
                 );
+            case 'numeric_value':
+                return (
+                    <NumericValueQuestion
+                        question={question}
+                        answer={answer as NumericValueAnswer}
+                        {...sharedProps}
+                    />
+                );
             default:
                 return null;
         }
     }, [question, answer, isPastDeadline, handleAnswerChanged]);
 
     return (
-        <div className='border-light-gray w-full overflow-hidden rounded-xl border bg-white shadow-sm transition-all duration-300 hover:shadow-md'>
+        <div className='border-light-gray w-full rounded-xl border bg-white shadow-sm'>
             <div className='border-light-gray border-b px-6 py-6 md:px-8 md:py-8'>
                 <QuestionHeader
                     content={question.content}
@@ -117,19 +127,24 @@ export default function QuestionRenderer({
                     points={
                         answer?.points_granted_at ? answer.points : undefined
                     }
+                    {...(onEdit !== undefined ? { adminView: true } : {})}
                 />
             </div>
-            <div className='px-6 py-6 md:px-8 md:py-8'>
-                {renderQuestionComponent}
-            </div>
-            <div className='border-light-gray border-t px-6 py-4 md:px-8 md:py-6'>
-                <QuestionFooterButtons
-                    isSubmitting={isSubmitting}
-                    isModified={isModified}
-                    isPastDeadline={isPastDeadline}
-                    onSubmit={handleSubmit}
-                    {...(onEdit !== undefined ? { onEdit } : {})}
-                />
+            <div>
+                {(onEdit === undefined || answer) && (
+                    <div className='px-6 py-6 md:px-8 md:py-8'>
+                        {renderQuestionComponent}
+                    </div>
+                )}
+                <div className='border-light-gray border-t px-6 py-4 md:px-8 md:py-6'>
+                    <QuestionFooterButtons
+                        isSubmitting={false}
+                        isModified={isModified}
+                        isPastDeadline={isPastDeadline}
+                        onSubmit={handleSubmit}
+                        {...(onEdit !== undefined ? { onEdit } : {})}
+                    />
+                </div>
             </div>
         </div>
     );

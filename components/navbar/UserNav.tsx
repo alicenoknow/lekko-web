@@ -24,7 +24,7 @@ const UserNav = memo(function UserNav() {
             <Avatar username={user.username} size={36} />
             <button
                 onClick={handleLogout}
-                className='hover:text-grey mt-4 block uppercase md:mt-0 md:inline-block'
+                className='hover:text-grey uppercase'
             >
                 {txt.user.logout}
             </button>

@@ -9,9 +9,11 @@ export default function TyperLayout({
 }>) {
     return (
         <PrivateContent redirect fallback={<Spinner />}>
-            <div className='bg-primary-light min-h-screen'>
-                <div className='flex justify-center px-4 py-8 md:px-6 md:py-12'>
-                    <div className='w-full max-w-4xl space-y-6'>{children}</div>
+            <div className='bg-primary-light flex flex-1 flex-col'>
+                <div className='flex flex-1 justify-center px-4 py-8 md:px-6 md:py-12'>
+                    <div className='flex w-full max-w-4xl flex-col space-y-6'>
+                        {children}
+                    </div>
                 </div>
             </div>
             <LazyErrorDialog />

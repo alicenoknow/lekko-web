@@ -4,7 +4,7 @@
     --color-primary-light: #edf4f8;
     --color-primary-dark: #223239;
     --color-accent-light: #e1ff1c;
-    --color-accent-dark: #2a2b68;
+    --color-accent-dark: #241c99;
     --color-absolute-black: #000;
     --color-light-green: #93fc8d;
     --color-light-yellow: #fff2a9;
@@ -27,6 +27,28 @@ body {
     @apply bg-primary-light text-primary-dark;
 }
 
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+}
+
 @layer utilities {
     .text-blur {
         @apply z-0 text-absolute-black blur-[8px];
@@ -38,6 +60,14 @@ body {
         /*  Set text-color to transparent to only show the outline  */
         text-stroke: 3px var(--stroke-color);
         -webkit-text-stroke: 3px var(--stroke-color);
+    }
+
+    .animate-slide-in-up {
+        animation: slideInUp 0.4s ease-out forwards;
+    }
+
+    .animate-slide-out-down {
+        animation: slideOutDown 0.3s ease-in forwards;
     }
 }
 

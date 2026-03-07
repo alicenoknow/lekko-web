@@ -11,17 +11,20 @@ const EXTERNAL_LINKS = {
 
 const Banner: React.FC = () => {
     return (
-        <div className='relative flex w-full flex-grow flex-col items-center justify-center overflow-hidden text-center'>
-            <div className='relative z-10 flex flex-col items-center space-y-12 px-4 md:space-y-24'>
-                <span className='max-w-4xl text-3xl font-bold tracking-widest uppercase md:text-7xl'>
+        <div className='relative flex min-h-0 w-full flex-grow flex-col items-center overflow-hidden'>
+            <div className='h-[60vh] w-full overflow-hidden'>
+                <RunningTrack />
+            </div>
+            <div className='flex flex-col items-center space-y-6 pb-12'>
+                <span className='text-primary-dark max-w-4xl text-5xl font-bold tracking-widest uppercase md:text-7xl'>
                     {txt.home.title}
                 </span>
                 <ExternalLinkButton
                     label={txt.home.joinFb}
                     link={EXTERNAL_LINKS.facebook}
+                    className='bg-accent-dark hover:bg-primary-dark text-white'
                 />
             </div>
-            <RunningTrack />
         </div>
     );
 };

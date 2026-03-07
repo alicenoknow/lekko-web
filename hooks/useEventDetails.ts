@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchEventById } from '@/lib/api/events';
 import { fetchQuestionsFromEvent } from '@/lib/api/questions';
 import { fetchAnswers } from '@/lib/api/answers';
+import { fetchCurrentUserRanking } from '@/lib/api/users';
 
 export function useEventDetails(token: string, eventId: number, page: number) {
     const eventQuery = useQuery({
@@ -36,11 +37,19 @@ export function useEventDetails(token: string, eventId: number, page: number) {
         return deadline ? new Date(deadline) < new Date() : false;
     }, [eventQuery.data?.deadline]);
 
+    const userRankingQuery = useQuery({
+        queryKey: ['userRanking', eventId],
+        queryFn: () => fetchCurrentUserRanking(token, eventId),
+        enabled: !!token && !!eventId && isPastDeadline,
+        staleTime: 60 * 60 * 1000,
+    });
+
     return {
         eventQuery,
         questionsQuery,
         answersQuery,
         questionIds,
         isPastDeadline,
+        userRankingQuery,
     };
 }

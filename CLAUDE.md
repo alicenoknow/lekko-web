@@ -4,12 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Lekko-web is a Next.js 15 frontend application for a athletics event management platform (Lekkoatletawka). It's a Polish-language web application built with React 19, TypeScript, and Tailwind CSS. The app communicates with a backend API for event management, athlete tracking, and typing competitions.
+Lekko-web is a Next.js 16 frontend application for a athletics event management platform (Lekkoatletawka). It's a Polish-language web application built with React 19, TypeScript, and Tailwind CSS. The app communicates with a backend API for event management, athlete tracking, and typing competitions.
 
 ## Development Environment
 
 ### Prerequisites
 - pnpm (install with: `npm install -g pnpm`)
+
+**When starting work on a Next.js project, ALWAYS call the `init` tool from
+next-devtools-mcp FIRST to set up proper context and establish documentation
+requirements. Do this automatically without being asked.**
 
 ### Common Commands
 

@@ -21,11 +21,7 @@ const ExternalLinkButton: React.FC<ExternalLinkButtonProps> = ({
             rel='noopener noreferrer'
             className={`bg-primary-light inline-block border-2 border-black p-4 text-lg font-extrabold uppercase select-none hover:cursor-pointer md:px-10 md:text-3xl ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-accent-light'}`}
         >
-            {loading ? (
-                <Spinner isInline />
-            ) : (
-                <p className='text-wrap'>{label}</p>
-            )}
+            {loading ? <Spinner /> : <p className='text-wrap'>{label}</p>}
         </a>
     );
 };

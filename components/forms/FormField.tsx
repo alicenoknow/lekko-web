@@ -11,6 +11,9 @@ interface FormFieldProps {
     onFocus?: (
         e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => void;
+    onBlur?: (
+        e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => void;
     label?: string;
     type?: string;
     required?: boolean;
@@ -26,6 +29,7 @@ const FormField: React.FC<FormFieldProps> = ({
     value,
     onChange,
     onFocus,
+    onBlur,
     label,
     type = 'text',
     required = false,
@@ -42,7 +46,7 @@ const FormField: React.FC<FormFieldProps> = ({
                 {label && (
                     <label
                         htmlFor={id}
-                        className='text-primary-dark text-sm font-bold uppercase md:text-lg'
+                        className='text-primary-dark shrink-0 text-sm font-bold uppercase md:w-32 md:text-lg'
                     >
                         {label}
                         {required && (
@@ -58,6 +62,7 @@ const FormField: React.FC<FormFieldProps> = ({
                         value={value ?? ''}
                         onChange={onChange}
                         onFocus={onFocus}
+                        onBlur={onBlur}
                         required={required}
                         placeholder={placeholder}
                         rows={rows}
@@ -81,6 +86,7 @@ const FormField: React.FC<FormFieldProps> = ({
                         value={value ?? ''}
                         onChange={onChange}
                         onFocus={onFocus}
+                        onBlur={onBlur}
                         required={required}
                         placeholder={placeholder}
                         type={type}

@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { logger } from '@/lib/logger';
 import {
     createQuestion,
     deleteQuestion,
@@ -37,7 +38,7 @@ export function useEventAdmin(
             setEventModified(false);
         },
         onError: () => {
-            console.error('Cannot update event.');
+            logger.error('Cannot update event.');
             showErrorDialog(txt.errors.eventUpdate);
             setEventModified(true);
         },
@@ -59,7 +60,7 @@ export function useEventAdmin(
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
         },
         onError: () => {
-            console.error('Cannot add question.');
+            logger.error('Cannot add question.');
             showErrorDialog(txt.errors.questionAdd);
         },
     });
@@ -69,8 +70,8 @@ export function useEventAdmin(
             return updateQuestion(
                 token,
                 question.id,
+                eventId,
                 question.type,
-                question.event_id,
                 question.content,
                 question.points,
                 question.correct_answer
@@ -80,7 +81,7 @@ export function useEventAdmin(
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
         },
         onError: () => {
-            console.error('Cannot update question.');
+            logger.error('Cannot update question.');
             showErrorDialog(txt.errors.questionUpdate);
         },
     });
@@ -91,7 +92,7 @@ export function useEventAdmin(
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
         },
         onError: () => {
-            console.error('Cannot remove question.');
+            logger.error('Cannot remove question.');
             showErrorDialog(txt.errors.questionDelete);
         },
     });

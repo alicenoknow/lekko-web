@@ -92,24 +92,18 @@ export default function CountryRankingQuestion({
         <div className='flex flex-col gap-6'>
             {!admin &&
                 (isLocked ? (
-                    hasAnswer ? (
-                        <div className='space-y-3'>
-                            {selectedCountries.map((country, i) => (
-                                <CountryDropdown
-                                    key={i}
-                                    label={i === 0 ? txt.forms.yourAnswer : ''}
-                                    emoji={RANKING[i] ?? ''}
-                                    selected={country}
-                                    onSelect={(value) => handleSelect(i, value)}
-                                    disabled
-                                />
-                            ))}
-                        </div>
-                    ) : (
-                        <p className='text-grey text-sm'>
-                            {txt.questions.resolved}
-                        </p>
-                    )
+                    <div className='space-y-3'>
+                        {selectedCountries.map((country, i) => (
+                            <CountryDropdown
+                                key={i}
+                                label={i === 0 ? txt.forms.yourAnswer : ''}
+                                emoji={RANKING[i] ?? ''}
+                                selected={country}
+                                onSelect={(value) => handleSelect(i, value)}
+                                disabled
+                            />
+                        ))}
+                    </div>
                 ) : (
                     <div className='space-y-3'>
                         {selectedCountries.map((country, i) => (

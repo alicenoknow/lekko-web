@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Nunito } from 'next/font/google';
+import { Coda } from 'next/font/google';
 import './globals.css';
 import Footer from '@/components/Footer';
 import NavBar from '@/components/navbar/NavBar';
@@ -7,7 +7,7 @@ import { HydrateUser } from '@/components/auth/HydrateUser';
 import QueryProvider from '@/context/QueryProvider';
 import { ErrorBoundary } from '@/components/error/ErrorBoundary';
 
-const font = Nunito({ subsets: ['latin'] });
+const font = Coda({ subsets: ['latin'], weight: "400" });
 
 export const metadata: Metadata = {
     title: 'Lekkoatletawka',
@@ -24,10 +24,12 @@ export default function RootLayout({
             <body className={font.className}>
                 <ErrorBoundary>
                     <QueryProvider>
-                        <div className='flex min-h-screen flex-col justify-between'>
+                        <div className='flex min-h-screen flex-col'>
                             <HydrateUser />
                             <NavBar />
-                            {children}
+                            <main className='flex flex-1 flex-col'>
+                                {children}
+                            </main>
                             <Footer />
                         </div>
                     </QueryProvider>

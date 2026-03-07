@@ -48,18 +48,12 @@ export default function CountryQuestion({
         <div className='flex flex-col gap-6'>
             {!admin &&
                 (isLocked ? (
-                    hasAnswer ? (
-                        <CountryDropdown
-                            label={txt.forms.yourAnswer}
-                            selected={selectedCountry}
-                            onSelect={setSelectedCountry}
-                            disabled
-                        />
-                    ) : (
-                        <p className='text-grey text-sm'>
-                            {txt.questions.resolved}
-                        </p>
-                    )
+                    <CountryDropdown
+                        label={txt.forms.yourAnswer}
+                        selected={selectedCountry}
+                        onSelect={setSelectedCountry}
+                        disabled
+                    />
                 ) : (
                     <CountryDropdown
                         label={txt.forms.yourAnswer}

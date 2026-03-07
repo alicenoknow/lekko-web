@@ -1,6 +1,6 @@
 'use client';
 
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import Spinner from '@/components/Spinner';
 
 // Lazy load AddEvent since it's only used by admins
@@ -12,7 +12,7 @@ interface LazyAddEventProps {
 
 export default function LazyAddEvent(props: LazyAddEventProps) {
     return (
-        <Suspense fallback={<Spinner isInline />}>
+        <Suspense fallback={<Spinner />}>
             <AddEvent {...props} />
         </Suspense>
     );

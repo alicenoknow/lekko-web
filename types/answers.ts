@@ -25,6 +25,10 @@ export interface CountryRankingAnswer extends Answer {
     content: CountryRankingAnswerContent | null;
 }
 
+export interface NumericValueAnswer extends Answer {
+    content: { value: number | null } | null;
+}
+
 export type AnswersParams = {
     question_ids?: string;
 };

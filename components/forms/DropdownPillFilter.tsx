@@ -68,7 +68,10 @@ function DropdownPillFilter({
                             {getLabel()}
                             <FaChevronDown className='ml-2 h-4 w-4' />
                         </ListboxButton>
-                        <ListboxOptions className='absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg border bg-white text-sm shadow-lg focus:outline-none'>
+                        <ListboxOptions
+                            anchor='bottom start'
+                            className='z-50 mt-1 max-h-60 w-[var(--button-width)] overflow-auto rounded-lg border bg-white text-sm shadow-lg [--anchor-max-height:240px] focus:outline-none'
+                        >
                             <ListboxOption
                                 value={NO_SELECTION}
                                 key='all'

@@ -1,13 +1,19 @@
-import { FaEdit, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { TiDelete } from 'react-icons/ti';
-import { MdEmojiEvents } from 'react-icons/md';
-import { FaClock } from 'react-icons/fa';
+import {
+    FaTimesCircle,
+    FaClock,
+    FaEdit,
+    FaEye,
+    FaEyeSlash,
+    FaPen,
+    FaClipboardList,
+    FaTrophy,
+} from 'react-icons/fa';
+import { MdLeaderboard } from 'react-icons/md';
 import ActionIcon from '@/components/buttons/ActionIcon';
 import { AdminOnly } from '@/components/auth/AdminOnly';
 import { TyperEvent } from '@/types/events';
 import { txt } from '@/nls/texts';
 import React from 'react';
-import ActionButton from '../buttons/ActionButton';
 
 interface Props {
     event: TyperEvent;
@@ -15,6 +21,7 @@ interface Props {
     onAdminEdit: () => void;
     onDelete: () => void;
     onToggleStatus: () => void;
+    onGoToRanking: () => void;
     isDeleting: boolean;
     isTogglingStatus: boolean;
 }
@@ -25,22 +32,24 @@ function EventCard({
     onAdminEdit,
     onDelete,
     onToggleStatus,
+    onGoToRanking,
     isDeleting,
     isTogglingStatus,
 }: Props) {
     const isPastDeadline = new Date(event.deadline) < new Date();
     const deadline = new Date(event.deadline);
+    const eventActionIconClass = 'p-3';
 
     return (
-        <div className='group border-light-gray flex flex-col gap-4 rounded-xl border bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-md md:flex-row md:items-center md:justify-between'>
+        <div className='group border-light-gray flex flex-col gap-4 rounded-xl border bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-md md:flex-row md:items-center md:gap-6'>
             {/* Icon and content */}
-            <div className='flex flex-1 items-start gap-4'>
+            <div className='flex flex-1 items-center gap-4'>
                 <div className='bg-blue-accent text-primary-dark flex-shrink-0 rounded-lg p-3'>
-                    <MdEmojiEvents size={24} />
+                    <FaTrophy size={36} />
                 </div>
-                <div className='flex flex-col gap-2'>
+                <div className='flex flex-col items-start gap-2 text-left'>
                     <div className='flex items-center gap-2'>
-                        <h2 className='text-primary-dark text-lg font-bold md:text-xl'>
+                        <h2 className='text-primary-dark text-left text-lg font-bold md:text-xl'>
                             {event.name}
                         </h2>
                         {event.status === 'draft' && (
@@ -50,76 +59,106 @@ function EventCard({
                         )}
                     </div>
                     {event.description && (
-                        <p className='text-grey text-sm md:text-base'>
+                        <p className='text-grey text-left text-sm md:text-base'>
                             {event.description}
                         </p>
                     )}
                 </div>
             </div>
 
-            {/* Deadline info */}
-            <div className='flex items-center gap-3'>
-                <FaClock
-                    size={16}
-                    className={isPastDeadline ? 'text-dark-red' : 'text-grey'}
-                />
-                <div className='flex flex-col'>
-                    <p className='text-grey text-xs font-semibold uppercase'>
-                        {txt.events.deadline}
-                    </p>
+            <div className='flex items-center justify-between gap-4 md:justify-end'>
+                {/* Deadline info */}
+                <div className='flex items-center gap-3'>
+                    <FaClock
+                        size={16}
+                        className={
+                            isPastDeadline ? 'text-dark-red' : 'text-grey'
+                        }
+                    />
                     <p
-                        className={`text-sm font-semibold ${
-                            isPastDeadline
-                                ? 'text-dark-red'
-                                : 'text-primary-dark'
+                        className={`text-sm font-semibold uppercase ${
+                            isPastDeadline ? 'text-dark-red' : 'text-grey'
                         }`}
                     >
-                        {deadline.toLocaleDateString('pl-PL')}
+                        {txt.events.deadline}:{' '}
+                        {deadline.toLocaleDateString('pl-PL')}{' '}
+                        {deadline.toLocaleTimeString('pl-PL', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                        })}
                     </p>
                 </div>
-            </div>
 
-            {/* Actions */}
-            <div className='flex items-center gap-2 md:pl-4'>
-                <AdminOnly
-                    fallback={
-                        <ActionButton
-                            label={txt.events.open}
-                            onClick={onEdit}
-                        />
-                    }
-                >
-                    {null}
-                </AdminOnly>
-                <AdminOnly>
-                    <ActionIcon
-                        label={<FaEdit size={20} />}
-                        onClick={onAdminEdit}
-                    />
-                </AdminOnly>
-                <AdminOnly>
-                    <ActionIcon
-                        label={<TiDelete size={20} />}
-                        onClick={onDelete}
-                        loading={isDeleting}
-                        disabled={isDeleting}
-                        variant='danger'
-                    />
-                </AdminOnly>
-                <AdminOnly>
-                    <ActionIcon
-                        label={
-                            event.status === 'draft' ? (
-                                <FaEye size={20} />
+                {/* Actions */}
+                <div className='flex shrink-0 items-center gap-2'>
+                    <AdminOnly
+                        fallback={
+                            isPastDeadline ? (
+                                <>
+                                    <ActionIcon
+                                        label={
+                                            <FaClipboardList
+                                                size={24}
+                                                color={'#edf4f8'}
+                                            />
+                                        }
+                                        onClick={onEdit}
+                                        className={eventActionIconClass}
+                                    />
+                                    <ActionIcon
+                                        label={
+                                            <MdLeaderboard
+                                                size={24}
+                                                color={'#edf4f8'}
+                                            />
+                                        }
+                                        onClick={onGoToRanking}
+                                        className={eventActionIconClass}
+                                    />
+                                </>
                             ) : (
-                                <FaEyeSlash size={20} />
+                                <ActionIcon
+                                    label={
+                                        <FaPen size={24} color={'#edf4f8'} />
+                                    }
+                                    onClick={onEdit}
+                                    className={eventActionIconClass}
+                                />
                             )
                         }
-                        onClick={onToggleStatus}
-                        loading={isTogglingStatus}
-                        disabled={isTogglingStatus}
-                    />
-                </AdminOnly>
+                    >
+                        {null}
+
+                        <ActionIcon
+                            label={<FaEdit size={24} color={'#edf4f8'} />}
+                            onClick={onAdminEdit}
+                            className={eventActionIconClass}
+                        />
+                        <ActionIcon
+                            label={
+                                event.status === 'draft' ? (
+                                    <FaEye size={24} color={'#edf4f8'} />
+                                ) : (
+                                    <FaEyeSlash size={24} color={'#edf4f8'} />
+                                )
+                            }
+                            onClick={onToggleStatus}
+                            loading={isTogglingStatus}
+                            disabled={isTogglingStatus}
+                            className={eventActionIconClass}
+                        />
+                        <ActionIcon
+                            label={
+                                <FaTimesCircle size={24} color={'#ffaaaa'} />
+                            }
+                            onClick={onDelete}
+                            loading={isDeleting}
+                            disabled={isDeleting}
+                            variant='danger'
+                            className={eventActionIconClass}
+                        />
+                    </AdminOnly>
+                </div>
             </div>
         </div>
     );

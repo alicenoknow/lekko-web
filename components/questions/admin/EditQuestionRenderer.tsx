@@ -4,6 +4,7 @@ import {
     AthleteRankingQuestion,
     CountryQuestion,
     CountryRankingQuestion,
+    NumericValueQuestion,
 } from '@/types/questions';
 import { AnswerContentMap } from '@/types/answers';
 
@@ -11,6 +12,7 @@ import EditAthleteQuestion from './EditAthleteQuestion';
 import EditAthleteRankingQuestion from './EditAthleteRankingQuestion';
 import EditCountryQuestion from './EditCountryQuestion';
 import EditCountryRankingQuestion from './EditCountryRankingQuestion';
+import EditNumericValueQuestion from './EditNumericValueQuestion';
 
 import { useCallback, useMemo, useState } from 'react';
 import EditQuestionHeader from './common/EditQuestionHeader';
@@ -97,6 +99,13 @@ export default function EditQuestionRenderer({
                         {...sharedProps}
                     />
                 );
+            case 'numeric_value':
+                return (
+                    <EditNumericValueQuestion
+                        question={question as NumericValueQuestion}
+                        {...sharedProps}
+                    />
+                );
             default:
                 return null;
         }
@@ -114,6 +123,7 @@ export default function EditQuestionRenderer({
             <QuestionFooterButtons
                 disableSubmit={isFormInvalid}
                 isLoading={isSubmitting}
+                isNew={question.id < 0}
                 onSubmit={handleSubmit}
                 onDelete={handleDelete}
             />

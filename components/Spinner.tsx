@@ -1,22 +1,12 @@
 'use client';
 
-import React from 'react';
-
-interface SpinnerProps {
-    isInline?: boolean;
-}
-
-const Spinner = ({ isInline = false }: SpinnerProps) => {
-    const wrapperClass = isInline
-        ? 'flex items-center justify-center'
-        : 'flex h-screen items-center justify-center';
-
+const Spinner = () => {
     return (
-        <div className={wrapperClass}>
+        <div className='flex items-center justify-center'>
             <div role='status'>
                 <svg
                     aria-hidden='true'
-                    className={`h-8 w-8 animate-spin fill-accentLight text-grey dark:text-primary-dark`}
+                    className={`h-8 w-8 animate-spin fill-light-gray text-grey dark:text-primary-dark`}
                     viewBox='0 0 100 101'
                     fill='none'
                     xmlns='http://www.w3.org/2000/svg'

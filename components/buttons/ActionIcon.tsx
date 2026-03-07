@@ -22,19 +22,15 @@ const ActionIcon = React.memo<ActionIconProps>(function ActionIcon({
         ? 'cursor-not-allowed opacity-50'
         : variant === 'danger'
           ? 'hover:bg-dark-red hover:text-white hover:border-dark-red'
-          : 'hover:bg-blue-accent hover:text-primary-dark hover:border-blue-accent';
+          : 'hover:bg-accent-dark/70';
     return (
         <button
             aria-label={`${label} button`}
             disabled={disabled || loading}
-            className={`border-grey bg-primary-light rounded-lg border-1 p-2 text-xl font-extrabold uppercase select-none hover:cursor-pointer ${hoverClass} ${variant === 'danger' ? 'text-dark-red border-dark-red' : ''} ${className}`}
+            className={`bg-accent-dark rounded-lg p-2 text-xl font-extrabold uppercase select-none hover:cursor-pointer ${hoverClass} ${variant === 'danger' ? 'text-dark-red border-dark-red' : ''} ${className}`}
             onClick={onClick}
         >
-            {loading ? (
-                <Spinner isInline />
-            ) : (
-                <p className='text-wrap'>{label}</p>
-            )}
+            {loading ? <Spinner /> : <p className='text-wrap'>{label}</p>}
         </button>
     );
 });

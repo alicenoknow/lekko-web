@@ -4,6 +4,7 @@ import { txt } from '@/nls/texts';
 interface Props {
     isLoading: boolean;
     disableSubmit: boolean;
+    isNew?: boolean;
     onSubmit: () => void;
     onDelete: () => void;
 }
@@ -11,11 +12,12 @@ interface Props {
 export default function QuestionFooterButtons({
     isLoading,
     disableSubmit,
+    isNew = false,
     onSubmit,
     onDelete,
 }: Props) {
     return (
-        <div className='justify-between py-4 sm:flex sm:flex-row-reverse'>
+        <div className='flex flex-wrap justify-between gap-4 py-4'>
             <ActionButton
                 disabled={disableSubmit}
                 loading={isLoading}
@@ -24,7 +26,7 @@ export default function QuestionFooterButtons({
             />
             <ActionButton
                 loading={isLoading}
-                label={txt.questions.delete}
+                label={isNew ? txt.forms.cancel : txt.questions.delete}
                 onClick={onDelete}
             />
         </div>

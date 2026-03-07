@@ -12,7 +12,7 @@ function CountryLabel({ code, emoji, isLarge = false }: Props) {
     const countryName = COUNTRIES[code] ?? code;
     return (
         <div
-            className='my-1 flex flex-row items-center gap-2'
+            className='flex flex-row items-center gap-2'
             aria-label={`Country: ${countryName}`}
         >
             {emoji && <span className='mr-4 text-3xl'>{emoji}</span>}

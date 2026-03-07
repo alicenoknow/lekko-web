@@ -6,6 +6,7 @@ interface ExternalLinkButtonProps {
     disabled?: boolean;
     loading?: boolean;
     link: string;
+    className?: string;
 }
 
 const ExternalLinkButton: React.FC<ExternalLinkButtonProps> = ({
@@ -13,19 +14,16 @@ const ExternalLinkButton: React.FC<ExternalLinkButtonProps> = ({
     loading,
     label,
     link,
+    className = 'bg-primary-light hover:bg-accent-light',
 }) => {
     return (
         <a
             href={link}
             target='_blank'
             rel='noopener noreferrer'
-            className={`bg-primary-light inline-block border-2 border-black p-4 text-lg font-extrabold uppercase select-none hover:cursor-pointer md:px-10 md:text-3xl ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-accent-light'}`}
+            className={`inline-block rounded-xl p-4 text-lg font-extrabold uppercase select-none hover:cursor-pointer md:px-10 md:text-3xl ${disabled ? 'cursor-not-allowed opacity-50' : ''} ${className}`}
         >
-            {loading ? (
-                <Spinner isInline />
-            ) : (
-                <p className='text-wrap'>{label}</p>
-            )}
+            {loading ? <Spinner /> : <p className='text-wrap'>{label}</p>}
         </a>
     );
 };

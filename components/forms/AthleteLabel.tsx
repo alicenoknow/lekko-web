@@ -11,9 +11,10 @@ interface Props {
     selected: number | null;
     label?: string;
     emoji?: string;
+    compact?: boolean;
 }
 
-function AthleteLabel({ selected, label, emoji }: Props) {
+function AthleteLabel({ selected, label, emoji, compact = false }: Props) {
     const { token } = useAuthenticatedUser();
 
     const shouldFetch = !!token && !!selected;
@@ -28,7 +29,7 @@ function AthleteLabel({ selected, label, emoji }: Props) {
     if (!shouldFetch || !athlete) return null;
 
     return (
-        <div className='my-2 flex flex-col gap-2'>
+        <div className={`${compact ? '' : 'my-2'}flex flex-col gap-2`}>
             {label && (
                 <p className='md:text-md text-primary-dark text-sm font-bold uppercase'>
                     {label}:

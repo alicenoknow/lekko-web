@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { deleteEvent, fetchEvents, setEventStatus } from '@/lib/api/events';
 import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
@@ -15,7 +15,8 @@ import EventCard from '@/components/event/EventCard';
 import LazyAddEvent from '@/components/event/LazyAddEvent';
 import { useErrorStore } from '@/store/error';
 import LazyConfirmationDialog from '@/components/forms/LazyConfirmationDialog';
-import { EventsData, TyperEvent } from '@/types/events';
+import { EventsData } from '@/types/events';
+import { logger } from '@/lib/logger';
 
 export default function EventsPage() {
     const router = useRouter();
@@ -48,7 +49,7 @@ export default function EventsPage() {
             queryClient.invalidateQueries({ queryKey: ['events'] });
         },
         onError: () => {
-            console.error('Cannot remove event.');
+            logger.error('Cannot remove event.');
             showErrorDialog(txt.events.removeError);
         },
     });
@@ -69,7 +70,7 @@ export default function EventsPage() {
             queryClient.invalidateQueries({ queryKey: ['events'] });
         },
         onError: () => {
-            console.error('Cannot update event status.');
+            logger.error('Cannot update event status.');
             showErrorDialog(txt.errors.eventStatusUpdate);
         },
     });
@@ -85,6 +86,11 @@ export default function EventsPage() {
     );
 
     const handleAdd = useCallback(() => router.push('/typer/new'), [router]);
+
+    const handleGoToRanking = useCallback(
+        (id: number) => router.push(`/ranking?eventId=${id}`),
+        [router]
+    );
 
     const handleDeleteRequest = useCallback((id: number) => {
         setEventToDelete(id);
@@ -137,7 +143,12 @@ export default function EventsPage() {
         [isError]
     );
 
-    if (isLoading) return <Spinner />;
+    if (isLoading)
+        return (
+            <div className='flex flex-1 items-center justify-center'>
+                <Spinner />
+            </div>
+        );
 
     return (
         <>
@@ -158,6 +169,7 @@ export default function EventsPage() {
                         onToggleStatus={() =>
                             handleToggleStatusRequest(event.id, event.status)
                         }
+                        onGoToRanking={() => handleGoToRanking(event.id)}
                         isDeleting={isDeleting}
                         isTogglingStatus={
                             isTogglingStatus &&

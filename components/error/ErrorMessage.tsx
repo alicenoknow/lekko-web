@@ -5,12 +5,11 @@ interface ErrorProps {
 }
 
 export const ErrorMessage = (props: ErrorProps) => {
-    if (props.errorMessage) {
-        return (
-            <p className='text-dark-red mb-6 text-sm font-semibold uppercase md:text-lg'>
-                {props.errorMessage}
-            </p>
-        );
-    }
-    return null;
+    return (
+        <p
+            className={`mb-6 text-sm font-semibold uppercase md:text-lg ${props.errorMessage ? 'text-dark-red' : 'invisible'}`}
+        >
+            {props.errorMessage || '\u00A0'}
+        </p>
+    );
 };

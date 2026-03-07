@@ -5,13 +5,15 @@ import { Answer, AnswerContent } from '@/types/answers';
 import { queryClient } from '@/context/QueryProvider';
 import { useErrorStore } from '@/store/error';
 import { txt } from '@/nls/texts';
+import { useUserStore } from '@/store/user';
+import { logger } from '@/lib/logger';
 
 export function useAnswerSubmit(
     token: string,
-    userId: number,
     setIsModified: (isModified: boolean) => void
 ) {
     const { showErrorDialog } = useErrorStore();
+    const user = useUserStore((s) => s.user);
 
     const create = useMutation({
         mutationFn: ({
@@ -20,11 +22,11 @@ export function useAnswerSubmit(
         }: {
             questionId: number;
             content: AnswerContent;
-        }) => createAnswer(token, questionId, content, userId),
+        }) => createAnswer(token, questionId, content, Number(user!.sub)),
         onSuccess: () =>
             queryClient.invalidateQueries({ queryKey: ['answers'] }),
         onError: () => {
-            console.error('Cannot create answer.');
+            logger.error('Cannot create answer.');
             showErrorDialog(txt.errors.answerUpdate);
         },
     });
@@ -38,11 +40,11 @@ export function useAnswerSubmit(
             id: number;
             questionId: number;
             content: AnswerContent;
-        }) => updateAnswer(token, id, content, questionId, userId),
+        }) => updateAnswer(token, id, content, questionId, Number(user!.sub)),
         onSuccess: () =>
             queryClient.invalidateQueries({ queryKey: ['answers'] }),
         onError: () => {
-            console.error('Cannot update answer.');
+            logger.error('Cannot update answer.');
             showErrorDialog(txt.errors.answerUpdate);
         },
     });

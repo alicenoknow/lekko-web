@@ -79,7 +79,7 @@ function DropdownField({
             >
                 <div className='relative inline-block w-full text-left'>
                     <ListboxButton
-                        className={`flex w-full items-center justify-between rounded-lg border px-4 py-2 text-sm shadow-sm focus:outline-none md:p-4 md:text-lg ${
+                        className={`flex min-h-[44px] w-full items-center justify-between rounded-lg border px-4 py-2 text-sm shadow-sm focus:outline-none md:p-4 md:text-lg ${
                             disabled
                                 ? 'bg-grey/25 text-grey'
                                 : 'text-primary-dark bg-white'
@@ -89,7 +89,10 @@ function DropdownField({
                         <FaChevronDown className='ml-2 h-4 w-4' />
                     </ListboxButton>
 
-                    <ListboxOptions className='absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg border bg-white text-sm shadow-lg focus:outline-none'>
+                    <ListboxOptions
+                        anchor='bottom start'
+                        className='z-50 mt-1 max-h-60 w-[var(--button-width)] overflow-auto rounded-lg border bg-white text-sm shadow-lg [--anchor-max-height:240px] focus:outline-none'
+                    >
                         <ListboxOption
                             key='none'
                             value={NO_SELECTION}

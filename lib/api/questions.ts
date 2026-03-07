@@ -1,6 +1,7 @@
 import {
     CreateQuestionResponse,
     DeleteQuestionResponse,
+    Question,
     Questions,
     UpdateQuestionResponse,
 } from '@/types/questions';
@@ -15,10 +16,10 @@ export async function fetchQuestionsFromEvent(
     id: string | number,
     page: number = 1
 ): Promise<Questions> {
-    const res = await axios.get(
-        `${API_URL}/api/v1/questions?event_id=${id}&page=${page}`,
-        getAuthConfig(token)
-    );
+    const res = await axios.get(`${API_URL}/api/v1/questions`, {
+        ...getAuthConfig(token),
+        params: { event_id: id, page_no: page },
+    });
     if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }
@@ -42,8 +43,8 @@ export async function createQuestion(
 export async function updateQuestion(
     token: string,
     id: number,
+    event_id: number,
     type: string,
-    event_id?: number,
     content?: string,
     points?: number,
     correct_answer?: AnswerContent
@@ -51,6 +52,18 @@ export async function updateQuestion(
     const res = await axios.put(
         `${API_URL}/api/v1/questions/${id}`,
         { event_id, content, type, points, correct_answer },
+        getAuthConfig(token)
+    );
+    if (isApiError(res.data)) throw handleError(res.data);
+    return res.data;
+}
+
+export async function fetchQuestionById(
+    token: string,
+    id: number
+): Promise<Question> {
+    const res = await axios.get(
+        `${API_URL}/api/v1/questions/${id}`,
         getAuthConfig(token)
     );
     if (isApiError(res.data)) throw handleError(res.data);

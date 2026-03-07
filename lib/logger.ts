@@ -1,7 +1,3 @@
-/**
- * Simple logging utility for the application
- */
-
 const isDev = process.env.NODE_ENV === 'development';
 
 export const logger = {

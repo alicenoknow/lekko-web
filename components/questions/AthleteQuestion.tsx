@@ -63,6 +63,7 @@ export default function AthleteQuestion({
                         label={txt.forms.yourAnswer}
                         selected={selectedId}
                         onSelect={setSelectedId}
+                        showSelectedBelow
                     />
                 ))}
             {showCorrectAnswer && question.correct_answer?.athlete_id && (

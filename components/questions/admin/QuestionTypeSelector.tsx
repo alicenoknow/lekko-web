@@ -18,6 +18,7 @@ const questionOptions: { label: string; value: QuestionType }[] = [
     { label: txt.questions.types.athleteRank, value: 'athletes_three' },
     { label: txt.questions.types.country, value: 'country' },
     { label: txt.questions.types.countryRank, value: 'countries_three' },
+    { label: txt.questions.types.numericValue, value: 'numeric_value' },
 ];
 
 function QuestionTypeSelector({ selected, setSelected, onAdd }: Props) {
@@ -26,7 +27,7 @@ function QuestionTypeSelector({ selected, setSelected, onAdd }: Props) {
             <div className='relative'>
                 <select
                     aria-label='select question type'
-                    className='border border-gray-300 appearance-none bg-white p-2 pr-12 text-sm text-primary-dark md:p-4 md:pr-16 md:text-xl focus:border-primary-dark w-full cursor-pointer'
+                    className='w-full cursor-pointer appearance-none rounded-lg border border-gray-300 bg-white p-3 pr-12 text-base text-primary-dark focus:border-primary-dark md:p-4 md:pr-16 md:text-xl'
                     value={selected}
                     onChange={(e) => {
                         setSelected(e.target.value as QuestionType);

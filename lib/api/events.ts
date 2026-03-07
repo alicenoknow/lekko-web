@@ -14,10 +14,10 @@ export async function fetchEvents(
     token: string,
     page = 1
 ): Promise<EventsData> {
-    const res = await axios.get(
-        `${API_URL}/api/v1/events?page=${page}`,
-        getAuthConfig(token)
-    );
+    const res = await axios.get(`${API_URL}/api/v1/events`, {
+        ...getAuthConfig(token),
+        params: { page_no: page },
+    });
     if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
 }
@@ -59,7 +59,6 @@ export async function updateEvent(
     const res = await axios.put(
         `${API_URL}/api/v1/events/${eventId}`,
         {
-            event_id: eventId,
             name,
             description,
             deadline,

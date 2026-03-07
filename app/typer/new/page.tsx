@@ -12,6 +12,7 @@ import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import { AdminOnly } from '@/components/auth/AdminOnly';
 import { queryClient } from '@/context/QueryProvider';
 import { useErrorStore } from '@/store/error';
+import { logger } from '@/lib/logger';
 
 function CreateEventPage() {
     const router = useRouter();
@@ -39,7 +40,7 @@ function CreateEventPage() {
             queryClient.invalidateQueries({ queryKey: ['events'] });
         },
         onError: (err) => {
-            console.error('Create event error:', err.message);
+            logger.error('Create event error:', err);
             showErrorDialog(txt.events.createError);
         },
     });

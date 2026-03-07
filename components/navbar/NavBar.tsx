@@ -16,7 +16,7 @@ const Logo = memo(() => (
 Logo.displayName = 'Logo';
 
 const NavBar = () => (
-    <nav className='bg-accent-light z-[4] flex flex-wrap items-center justify-evenly border-b px-6 py-6 md:px-12'>
+    <nav className='bg-accent-light relative z-[4] flex flex-wrap items-center justify-evenly border-b px-6 py-6 md:px-12'>
         <Logo />
         <NavBarMenu />
     </nav>

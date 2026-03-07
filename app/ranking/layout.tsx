@@ -10,8 +10,12 @@ export default function RankingLayout({
     return (
         <QueryProvider>
             <PrivateContent redirect fallback={<Spinner />}>
-                <div className='flex min-h-screen justify-center p-6'>
-                    <div className='w-full max-w-4xl space-y-6'>{children}</div>
+                <div className='bg-primary-light min-h-full'>
+                    <div className='flex justify-center px-4 py-8 md:px-6 md:py-12'>
+                        <div className='w-full max-w-4xl space-y-6'>
+                            {children}
+                        </div>
+                    </div>
                 </div>
             </PrivateContent>
         </QueryProvider>

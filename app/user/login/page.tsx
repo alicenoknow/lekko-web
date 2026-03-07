@@ -29,7 +29,7 @@ function LoginPage() {
         mutationFn: () => loginUser(email, password),
         onSuccess: (data: LoginData) => {
             setUserFromToken(data.access_token, data.refresh_token);
-            router.replace('/user');
+            router.replace('/typer');
         },
         onError: () => setErrorMessage(txt.login.error),
     });
@@ -43,42 +43,43 @@ function LoginPage() {
     }, [router]);
 
     return (
-        <div className='m-auto flex w-full max-w-md flex-col justify-center space-y-6 p-4'>
-            <h1 className='text-2xl font-bold uppercase tracking-tight text-primary-dark'>
-                {txt.login.header}
-            </h1>
-            <FormField
-                label={txt.forms.email}
-                id='email'
-                type='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-            />
-            <FormField
-                label={txt.forms.password}
-                id='password'
-                type='password'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
-            {isFormInvalid && (
-                <ErrorMessage errorMessage={txt.forms.fillAllInfo} />
-            )}
-            {!isFormInvalid && errorMessage && (
-                <ErrorMessage errorMessage={errorMessage} />
-            )}
-            <ActionButton
-                label={txt.forms.send}
-                onClick={handleLogin}
-                loading={isSubmitting}
-                disabled={isFormInvalid}
-            />
-            <ActionButton
-                label={txt.login.noAccountText}
-                onClick={handleRegisterRedirect}
-            />
+        <div className='bg-primary-light flex flex-1 items-center justify-center px-4 py-8 md:px-6 md:py-12'>
+            <div className='w-full max-w-4xl'>
+                <div className='flex w-full flex-col space-y-6'>
+                    <h1 className='text-2xl font-bold uppercase tracking-tight text-primary-dark'>
+                        {txt.login.header}
+                    </h1>
+                    <FormField
+                        label={txt.forms.email}
+                        id='email'
+                        type='email'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                    <FormField
+                        label={txt.forms.password}
+                        id='password'
+                        type='password'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                    <ErrorMessage errorMessage={isFormInvalid ? txt.forms.fillAllInfo : errorMessage} />
+                    <div className='mx-auto flex max-w-xl flex-wrap justify-center gap-4 [&>button]:flex-1 [&>button]:min-w-[240px]'>
+                        <ActionButton
+                            label={txt.forms.login}
+                            onClick={handleLogin}
+                            loading={isSubmitting}
+                            disabled={isFormInvalid}
+                        />
+                        <ActionButton
+                            label={txt.login.noAccountText}
+                            onClick={handleRegisterRedirect}
+                        />
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

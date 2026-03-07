@@ -6,7 +6,7 @@ import {
     ListboxOption,
     ListboxOptions,
 } from '@headlessui/react';
-import { FaChevronDown, FaCheck } from 'react-icons/fa';
+import { FaChevronDown, FaCheck, FaTimes } from 'react-icons/fa';
 import { txt } from '@/nls/texts';
 import React, { useCallback } from 'react';
 
@@ -41,9 +41,9 @@ function MultipleDropdownPillFilter({
         [onSelect]
     );
 
-    const selectedLabels = options
-        .filter((opt) => selected.includes(opt.value))
-        .map((opt) => opt.label);
+    const selectedOptions = options.filter((opt) =>
+        selected.includes(opt.value)
+    );
 
     return (
         <div className='flex w-full flex-col gap-1'>
@@ -64,12 +64,26 @@ function MultipleDropdownPillFilter({
                     >
                         <div className='flex flex-wrap items-center gap-2 overflow-hidden'>
                             {selected.length > 0 ? (
-                                selectedLabels.map((label, idx) => (
+                                selectedOptions.map((opt) => (
                                     <span
-                                        key={idx}
-                                        className='bg-primary-light text-primary-dark rounded px-2 py-1 text-xs font-semibold whitespace-nowrap'
+                                        key={opt.value}
+                                        className='bg-primary-light text-primary-dark flex items-center gap-1 rounded px-2 py-1 text-xs font-semibold whitespace-nowrap'
                                     >
-                                        {label}
+                                        {opt.label}
+                                        <button
+                                            type='button'
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onSelect(
+                                                    selected.filter(
+                                                        (v) => v !== opt.value
+                                                    )
+                                                );
+                                            }}
+                                            className='hover:text-dark-red ml-1'
+                                        >
+                                            <FaTimes className='h-3 w-3' />
+                                        </button>
                                     </span>
                                 ))
                             ) : (
@@ -78,7 +92,10 @@ function MultipleDropdownPillFilter({
                         </div>
                         <FaChevronDown className='ml-auto h-4 w-4 shrink-0' />
                     </ListboxButton>
-                    <ListboxOptions className='absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg border bg-white text-sm shadow-lg focus:outline-none'>
+                    <ListboxOptions
+                        anchor='bottom start'
+                        className='z-50 mt-1 max-h-60 w-[var(--button-width)] overflow-auto rounded-lg border bg-white text-sm shadow-lg [--anchor-max-height:240px] focus:outline-none'
+                    >
                         <ListboxOption
                             value={undefined}
                             key='all'

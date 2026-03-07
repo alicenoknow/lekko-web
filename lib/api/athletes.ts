@@ -26,7 +26,9 @@ export async function fetchAthletes(
 ): Promise<Athletes> {
     const params: AthletesParams = {
         search,
-        page,
+        page_no: page,
+        order_by: 'last_name',
+        order_dir: 'asc',
     };
 
     if (discipline_ids && discipline_ids.length > 0) {

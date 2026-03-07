@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { EmptyResponse, handleError, isApiError } from './common';
+import {
+    EmptyResponse,
+    getAuthConfig,
+    handleError,
+    isApiError,
+} from './common';
 import { ApiErrorType } from '@/types/errors';
 
 type RegisterData = { message: string };
@@ -50,4 +55,23 @@ export async function refreshAccessToken(
     );
     if (isApiError(res.data)) throw handleError(res.data);
     return res.data;
+}
+
+export async function verifyEmail(token: string): Promise<LoginData> {
+    const res = await axios.post<LoginResponse>(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/verify-email`,
+        { token }
+    );
+    if (isApiError(res.data)) throw handleError(res.data);
+    return res.data;
+}
+
+export async function logoutUser(authToken: string): Promise<EmptyResponse> {
+    const res = await axios.post<EmptyResponse | ApiErrorType>(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/auth/logout`,
+        undefined,
+        getAuthConfig(authToken)
+    );
+    if (isApiError(res.data)) throw handleError(res.data);
+    return res.data as EmptyResponse;
 }

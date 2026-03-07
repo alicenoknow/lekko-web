@@ -1,12 +1,10 @@
 'use client';
 
-import { Fragment } from 'react';
 import {
     Dialog,
+    DialogBackdrop,
     DialogPanel,
     DialogTitle,
-    Transition,
-    TransitionChild,
 } from '@headlessui/react';
 import { FaExclamationTriangle } from 'react-icons/fa';
 import ActionButton from '../buttons/ActionButton';
@@ -17,35 +15,22 @@ export default function ErrorDialog() {
     const { isDialogVisible, errorMessage, hideErrorDialog } = useErrorStore();
 
     return (
-        <Transition appear show={isDialogVisible} as={Fragment}>
-            <Dialog
-                as='div'
-                className='relative z-50'
-                onClose={hideErrorDialog}
-            >
-                <TransitionChild
-                    as={Fragment}
-                    enter='ease-out duration-200'
-                    enterFrom='opacity-0'
-                    enterTo='opacity-100'
-                    leave='ease-in duration-150'
-                    leaveFrom='opacity-100'
-                    leaveTo='opacity-0'
-                >
-                    <div className='bg-opacity-25 fixed inset-0 bg-black' />
-                </TransitionChild>
-
-                <div className='fixed inset-0 flex items-center justify-center p-4'>
-                    <TransitionChild
-                        as={Fragment}
-                        enter='ease-out duration-200'
-                        enterFrom='opacity-0 scale-95'
-                        enterTo='opacity-100 scale-100'
-                        leave='ease-in duration-150'
-                        leaveFrom='opacity-100 scale-100'
-                        leaveTo='opacity-0 scale-95'
+        <Dialog
+            open={isDialogVisible}
+            onClose={hideErrorDialog}
+            className='relative z-50'
+        >
+            <DialogBackdrop
+                transition
+                className='bg-grey/75 fixed inset-0 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in'
+            />
+            <div className='fixed inset-0 z-10 w-screen overflow-y-auto'>
+                <div className='flex min-h-full items-center justify-center p-4 text-center sm:p-0'>
+                    <DialogPanel
+                        transition
+                        className='bg-primary-light relative w-full max-w-sm transform overflow-hidden rounded-xl text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 data-closed:sm:translate-y-0 data-closed:sm:scale-95'
                     >
-                        <DialogPanel className='w-full max-w-sm transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all'>
+                        <div className='bg-primary-light px-4 pt-5 pb-4 sm:p-6 sm:pb-4'>
                             <div className='flex flex-col items-center gap-4'>
                                 <FaExclamationTriangle
                                     size={40}
@@ -62,10 +47,10 @@ export default function ErrorDialog() {
                                     onClick={hideErrorDialog}
                                 />
                             </div>
-                        </DialogPanel>
-                    </TransitionChild>
+                        </div>
+                    </DialogPanel>
                 </div>
-            </Dialog>
-        </Transition>
+            </div>
+        </Dialog>
     );
 }
