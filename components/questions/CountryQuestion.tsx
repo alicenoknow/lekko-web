@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { txt } from '@/nls/texts';
-import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
-import { isAdmin } from '@/lib/admin';
 import CountryDropdown from '../forms/CountryDropdown';
 import CorrectAnswer from './common/CorrectAnswer';
 import CountryLabel from '../forms/CountryLabel';
 import { CountryAnswer, CountryAnswerContent } from '@/types/answers';
 import { CountryQuestion as CountryQuestionType } from '@/types/questions';
+import { useAnswerSync } from '@/hooks/useAnswerSync';
+import { useQuestionState } from '@/hooks/useQuestionState';
 
 interface Props {
     question: CountryQuestionType;
@@ -23,43 +22,37 @@ export default function CountryQuestion({
     isPastDeadline,
     onAnswerChanged,
 }: Props) {
-    const { user } = useAuthenticatedUser();
-    const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+    const [selectedCountry, setSelectedCountry] = useAnswerSync(
+        answer?.content?.country ?? null,
+        (country) => onAnswerChanged({ country })
+    );
 
-    useEffect(() => {
-        if (answer?.content?.country) {
-            setSelectedCountry(answer.content.country);
-        }
-    }, [answer?.content?.country]);
-
-    useEffect(() => {
-        if (selectedCountry && selectedCountry !== answer?.content?.country) {
-            onAnswerChanged({ country: selectedCountry });
-        }
-    }, [selectedCountry, answer?.content?.country, onAnswerChanged]);
-
-    const admin = isAdmin(user);
-    const isResolved = !!question.correct_answer;
-    const isLocked = isPastDeadline || isResolved;
+    const { admin, isLocked, showCorrectAnswer } = useQuestionState(
+        question,
+        isPastDeadline
+    );
     const hasAnswer = !!answer?.content?.country;
-    const showCorrectAnswer = admin || isLocked;
 
     return (
         <div className='flex flex-col gap-6'>
             {!admin &&
                 (isLocked ? (
-                    <CountryDropdown
-                        label={txt.forms.yourAnswer}
-                        selected={selectedCountry}
-                        onSelect={setSelectedCountry}
-                        disabled
-                    />
+                    hasAnswer ? (
+                        <CountryLabel
+                            code={selectedCountry ?? ''}
+                            label={txt.forms.yourAnswer}
+                            isLarge
+                        />
+                    ) : (
+                        <p className='text-grey text-sm'>
+                            {txt.questions.resolved}
+                        </p>
+                    )
                 ) : (
                     <CountryDropdown
                         label={txt.forms.yourAnswer}
                         selected={selectedCountry}
                         onSelect={setSelectedCountry}
-                        disabled={isPastDeadline}
                     />
                 ))}
             {showCorrectAnswer && question.correct_answer?.country && (

@@ -15,6 +15,16 @@ interface Option {
     value: string;
 }
 
+interface DropdownPagination {
+    hasNextPage: boolean;
+    isFetchingNextPage: boolean;
+    fetchNextPage: () => void;
+    autoFetchOnScrollEnd?: boolean;
+    showLoadMoreAction?: boolean;
+    loadMoreLabel?: string;
+    loadingMoreLabel?: string;
+}
+
 interface DropdownFieldProps {
     label?: string;
     options: Option[];
@@ -22,6 +32,7 @@ interface DropdownFieldProps {
     multiple?: boolean;
     disabled?: boolean;
     placeholder?: string;
+    pagination?: DropdownPagination;
     onSelect: ((value: string | null) => void) | ((value: string[]) => void);
 }
 
@@ -35,6 +46,7 @@ function DropdownField({
     multiple = false,
     disabled = false,
     onSelect,
+    pagination,
 }: DropdownFieldProps) {
     const internalValue = useCallback(() => {
         if (multiple) return selected as string[];
@@ -64,6 +76,27 @@ function DropdownField({
         [multiple, onSelect]
     );
 
+    const handleOptionsScroll = useCallback(
+        (event: React.UIEvent<HTMLDivElement>) => {
+            if (!pagination?.autoFetchOnScrollEnd) {
+                return;
+            }
+
+            if (!pagination.hasNextPage || pagination.isFetchingNextPage) {
+                return;
+            }
+
+            const target = event.currentTarget;
+            const nearBottom =
+                target.scrollTop + target.clientHeight >= target.scrollHeight - 24;
+
+            if (nearBottom) {
+                pagination.fetchNextPage();
+            }
+        },
+        [pagination]
+    );
+
     return (
         <div className='flex w-full flex-col gap-1'>
             {label && (
@@ -91,6 +124,7 @@ function DropdownField({
 
                     <ListboxOptions
                         anchor='bottom start'
+                        onScroll={handleOptionsScroll}
                         className='z-50 mt-1 max-h-60 w-[var(--button-width)] overflow-auto rounded-lg border bg-white text-sm shadow-lg [--anchor-max-height:240px] focus:outline-none'
                     >
                         <ListboxOption
@@ -123,6 +157,19 @@ function DropdownField({
                                 )}
                             </ListboxOption>
                         ))}
+                        {pagination?.showLoadMoreAction && pagination.hasNextPage && (
+                            <button
+                                type='button'
+                                className='text-primary-dark hover:bg-primary-light/40 w-full cursor-pointer px-4 py-2 text-left text-sm font-semibold'
+                                onMouseDown={(event) => event.preventDefault()}
+                                onClick={() => pagination.fetchNextPage()}
+                                disabled={pagination.isFetchingNextPage}
+                            >
+                                {pagination.isFetchingNextPage
+                                    ? pagination.loadingMoreLabel ?? txt.loading
+                                    : pagination.loadMoreLabel ?? txt.loadMore}
+                            </button>
+                        )}
                     </ListboxOptions>
                 </div>
             </Listbox>

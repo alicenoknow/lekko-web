@@ -1,10 +1,9 @@
 import { EmptyResponse } from '@/lib/api/common';
+import { PaginationInfo } from '@/types/pagination';
 
 export interface EventsData {
     data: readonly TyperEvent[];
-    total_count: number;
-    page: number;
-    limit: number;
+    pagination_info: PaginationInfo;
 }
 
 export interface TyperEvent {

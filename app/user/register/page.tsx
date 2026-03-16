@@ -3,13 +3,13 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
-
 import { registerUser } from '@/lib/api/auth';
 import { txt } from '@/nls/texts';
 import FormField from '@/components/forms/FormField';
 import ActionButton from '@/components/buttons/ActionButton';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
 import { logger } from '@/lib/logger';
+import { AuthFormLayout } from '@/components/auth/AuthFormLayout';
 
 function RegisterForm() {
     const router = useRouter();
@@ -23,6 +23,7 @@ function RegisterForm() {
 
     const [errorMessage, setErrorMessage] = useState('');
     const [registered, setRegistered] = useState(false);
+    const [submitAttempted, setSubmitAttempted] = useState(false);
 
     const handleChange =
         (field: keyof typeof form) =>
@@ -50,15 +51,18 @@ function RegisterForm() {
         onSuccess: () => setRegistered(true),
         onError: (err) => {
             logger.error('Register error:', err);
-            setErrorMessage(txt.register.error);
+            setErrorMessage(typeof err === 'string' ? err : txt.register.error);
         },
     });
 
-    const handleSubmit = useCallback(() => {
-        if (!isFormInvalid) {
-            register();
-        }
-    }, [register, isFormInvalid]);
+    const handleSubmit = useCallback(
+        (e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            setSubmitAttempted(true);
+            if (!isFormInvalid) register();
+        },
+        [isFormInvalid, register]
+    );
 
     const redirectToLogin = useCallback(() => {
         router.replace('/user/login');
@@ -67,71 +71,70 @@ function RegisterForm() {
     const getErrorMessage = () => {
         if (form.password && form.passwordRepeat && form.password !== form.passwordRepeat)
             return txt.register.passwordMismatch;
-        if (isFormInvalid) return txt.forms.fillAllInfo;
+        if (submitAttempted && isFormInvalid) return txt.forms.fillAllInfo;
         return errorMessage;
     };
 
     return (
-        <div className='bg-primary-light flex flex-1 items-center justify-center px-4 py-8 md:px-6 md:py-12'>
-            <div className='w-full max-w-4xl'>
-                <div className='flex w-full flex-col space-y-6'>
-                    <h1 className='text-2xl font-bold uppercase tracking-tight text-primary-dark'>
-                        {txt.register.header}
-                    </h1>
-                    <FormField
-                        label={txt.forms.username}
-                        id='username'
-                        type='text'
-                        value={form.username}
-                        onChange={handleChange('username')}
-                        required
+        <AuthFormLayout
+            title={txt.register.header}
+            onSubmit={handleSubmit}
+            actions={
+                <>
+                    <ActionButton
+                        label={txt.forms.register}
+                        type='submit'
+                        disabled={isFormInvalid}
+                        loading={isSubmitting}
                     />
-                    <FormField
-                        label={txt.forms.email}
-                        id='email'
-                        type='email'
-                        value={form.email}
-                        onChange={handleChange('email')}
-                        required
+                    <ActionButton
+                        label={txt.register.hasAccountText}
+                        onClick={redirectToLogin}
+                        type='button'
                     />
-                    <FormField
-                        label={txt.forms.password}
-                        id='password'
-                        type='password'
-                        value={form.password}
-                        onChange={handleChange('password')}
-                        required
-                    />
-                    <FormField
-                        label={txt.forms.repeatPassword}
-                        id='passwordRepeat'
-                        type='password'
-                        value={form.passwordRepeat}
-                        onChange={handleChange('passwordRepeat')}
-                        required
-                    />
-                    {registered ? (
-                        <p className='text-lg font-semibold uppercase text-dark-green'>
-                            {txt.register.success}
-                        </p>
-                    ) : (
-                        <ErrorMessage errorMessage={getErrorMessage()} />
-                    )}
-                    <div className='mx-auto flex max-w-xl flex-wrap justify-center gap-4 [&>button]:flex-1 [&>button]:min-w-[240px]'>
-                        <ActionButton
-                            label={txt.forms.register}
-                            onClick={handleSubmit}
-                            disabled={isFormInvalid}
-                            loading={isSubmitting}
-                        />
-                        <ActionButton
-                            label={txt.register.hasAccountText}
-                            onClick={redirectToLogin}
-                        />
-                    </div>
-                </div>
-            </div>
-        </div>
+                </>
+            }
+        >
+            <FormField
+                label={txt.forms.username}
+                id='username'
+                type='text'
+                value={form.username}
+                onChange={handleChange('username')}
+                required
+            />
+            <FormField
+                label={txt.forms.email}
+                id='email'
+                type='email'
+                value={form.email}
+                onChange={handleChange('email')}
+                required
+            />
+            <FormField
+                label={txt.forms.password}
+                id='password'
+                type='password'
+                value={form.password}
+                onChange={handleChange('password')}
+                required
+            />
+            <FormField
+                label={txt.forms.repeatPassword}
+                id='passwordRepeat'
+                type='password'
+                value={form.passwordRepeat}
+                onChange={handleChange('passwordRepeat')}
+                required
+            />
+            {registered ? (
+                <p className='text-lg font-semibold uppercase text-dark-green'>
+                    {txt.register.success}
+                </p>
+            ) : (
+                <ErrorMessage errorMessage={getErrorMessage()} />
+            )}
+        </AuthFormLayout>
     );
 }
 

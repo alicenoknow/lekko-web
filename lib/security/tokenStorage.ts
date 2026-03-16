@@ -1,113 +1,105 @@
 /**
- * Secure token storage with encryption and tampering detection
- * Implements enhanced security for localStorage JWT storage
+ * Secure token storage using AES-GCM authenticated encryption.
+ * A random 256-bit key is generated on first use and persisted in localStorage.
+ * AES-GCM provides both confidentiality and integrity — no separate hash needed.
  */
 
 import { logger } from '@/lib/logger';
 
 class SecureTokenStorage {
     private readonly STORAGE_KEY = 'secure_auth_token';
-    private readonly INTEGRITY_KEY = 'token_integrity';
     private readonly EXPIRY_KEY = 'token_expiry';
     private readonly REFRESH_TOKEN_KEY = 'secure_refresh_token';
     private readonly REFRESH_AT_KEY = 'token_refresh_at';
+    private readonly ENC_KEY_SEED = 'auth_enc_key';
 
-    private encryptData(data: string): string {
-        const key = this.generateKey();
-        let encrypted = '';
+    private cachedKey: CryptoKey | null = null;
 
-        for (let i = 0; i < data.length; i++) {
-            encrypted += String.fromCharCode(
-                data.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+    private async getOrCreateKey(): Promise<CryptoKey> {
+        if (this.cachedKey) return this.cachedKey;
+
+        let seedBase64 = localStorage.getItem(this.ENC_KEY_SEED);
+        let keyMaterial: Uint8Array;
+
+        if (!seedBase64) {
+            keyMaterial = crypto.getRandomValues(new Uint8Array(32));
+            seedBase64 = btoa(String.fromCharCode(...keyMaterial));
+            localStorage.setItem(this.ENC_KEY_SEED, seedBase64);
+        } else {
+            keyMaterial = Uint8Array.from(atob(seedBase64), (c) =>
+                c.charCodeAt(0)
             );
         }
 
-        return btoa(encrypted);
+        this.cachedKey = await crypto.subtle.importKey('raw', keyMaterial.buffer as ArrayBuffer, 'AES-GCM', false, [
+            'encrypt',
+            'decrypt',
+        ]);
+        return this.cachedKey;
     }
 
-    private decryptData(encryptedData: string): string | null {
+    private async encryptData(data: string): Promise<string> {
+        const key = await this.getOrCreateKey();
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const encoded = new TextEncoder().encode(data);
+
+        const ciphertext = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv },
+            key,
+            encoded
+        );
+
+        // Prepend IV so decryption can recover it
+        const combined = new Uint8Array(12 + ciphertext.byteLength);
+        combined.set(iv, 0);
+        combined.set(new Uint8Array(ciphertext), 12);
+
+        return btoa(String.fromCharCode(...combined));
+    }
+
+    private async decryptData(encryptedData: string): Promise<string | null> {
         try {
-            const key = this.generateKey();
-            const encrypted = atob(encryptedData);
-            let decrypted = '';
+            const key = await this.getOrCreateKey();
+            const combined = Uint8Array.from(atob(encryptedData), (c) =>
+                c.charCodeAt(0)
+            );
 
-            for (let i = 0; i < encrypted.length; i++) {
-                decrypted += String.fromCharCode(
-                    encrypted.charCodeAt(i) ^ key.charCodeAt(i % key.length)
-                );
-            }
+            const iv = combined.slice(0, 12);
+            const ciphertext = combined.slice(12);
 
-            return decrypted;
-        } catch (error) {
-            logger.error('Failed to decrypt token data', error);
+            // AES-GCM decryption fails (throws) if the ciphertext was tampered with
+            const plaintext = await crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv },
+                key,
+                ciphertext
+            );
+
+            return new TextDecoder().decode(plaintext);
+        } catch {
+            logger.error('Failed to decrypt token — data may have been tampered with');
             return null;
         }
     }
 
-    private generateKey(): string {
-        const fingerprint = this.getBrowserFingerprint();
-        const secret = 'lekko_web_secure_key_2024'; // In production, use env var
-        return btoa(fingerprint + secret).slice(0, 32);
-    }
-
-    private getBrowserFingerprint(): string {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-            ctx.textBaseline = 'top';
-            ctx.font = '14px Arial';
-            ctx.fillText('Browser fingerprint', 2, 2);
-        }
-
-        return btoa(
-            [
-                navigator.userAgent,
-                navigator.language,
-                screen.width + 'x' + screen.height,
-                new Date().getTimezoneOffset(),
-                canvas.toDataURL(),
-            ].join('|')
-        ).slice(0, 16);
-    }
-
-    private calculateIntegrity(data: string): string {
-        // Simple integrity hash
-        let hash = 0;
-        for (let i = 0; i < data.length; i++) {
-            const char = data.charCodeAt(i);
-            hash = (hash << 5) - hash + char;
-            hash = hash & hash; // Convert to 32-bit integer
-        }
-        return Math.abs(hash).toString(36);
-    }
-
     /**
-     * Securely store token with encryption and integrity check
+     * Encrypt and store token with expiry metadata.
      */
-    setToken(token: string): boolean {
+    async setToken(token: string): Promise<boolean> {
         try {
-            // Check if we're in a browser environment
-            if (typeof window === 'undefined') {
-                return false;
-            }
+            if (typeof window === 'undefined') return false;
 
-            // Extract expiry from JWT payload
             const payload = this.extractJWTPayload(token);
-            if (!payload || !payload.exp) {
-                logger.error('Invalid JWT token - missing expiry');
+            if (!payload?.exp) {
+                logger.error('Invalid JWT token — missing expiry');
                 return false;
             }
 
-            const encryptedToken = this.encryptData(token);
-            const integrity = this.calculateIntegrity(token);
-            const expiry = payload.exp * 1000; // Convert to milliseconds
-
-            // Compute half-life refresh point: midpoint between issuedAt and expiry
+            const encryptedToken = await this.encryptData(token);
+            const expiry = payload.exp * 1000;
             const issuedAt = payload.iat ? payload.iat * 1000 : Date.now();
             const refreshAt = issuedAt + (expiry - issuedAt) / 2;
 
             localStorage.setItem(this.STORAGE_KEY, encryptedToken);
-            localStorage.setItem(this.INTEGRITY_KEY, integrity);
             localStorage.setItem(this.EXPIRY_KEY, expiry.toString());
             localStorage.setItem(this.REFRESH_AT_KEY, refreshAt.toString());
 
@@ -119,52 +111,29 @@ class SecureTokenStorage {
     }
 
     /**
-     * Securely retrieve and validate token
+     * Retrieve and decrypt the stored token, verifying expiry and AES-GCM integrity.
      */
-    getToken(): string | null {
+    async getToken(): Promise<string | null> {
         try {
-            // Check if we're in a browser environment
-            if (typeof window === 'undefined') {
-                return null;
-            }
+            if (typeof window === 'undefined') return null;
 
             const encryptedToken = localStorage.getItem(this.STORAGE_KEY);
-            const storedIntegrity = localStorage.getItem(this.INTEGRITY_KEY);
             const storedExpiry = localStorage.getItem(this.EXPIRY_KEY);
 
-            if (!encryptedToken || !storedIntegrity || !storedExpiry) {
-                return null;
-            }
+            if (!encryptedToken || !storedExpiry) return null;
 
-            // Check expiry
-            const expiryTime = parseInt(storedExpiry, 10);
-            const now = Date.now();
-
-            if (now >= expiryTime) {
+            if (Date.now() >= parseInt(storedExpiry, 10)) {
                 logger.warn('Token expired, clearing storage');
                 this.clearToken();
                 return null;
             }
 
-            // Decrypt token
-            const decryptedToken = this.decryptData(encryptedToken);
+            const decryptedToken = await this.decryptData(encryptedToken);
             if (!decryptedToken) {
-                logger.error('Failed to decrypt token');
                 this.clearToken();
                 return null;
             }
 
-            // Verify integrity
-            const calculatedIntegrity = this.calculateIntegrity(decryptedToken);
-            if (calculatedIntegrity !== storedIntegrity) {
-                logger.error(
-                    'Token integrity check failed - possible tampering detected'
-                );
-                this.clearToken();
-                return null;
-            }
-
-            // Additional JWT validation
             if (!this.isValidJWT(decryptedToken)) {
                 logger.error('Invalid JWT structure detected');
                 this.clearToken();
@@ -180,75 +149,57 @@ class SecureTokenStorage {
     }
 
     /**
-     * Clear all token-related data
+     * Clear all token-related data from storage.
      */
     clearToken(): void {
         try {
-            if (typeof window === 'undefined') {
-                return;
-            }
-
+            if (typeof window === 'undefined') return;
+            this.cachedKey = null;
             localStorage.removeItem(this.STORAGE_KEY);
-            localStorage.removeItem(this.INTEGRITY_KEY);
             localStorage.removeItem(this.EXPIRY_KEY);
             localStorage.removeItem(this.REFRESH_TOKEN_KEY);
             localStorage.removeItem(this.REFRESH_AT_KEY);
+            localStorage.removeItem(this.ENC_KEY_SEED);
         } catch (error) {
             logger.error('Failed to clear token storage', error);
         }
     }
 
-    /**
-     * Check if token exists and is valid
-     */
     hasValidToken(): boolean {
-        return this.getToken() !== null;
+        if (typeof window === 'undefined') return false;
+        const stored = localStorage.getItem(this.STORAGE_KEY);
+        const expiry = localStorage.getItem(this.EXPIRY_KEY);
+        if (!stored || !expiry) return false;
+        return Date.now() < parseInt(expiry, 10);
     }
 
-    /**
-     * Get token expiry time
-     */
     getTokenExpiry(): number | null {
         try {
-            if (typeof window === 'undefined') {
-                return null;
-            }
-
-            const storedExpiry = localStorage.getItem(this.EXPIRY_KEY);
-            return storedExpiry ? parseInt(storedExpiry, 10) : null;
+            if (typeof window === 'undefined') return null;
+            const stored = localStorage.getItem(this.EXPIRY_KEY);
+            return stored ? parseInt(stored, 10) : null;
         } catch {
             return null;
         }
     }
 
-    /**
-     * Check if token will expire soon (within 5 minutes)
-     */
     isTokenExpiringSoon(): boolean {
         const expiry = this.getTokenExpiry();
         if (!expiry) return false;
-
-        const fiveMinutes = 5 * 60 * 1000;
-        return expiry - Date.now() < fiveMinutes;
+        return expiry - Date.now() < 5 * 60 * 1000;
     }
 
-    /**
-     * Store the refresh token (encrypted)
-     */
-    setRefreshToken(token: string): void {
+    async setRefreshToken(token: string): Promise<void> {
         try {
             if (typeof window === 'undefined') return;
-            const encrypted = this.encryptData(token);
+            const encrypted = await this.encryptData(token);
             localStorage.setItem(this.REFRESH_TOKEN_KEY, encrypted);
         } catch (error) {
             logger.error('Failed to store refresh token', error);
         }
     }
 
-    /**
-     * Retrieve the refresh token
-     */
-    getRefreshToken(): string | null {
+    async getRefreshToken(): Promise<string | null> {
         try {
             if (typeof window === 'undefined') return null;
             const encrypted = localStorage.getItem(this.REFRESH_TOKEN_KEY);
@@ -259,16 +210,12 @@ class SecureTokenStorage {
         }
     }
 
-    /**
-     * Returns true when the current time has passed the midpoint between
-     * token issuance and expiry — i.e. it is time to proactively refresh.
-     */
     isTokenAtHalfLife(): boolean {
         try {
             if (typeof window === 'undefined') return false;
-            const storedRefreshAt = localStorage.getItem(this.REFRESH_AT_KEY);
-            if (!storedRefreshAt) return false;
-            return Date.now() >= parseInt(storedRefreshAt, 10);
+            const stored = localStorage.getItem(this.REFRESH_AT_KEY);
+            if (!stored) return false;
+            return Date.now() >= parseInt(stored, 10);
         } catch {
             return false;
         }
@@ -280,9 +227,7 @@ class SecureTokenStorage {
         try {
             const parts = token.split('.');
             if (parts.length !== 3) return null;
-
-            const payload = JSON.parse(atob(parts[1]!));
-            return payload;
+            return JSON.parse(atob(parts[1]!));
         } catch {
             return null;
         }
@@ -292,11 +237,8 @@ class SecureTokenStorage {
         try {
             const parts = token.split('.');
             if (parts.length !== 3) return false;
-
-            // Basic JWT structure validation
             const header = JSON.parse(atob(parts[0]!));
             const payload = JSON.parse(atob(parts[1]!));
-
             return !!(header && payload && header.typ && payload.exp);
         } catch {
             return false;
@@ -304,5 +246,4 @@ class SecureTokenStorage {
     }
 }
 
-// Export singleton instance
 export const secureTokenStorage = new SecureTokenStorage();

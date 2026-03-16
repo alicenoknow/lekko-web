@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import QuestionHeader from './common/QuestionHeader';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
 import AthleteQuestion from './AthleteQuestion';
@@ -9,19 +9,18 @@ import CountryQuestion from './CountryQuestion';
 import CountryRankingQuestion from './CountryRankingQuestion';
 import NumericValueQuestion from './NumericValueQuestion';
 
-import {
-    Answer,
-    AnswerContent,
-    AthleteAnswer,
-    AthleteRankingAnswer,
-    CountryAnswer,
-    CountryRankingAnswer,
-    NumericValueAnswer,
-} from '@/types/answers';
-
-import { Question } from '@/types/questions';
+import { Answer, AnswerContent } from '@/types/answers';
+import { Question, QuestionComponentProps, QuestionType } from '@/types/questions';
 import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import { useAnswerSubmit } from '@/hooks/useAnswerSubmit';
+
+const QUESTION_COMPONENT_MAP = {
+    athlete: AthleteQuestion,
+    athletes_three: AthleteRankingQuestion,
+    country: CountryQuestion,
+    countries_three: CountryRankingQuestion,
+    numeric_value: NumericValueQuestion,
+} as Record<QuestionType, React.ComponentType<QuestionComponentProps>>;
 
 interface Props {
     question: Question;
@@ -66,57 +65,7 @@ export default function QuestionRenderer({
         setIsModified(true);
     }, []);
 
-    const renderQuestionComponent = useMemo(() => {
-        const sharedProps = {
-            isPastDeadline,
-            onAnswerChanged: handleAnswerChanged,
-        };
-
-        switch (question.type) {
-            case 'athlete':
-                return (
-                    <AthleteQuestion
-                        question={question}
-                        answer={answer as AthleteAnswer}
-                        {...sharedProps}
-                    />
-                );
-            case 'athletes_three':
-                return (
-                    <AthleteRankingQuestion
-                        question={question}
-                        answer={answer as AthleteRankingAnswer}
-                        {...sharedProps}
-                    />
-                );
-            case 'country':
-                return (
-                    <CountryQuestion
-                        question={question}
-                        answer={answer as CountryAnswer}
-                        {...sharedProps}
-                    />
-                );
-            case 'countries_three':
-                return (
-                    <CountryRankingQuestion
-                        question={question}
-                        answer={answer as CountryRankingAnswer}
-                        {...sharedProps}
-                    />
-                );
-            case 'numeric_value':
-                return (
-                    <NumericValueQuestion
-                        question={question}
-                        answer={answer as NumericValueAnswer}
-                        {...sharedProps}
-                    />
-                );
-            default:
-                return null;
-        }
-    }, [question, answer, isPastDeadline, handleAnswerChanged]);
+    const QuestionComponent = QUESTION_COMPONENT_MAP[question.type] ?? null;
 
     return (
         <div className='border-light-gray w-full rounded-xl border bg-white shadow-sm'>
@@ -132,7 +81,14 @@ export default function QuestionRenderer({
             </div>
             <div>
                 <div className='px-6 py-6 md:px-8 md:py-8'>
-                    {renderQuestionComponent}
+                    {QuestionComponent && (
+                        <QuestionComponent
+                            question={question}
+                            answer={answer}
+                            isPastDeadline={isPastDeadline}
+                            onAnswerChanged={handleAnswerChanged}
+                        />
+                    )}
                 </div>
                 <div className='border-light-gray border-t px-6 py-4 md:px-8 md:py-6'>
                     <QuestionFooterButtons

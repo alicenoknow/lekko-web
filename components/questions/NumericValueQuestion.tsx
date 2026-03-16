@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { txt } from '@/nls/texts';
-import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
-import { isAdmin } from '@/lib/admin';
 import CorrectAnswer from './common/CorrectAnswer';
 import { NumericValueQuestion as NumericValueQuestionType } from '@/types/questions';
 import { NumericValueAnswer } from '@/types/answers';
+import { useQuestionState } from '@/hooks/useQuestionState';
+import { useAnswerSync } from '@/hooks/useAnswerSync';
 
 interface Props {
     question: NumericValueQuestionType;
@@ -21,53 +20,67 @@ export default function NumericValueQuestion({
     isPastDeadline,
     onAnswerChanged,
 }: Props) {
-    const { user } = useAuthenticatedUser();
-    const [inputValue, setInputValue] = useState<string>('');
+    const [numericValue, setNumericValue] = useAnswerSync<number | null>(
+        answer?.content?.value ?? null,
+        (v) => onAnswerChanged({ value: v })
+    );
 
-    useEffect(() => {
-        if (answer?.content?.value != null) {
-            setInputValue(String(answer.content.value));
-        }
-    }, [answer?.content?.value]);
+    const inputValue = numericValue != null ? String(numericValue) : '';
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const raw = e.target.value;
-        setInputValue(raw);
-        const parsed = parseFloat(raw);
-        if (!isNaN(parsed)) {
-            onAnswerChanged({ value: parsed });
-        }
+        const parsed = parseFloat(e.target.value);
+        setNumericValue(isNaN(parsed) ? null : parsed);
     };
 
-    const admin = isAdmin(user);
-    const isResolved = !!question.correct_answer;
-    const isLocked = isPastDeadline || isResolved;
-    const showCorrectAnswer = admin || isLocked;
+    const { admin, isLocked, showCorrectAnswer } = useQuestionState(
+        question,
+        isPastDeadline
+    );
+    const hasAnswer = answer?.content?.value != null;
 
     return (
         <div className='flex flex-col gap-6'>
-            {!admin && (
-                <div className='flex flex-col gap-2'>
-                    <label className='md:text-md text-primary-dark text-sm font-bold uppercase'>
-                        {txt.forms.yourAnswer}
-                    </label>
-                    <input
-                        type='number'
-                        className='text-primary-dark w-full rounded-lg border bg-white p-2 text-sm disabled:bg-gray-100 md:p-4 md:text-lg'
-                        value={inputValue}
-                        onChange={handleChange}
-                        disabled={isLocked}
-                    />
-                </div>
-            )}
+            {!admin &&
+                (isLocked ? (
+                    hasAnswer ? (
+                        <div className='flex flex-col gap-2'>
+                            <label className='md:text-md text-primary-dark text-sm font-bold uppercase'>
+                                {txt.forms.yourAnswer}
+                            </label>
+                            <input
+                                type='number'
+                                className='input-field disabled:bg-gray-100'
+                                value={inputValue}
+                                onChange={handleChange}
+                                disabled
+                            />
+                        </div>
+                    ) : (
+                        <p className='text-grey text-sm'>
+                            {txt.questions.resolved}
+                        </p>
+                    )
+                ) : (
+                    <div className='flex flex-col gap-2'>
+                        <label className='md:text-md text-primary-dark text-sm font-bold uppercase'>
+                            {txt.forms.yourAnswer}
+                        </label>
+                        <input
+                            type='number'
+                            className='input-field disabled:bg-gray-100'
+                            value={inputValue}
+                            onChange={handleChange}
+                        />
+                    </div>
+                ))}
             {showCorrectAnswer && question.correct_answer?.value != null && (
                 <CorrectAnswer
                     maxPoints={admin ? undefined : question.points}
                     grantedPoints={admin ? undefined : answer?.points}
                 >
-                    <span className='text-primary-dark text-lg font-bold'>
+                    <p className='text-primary-dark text-left text-lg font-bold'>
                         {question.correct_answer.value}
-                    </span>
+                    </p>
                 </CorrectAnswer>
             )}
             {admin && !question.correct_answer && (

@@ -2,11 +2,15 @@ const isDev = process.env.NODE_ENV === 'development';
 
 export const logger = {
     error: (message: string, error?: Error | unknown) => {
-        console.error(`[ERROR] ${message}`, error);
+        if (isDev) {
+            console.error(`[ERROR] ${message}`, error);
+        }
     },
 
     warn: (message: string) => {
-        console.warn(`[WARN] ${message}`);
+        if (isDev) {
+            console.warn(`[WARN] ${message}`);
+        }
     },
 
     info: (message: string) => {

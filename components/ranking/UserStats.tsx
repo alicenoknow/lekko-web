@@ -3,21 +3,14 @@ import { txt } from '@/nls/texts';
 interface UserStatsProps {
     place?: number | null | undefined;
     points?: number | null | undefined;
-    showWhenEmpty?: boolean;
 }
 
-export default function UserStats({
-    place,
-    points,
-    showWhenEmpty = false,
-}: UserStatsProps) {
+export default function UserStats({ place, points }: UserStatsProps) {
     const hasData =
-        (place !== undefined && place !== null) ||
-        (points !== undefined && points !== null);
+        place !== undefined && place !== null &&
+        points !== undefined && points !== null;
 
-    if (!showWhenEmpty && !hasData) {
-        return null;
-    }
+    if (!hasData) return null;
 
     return (
         <div className='flex flex-row items-center gap-3'>

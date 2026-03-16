@@ -6,8 +6,9 @@ import ActionButton from '../buttons/ActionButton';
 import { AdminOnly } from '../auth/AdminOnly';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
-import { FaTrophy, FaClock, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaTrophy, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import UserStats from '../ranking/UserStats';
+import { DeadlineDisplay } from './DeadlineDisplay';
 
 export default function EventHeader({
     event,
@@ -39,6 +40,9 @@ export default function EventHeader({
                 <span className='text-primary-dark flex-1 text-left text-lg font-bold'>
                     {event.name}
                 </span>
+                {(totalPoints != null || place != null) && (
+                    <UserStats place={place} points={totalPoints} />
+                )}
                 <span className='text-grey shrink-0'>
                     {isOpen ? (
                         <FaChevronUp size={20} />
@@ -60,32 +64,18 @@ export default function EventHeader({
                                         {event.description}
                                     </p>
                                 )}
-                                <div className='flex items-center gap-3'>
-                                    <FaClock
-                                        size={18}
-                                        className={`${isPastDeadline ? 'text-dark-red' : 'text-grey'}`}
-                                    />
-                                    <p
-                                        className={`text-sm font-semibold uppercase ${isPastDeadline ? 'text-dark-red' : 'text-grey'}`}
-                                    >
-                                        {txt.events.deadline}:{' '}
-                                        {deadline.toLocaleDateString('pl-PL')}{' '}
-                                        {deadline.toLocaleTimeString('pl-PL', {
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                        })}
-                                    </p>
-                                </div>
+                                <DeadlineDisplay
+                                    deadline={deadline}
+                                    isPastDeadline={isPastDeadline}
+                                    size={18}
+                                />
                             </div>
-                            <div className='flex flex-row items-center gap-4 md:flex-col md:items-end'>
-                                <UserStats place={place} points={totalPoints} />
-                                <AdminOnly>
-                                    <ActionButton
-                                        label={txt.forms.edit}
-                                        onClick={editEvent}
-                                    />
-                                </AdminOnly>
-                            </div>
+                            <AdminOnly>
+                                <ActionButton
+                                    label={txt.forms.edit}
+                                    onClick={editEvent}
+                                />
+                            </AdminOnly>
                         </div>
                     </div>
                 </div>

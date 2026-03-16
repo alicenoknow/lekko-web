@@ -1,6 +1,5 @@
 import {
     FaTimesCircle,
-    FaClock,
     FaEdit,
     FaEye,
     FaEyeSlash,
@@ -13,6 +12,7 @@ import ActionIcon from '@/components/buttons/ActionIcon';
 import { AdminOnly } from '@/components/auth/AdminOnly';
 import { TyperEvent } from '@/types/events';
 import { txt } from '@/nls/texts';
+import { DeadlineDisplay } from './DeadlineDisplay';
 import React from 'react';
 
 interface Props {
@@ -68,26 +68,10 @@ function EventCard({
 
             <div className='flex items-center justify-between gap-4 md:justify-end'>
                 {/* Deadline info */}
-                <div className='flex items-center gap-3'>
-                    <FaClock
-                        size={16}
-                        className={
-                            isPastDeadline ? 'text-dark-red' : 'text-grey'
-                        }
-                    />
-                    <p
-                        className={`text-sm font-semibold uppercase ${
-                            isPastDeadline ? 'text-dark-red' : 'text-grey'
-                        }`}
-                    >
-                        {txt.events.deadline}:{' '}
-                        {deadline.toLocaleDateString('pl-PL')}{' '}
-                        {deadline.toLocaleTimeString('pl-PL', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                        })}
-                    </p>
-                </div>
+                <DeadlineDisplay
+                    deadline={deadline}
+                    isPastDeadline={isPastDeadline}
+                />
 
                 {/* Actions */}
                 <div className='flex shrink-0 items-center gap-2'>

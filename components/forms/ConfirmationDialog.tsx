@@ -1,13 +1,9 @@
 'use client';
 
-import {
-    Dialog,
-    DialogBackdrop,
-    DialogPanel,
-    DialogTitle,
-} from '@headlessui/react';
+import { DialogTitle } from '@headlessui/react';
 import { FaExclamationTriangle } from 'react-icons/fa';
 import ActionButton from '../buttons/ActionButton';
+import { BaseDialog } from '@/components/BaseDialog';
 
 interface ConfirmationDialogProps {
     isOpen: boolean;
@@ -29,49 +25,27 @@ export default function ConfirmationDialog({
     cancelLabel = 'Cancel',
 }: ConfirmationDialogProps) {
     return (
-        <Dialog open={isOpen} onClose={onCancel} className='relative z-10'>
-            <DialogBackdrop
-                transition
-                className='bg-grey/75 fixed inset-0 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in'
-            />
-            <div className='fixed inset-0 z-10 w-screen overflow-y-auto'>
-                <div className='flex min-h-full items-center justify-center p-4 text-center sm:p-0'>
-                    <DialogPanel
-                        transition
-                        className='bg-primary-light relative w-full max-w-sm transform overflow-hidden rounded-xl text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 data-closed:sm:translate-y-0 data-closed:sm:scale-95'
+        <BaseDialog isOpen={isOpen} onClose={onCancel}>
+            <div className='bg-primary-light px-4 pt-5 pb-4 sm:p-6 sm:pb-4'>
+                <div className='flex flex-col items-center gap-4'>
+                    <FaExclamationTriangle size={40} className='text-dark-red' />
+                    <DialogTitle
+                        as='h3'
+                        className='text-primary-dark text-center text-lg font-semibold'
                     >
-                        <div className='bg-primary-light px-4 pt-5 pb-4 sm:p-6 sm:pb-4'>
-                            <div className='flex flex-col items-center gap-4'>
-                                <FaExclamationTriangle
-                                    size={40}
-                                    className='text-dark-red'
-                                />
-                                <DialogTitle
-                                    as='h3'
-                                    className='text-primary-dark text-center text-lg font-semibold'
-                                >
-                                    {title}
-                                </DialogTitle>
-                                {description && (
-                                    <p className='text-primary-dark text-center text-sm'>
-                                        {description}
-                                    </p>
-                                )}
-                                <div className='mt-4 flex w-full justify-center gap-4'>
-                                    <ActionButton
-                                        label={cancelLabel}
-                                        onClick={onCancel}
-                                    />
-                                    <ActionButton
-                                        label={confirmLabel}
-                                        onClick={onConfirm}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </DialogPanel>
+                        {title}
+                    </DialogTitle>
+                    {description && (
+                        <p className='text-primary-dark text-center text-sm'>
+                            {description}
+                        </p>
+                    )}
+                    <div className='mt-4 flex w-full justify-center gap-4'>
+                        <ActionButton label={cancelLabel} onClick={onCancel} />
+                        <ActionButton label={confirmLabel} onClick={onConfirm} />
+                    </div>
                 </div>
             </div>
-        </Dialog>
+        </BaseDialog>
     );
 }

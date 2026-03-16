@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
 import { txt } from '@/nls/texts';
 import FormField from '@/components/forms/FormField';
 import ActionButton from '@/components/buttons/ActionButton';
@@ -11,26 +10,30 @@ import { createEvent } from '@/lib/api/events';
 import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import { AdminOnly } from '@/components/auth/AdminOnly';
 import { queryClient } from '@/context/QueryProvider';
-import { useErrorStore } from '@/store/error';
-import { logger } from '@/lib/logger';
+import { useMutationWithError } from '@/hooks/useMutationWithError';
 
 function CreateEventPage() {
     const router = useRouter();
     const { token } = useAuthenticatedUser();
-    const { showErrorDialog } = useErrorStore();
 
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [deadline, setDeadline] = useState('');
+    const [form, setForm] = useState({ name: '', description: '', deadline: '' });
+    const [submitted, setSubmitted] = useState(false);
 
-    const isFormInvalid = !name || !deadline;
+    const isFormInvalid = !form.name || !form.deadline;
 
-    const mutation = useMutation({
-        mutationFn: () => {
-            const formattedDeadline = new Date(deadline).toISOString();
+    const mutation = useMutationWithError({
+        mutationFn: ({
+            name,
+            description,
+            deadline,
+        }: {
+            name: string;
+            description: string;
+            deadline: string;
+        }) => {
             return createEvent(
                 name,
-                formattedDeadline,
+                new Date(deadline).toISOString(),
                 description || null,
                 token
             );
@@ -39,15 +42,16 @@ function CreateEventPage() {
             router.replace(`/typer/event/${data.id}/admin`);
             queryClient.invalidateQueries({ queryKey: ['events'] });
         },
-        onError: (err) => {
-            logger.error('Create event error:', err);
-            showErrorDialog(txt.events.createError);
-        },
+        errorMessage: txt.events.createError,
+        errorLogMessage: 'Create event error',
     });
 
-    const handleSubmit = useCallback(() => {
-        mutation.mutate();
-    }, [mutation]);
+    const handleSubmit = () => {
+        setSubmitted(true);
+        if (!isFormInvalid) {
+            mutation.mutate(form);
+        }
+    };
 
     return (
         <>
@@ -58,8 +62,8 @@ function CreateEventPage() {
                 label={txt.forms.name}
                 id='event-name'
                 type='text'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
             />
             <FormField
@@ -67,25 +71,25 @@ function CreateEventPage() {
                 id='event-description'
                 type='text'
                 multiline
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
             <FormField
                 label={txt.forms.deadline}
                 id='event-deadline'
                 type='datetime-local'
-                value={deadline}
-                onChange={(e) => setDeadline(e.target.value)}
+                value={form.deadline}
+                onChange={(e) => setForm({ ...form, deadline: e.target.value })}
                 required
             />
-            {isFormInvalid && (
+            {submitted && isFormInvalid && (
                 <ErrorMessage errorMessage={txt.forms.fillAllInfo} />
             )}
             <ActionButton
                 label={txt.forms.send}
                 onClick={handleSubmit}
                 loading={mutation.isPending}
-                disabled={isFormInvalid}
+                disabled={submitted && isFormInvalid}
             />
         </>
     );

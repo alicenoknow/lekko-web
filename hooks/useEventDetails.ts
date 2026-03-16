@@ -5,7 +5,7 @@ import { fetchQuestionsFromEvent } from '@/lib/api/questions';
 import { fetchAnswers } from '@/lib/api/answers';
 import { fetchCurrentUserRanking } from '@/lib/api/users';
 
-export function useEventDetails(token: string, eventId: number, page: number) {
+export function useEventDetails(token: string, eventId: number, page = 1) {
     const eventQuery = useQuery({
         queryKey: ['event', eventId],
         queryFn: () => fetchEventById(token, eventId),

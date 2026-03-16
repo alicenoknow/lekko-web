@@ -6,7 +6,8 @@
         "title": "Ranking",
         "selectEvent": "Wydarzenie",
         "all": "Klasyfikacja generalna",
-        "noRanking": "Brak rankingu dla tego wydarzenia"
+        "noRanking": "Brak rankingu dla tego wydarzenia",
+        "noRankingAll": "Brak dostępnego rankingu"
     },
     "login": {
         "header": "Logowanie",
@@ -17,7 +18,7 @@
         "header": "Rejestracja",
         "hasAccountText": "Masz już konto?",
         "passwordMismatch": "Podane hasła nie są takie same.",
-        "success": "Zarejestrowano pomyślnie.",
+        "success": "Zarejestrowano pomyślnie. Sprawdź skrzynkę pocztową, aby potwierdzić adres email.",
         "error": "Nie udało się zarejstrować."
     },
     "confirmRegistration": {

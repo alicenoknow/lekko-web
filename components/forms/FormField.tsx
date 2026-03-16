@@ -58,7 +58,7 @@ const FormField: React.FC<FormFieldProps> = ({
                     <textarea
                         id={id}
                         ref={inputRef as React.Ref<HTMLTextAreaElement>}
-                        className='text-primary-dark w-full rounded-lg border bg-white p-2 text-sm md:p-4 md:text-lg'
+                        className='input-field'
                         value={value ?? ''}
                         onChange={onChange}
                         onFocus={onFocus}
@@ -71,7 +71,7 @@ const FormField: React.FC<FormFieldProps> = ({
                     <input
                         id={id}
                         ref={inputRef as React.Ref<HTMLInputElement>}
-                        className={`text-primary-dark w-full rounded-lg border bg-white p-2 text-sm md:p-4 md:text-lg ${
+                        className={`input-field ${
                             type === 'datetime-local'
                                 ? '[&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:brightness-0 [&::-webkit-calendar-picker-indicator]:contrast-200 [&::-webkit-calendar-picker-indicator]:invert-0 [&::-webkit-calendar-picker-indicator]:filter-none'
                                 : ''

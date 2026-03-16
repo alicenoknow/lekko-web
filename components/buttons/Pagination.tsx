@@ -15,41 +15,36 @@ export default function Pagination({
     pagination,
     changePage,
 }: PaginationProps) {
-    const totalPages =
-        pagination.limit > 0
-            ? Math.ceil(pagination.total_count / pagination.limit)
-            : 1;
-    const isFirstPage = pagination.page <= 1;
-    const isLastPage = pagination.page >= totalPages;
+    const { total_pages, current_page, is_first_page, is_last_page } = pagination;
 
     const onPagePrev = useCallback(() => {
-        changePage(pagination.page - 1);
+        changePage(current_page - 1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, [pagination.page, changePage]);
+    }, [current_page, changePage]);
 
     const onPageNext = useCallback(() => {
-        changePage(pagination.page + 1);
+        changePage(current_page + 1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, [pagination.page, changePage]);
+    }, [current_page, changePage]);
 
     return (
         <div className='mt-6 flex items-center justify-center gap-4'>
-            {!isFirstPage && (
+            {!is_first_page && (
                 <ActionIcon
                     label={<FaArrowLeft />}
                     onClick={onPagePrev}
-                    disabled={isFirstPage}
+                    disabled={is_first_page}
                 />
             )}
             <span className='px-4 py-2'>
-                {txt.events.page} {pagination.page} {txt.events.from}{' '}
-                {totalPages}
+                {txt.events.page} {current_page} {txt.events.from}{' '}
+                {total_pages}
             </span>
-            {!isLastPage && (
+            {!is_last_page && (
                 <ActionIcon
                     label={<FaArrowRight />}
                     onClick={onPageNext}
-                    disabled={isLastPage}
+                    disabled={is_last_page}
                 />
             )}
         </div>

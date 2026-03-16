@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { txt } from '@/nls/texts';
-import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
-import { isAdmin } from '@/lib/admin';
 import { RANKING } from '@/lib/ranking';
 import CountryDropdown from '../forms/CountryDropdown';
 import CorrectAnswer from './common/CorrectAnswer';
@@ -13,6 +11,7 @@ import {
     CountryRankingAnswerContent,
 } from '@/types/answers';
 import { CountryRankingQuestion as CountryRankingQuestionType } from '@/types/questions';
+import { useQuestionState } from '@/hooks/useQuestionState';
 
 interface Props {
     question: CountryRankingQuestionType;
@@ -27,8 +26,6 @@ export default function CountryRankingQuestion({
     isPastDeadline,
     onAnswerChanged,
 }: Props) {
-    const { user } = useAuthenticatedUser();
-
     const [selectedCountries, setSelectedCountries] = useState<
         (string | null)[]
     >([
@@ -78,32 +75,39 @@ export default function CountryRankingQuestion({
         });
     };
 
-    const admin = isAdmin(user);
-    const isResolved = !!question.correct_answer;
-    const isLocked = isPastDeadline || isResolved;
+    const { admin, isLocked, showCorrectAnswers } = useQuestionState(
+        question,
+        isPastDeadline
+    );
     const hasAnswer = !!(
         answer?.content?.country_one &&
         answer?.content?.country_two &&
         answer?.content?.country_three
     );
-    const showCorrectAnswers = admin || (isLocked && !!question.correct_answer);
 
     return (
         <div className='flex flex-col gap-6'>
             {!admin &&
                 (isLocked ? (
-                    <div className='space-y-3'>
-                        {selectedCountries.map((country, i) => (
-                            <CountryDropdown
-                                key={i}
-                                label={i === 0 ? txt.forms.yourAnswer : ''}
-                                emoji={RANKING[i] ?? ''}
-                                selected={country}
-                                onSelect={(value) => handleSelect(i, value)}
-                                disabled
-                            />
-                        ))}
-                    </div>
+                    hasAnswer ? (
+                        <div className='space-y-3'>
+                            {selectedCountries.map((country, i) =>
+                                country ? (
+                                    <CountryLabel
+                                        key={i}
+                                        code={country}
+                                        emoji={RANKING[i] ?? ''}
+                                        label={i === 0 ? txt.forms.yourAnswer : undefined}
+                                        isLarge
+                                    />
+                                ) : null
+                            )}
+                        </div>
+                    ) : (
+                        <p className='text-grey text-sm'>
+                            {txt.questions.resolved}
+                        </p>
+                    )
                 ) : (
                     <div className='space-y-3'>
                         {selectedCountries.map((country, i) => (
@@ -113,7 +117,6 @@ export default function CountryRankingQuestion({
                                 emoji={RANKING[i] ?? ''}
                                 selected={country}
                                 onSelect={(value) => handleSelect(i, value)}
-                                disabled={isPastDeadline}
                             />
                         ))}
                     </div>

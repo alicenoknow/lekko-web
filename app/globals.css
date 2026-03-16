@@ -50,6 +50,26 @@ body {
 }
 
 @layer utilities {
+    .common-page-wrapper {
+        @apply flex flex-1 items-center justify-center bg-primary-light px-4 py-8 md:px-6 md:py-12;
+    }
+
+    .common-page-content {
+        @apply w-full max-w-4xl;
+    }
+
+    .common-page-stack {
+        @apply flex w-full flex-col space-y-6;
+    }
+
+    .common-page-title {
+        @apply text-2xl font-bold uppercase tracking-tight text-primary-dark;
+    }
+
+    .common-page-actions {
+        @apply mx-auto flex max-w-xl flex-wrap justify-center gap-4 [&>button]:min-w-[240px] [&>button]:flex-1;
+    }
+
     .text-blur {
         @apply z-0 text-absolute-black blur-[8px];
         -webkit-filter: blur(8px);
@@ -68,6 +88,10 @@ body {
 
     .animate-slide-out-down {
         animation: slideOutDown 0.3s ease-in forwards;
+    }
+
+    .input-field {
+        @apply text-primary-dark w-full rounded-lg border bg-white p-2 text-sm md:p-4 md:text-lg;
     }
 }
 

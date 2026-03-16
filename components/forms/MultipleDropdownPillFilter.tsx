@@ -70,8 +70,9 @@ function MultipleDropdownPillFilter({
                                         className='bg-primary-light text-primary-dark flex items-center gap-1 rounded px-2 py-1 text-xs font-semibold whitespace-nowrap'
                                     >
                                         {opt.label}
-                                        <button
-                                            type='button'
+                                        <span
+                                            role='button'
+                                            tabIndex={0}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 onSelect(
@@ -80,10 +81,20 @@ function MultipleDropdownPillFilter({
                                                     )
                                                 );
                                             }}
-                                            className='hover:text-dark-red ml-1'
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    e.stopPropagation();
+                                                    onSelect(
+                                                        selected.filter(
+                                                            (v) => v !== opt.value
+                                                        )
+                                                    );
+                                                }
+                                            }}
+                                            className='hover:text-dark-red ml-1 cursor-pointer'
                                         >
                                             <FaTimes className='h-3 w-3' />
-                                        </button>
+                                        </span>
                                     </span>
                                 ))
                             ) : (

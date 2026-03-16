@@ -11,8 +11,8 @@ interface UserStore {
     hydrated: boolean;
     tokenExpiry: number | null;
     isRefreshing: boolean;
-    setUserFromToken: (accessToken: string, refreshToken?: string) => void;
-    setHydrated: () => void;
+    setUserFromToken: (accessToken: string, refreshToken?: string) => Promise<boolean>;
+    setHydrated: () => Promise<void>;
     logout: () => void;
     checkTokenExpiry: () => boolean;
     refreshTokenIfNeeded: () => Promise<void>;
@@ -25,39 +25,41 @@ export const useUserStore = create<UserStore>((set, get) => ({
     tokenExpiry: null,
     isRefreshing: false,
 
-    setUserFromToken: (accessToken: string, refreshToken?: string) => {
+    setUserFromToken: async (accessToken: string, refreshToken?: string) => {
         try {
             const payload = jwtDecode<User>(accessToken);
 
             if (payload.exp && payload.exp * 1000 <= Date.now()) {
                 logger.warn('Attempted to set expired token');
                 set({ user: null, token: null, tokenExpiry: null });
-                return;
+                return false;
             }
 
-            const stored = secureTokenStorage.setToken(accessToken);
+            const stored = await secureTokenStorage.setToken(accessToken);
             if (!stored) {
                 logger.error('Failed to securely store token');
                 set({ user: null, token: null, tokenExpiry: null });
-                return;
+                return false;
             }
 
             if (refreshToken) {
-                secureTokenStorage.setRefreshToken(refreshToken);
+                await secureTokenStorage.setRefreshToken(refreshToken);
             }
 
             const expiry = payload.exp ? payload.exp * 1000 : null;
             set({ user: payload, token: accessToken, tokenExpiry: expiry });
 
             logger.info('User authenticated successfully');
+            return true;
         } catch (err) {
             logger.error('Invalid JWT token during hydration', err);
             set({ user: null, token: null, tokenExpiry: null });
+            return false;
         }
     },
 
-    setHydrated: () => {
-        const storedToken = secureTokenStorage.getToken();
+    setHydrated: async () => {
+        const storedToken = await secureTokenStorage.getToken();
         if (storedToken) {
             try {
                 const payload = jwtDecode<User>(storedToken);
@@ -119,7 +121,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
         if (!state.token || state.isRefreshing) return;
         if (!secureTokenStorage.isTokenAtHalfLife()) return;
 
-        const storedRefreshToken = secureTokenStorage.getRefreshToken();
+        const storedRefreshToken = await secureTokenStorage.getRefreshToken();
         if (!storedRefreshToken) {
             logger.warn('No refresh token available for refresh');
             return;
@@ -129,7 +131,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
         try {
             logger.info('Refreshing token at half-life point');
             const data = await refreshAccessToken(storedRefreshToken);
-            get().setUserFromToken(data.access_token, data.refresh_token);
+            await get().setUserFromToken(data.access_token, data.refresh_token);
             logger.info('Token refreshed successfully');
         } catch (error) {
             logger.error('Failed to refresh token, logging out', error);

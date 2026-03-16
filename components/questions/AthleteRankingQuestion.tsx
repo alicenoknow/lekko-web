@@ -6,14 +6,13 @@ import AthleteLabel from '../forms/AthleteLabel';
 import { RANKING, getAthleteRankingKey } from '@/lib/ranking';
 import { txt } from '@/nls/texts';
 import CorrectAnswer from './common/CorrectAnswer';
-import { isAdmin } from '@/lib/admin';
-import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import { FaArrowDown, FaArrowUp, FaTimes } from 'react-icons/fa';
 import {
     AthleteRankingAnswer,
     AthleteRankingAnswerContent,
 } from '@/types/answers';
 import { AthleteRankingQuestion as AthleteRankingQuestionType } from '@/types/questions';
+import { useQuestionState } from '@/hooks/useQuestionState';
 
 interface Props {
     question: AthleteRankingQuestionType;
@@ -28,7 +27,6 @@ export default function AthleteRankingQuestion({
     isPastDeadline,
     onAnswerChanged,
 }: Props) {
-    const { user } = useAuthenticatedUser();
     const [selectedIds, setSelectedIds] = useState<(number | null)[]>([
         null,
         null,
@@ -118,15 +116,15 @@ export default function AthleteRankingQuestion({
         }
     }, [selectedIds, answer?.content, onAnswerChanged]);
 
-    const admin = isAdmin(user);
-    const isResolved = !!question.correct_answer;
-    const isLocked = isPastDeadline || isResolved;
+    const { admin, isLocked, showCorrectAnswers } = useQuestionState(
+        question,
+        isPastDeadline
+    );
     const hasAnswer = !!(
         answer?.content?.athlete_id_one &&
         answer?.content?.athlete_id_two &&
         answer?.content?.athlete_id_three
     );
-    const showCorrectAnswers = admin || (isLocked && !!question.correct_answer);
 
     return (
         <div className='flex flex-col gap-6'>
@@ -158,6 +156,7 @@ export default function AthleteRankingQuestion({
                             onSelect={handleAdd}
                             label={txt.forms.yourAnswer}
                             disabled={filledIds.length >= 3}
+                            showPlaceholder={false}
                         />
                         <div className='flex flex-col gap-2'>
                             {[0, 1, 2].map((index) => {

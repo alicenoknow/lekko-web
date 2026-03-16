@@ -1,5 +1,7 @@
 import { EmptyResponse } from '@/lib/api/common';
 import {
+    Answer,
+    AnswerContent,
     AthleteAnswerContent,
     AthleteRankingAnswerContent,
     CountryAnswerContent,
@@ -55,6 +57,20 @@ export type Question =
     | NumericValueQuestion;
 
 export type QuestionType = Question['type'];
+
+/** Shared props interface for all view-mode question components. */
+export interface QuestionComponentProps {
+    question: Question;
+    answer: Answer | undefined;
+    isPastDeadline: boolean;
+    onAnswerChanged: (content: AnswerContent) => void;
+}
+
+/** Shared props interface for all admin edit-mode question components. */
+export interface EditQuestionComponentProps {
+    question: Question;
+    onAnswerChanged: (content: AnswerContent) => void;
+}
 
 export type CreateQuestionResponse = Question;
 

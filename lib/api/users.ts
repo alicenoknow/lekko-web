@@ -12,6 +12,7 @@ import {
     UserApiResponse,
     UserRankingResponse,
 } from '@/types/user';
+import { NormalizedUserRanking } from '@/types/ranking';
 
 const API_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
@@ -92,11 +93,15 @@ export async function deleteUser(
 export async function fetchCurrentUserRanking(
     token: string,
     eventId?: number
-): Promise<UserRankingResponse> {
+): Promise<NormalizedUserRanking> {
     const res = await axios.get(`${API_URL}/api/v1/users/me/ranking`, {
         ...getAuthConfig(token),
         params: eventId !== undefined ? { event_id: eventId } : undefined,
     });
     if (isApiError(res.data)) throw handleError(res.data);
-    return res.data;
+    const raw: UserRankingResponse = res.data;
+    return {
+        place: raw.place ?? raw.position ?? null,
+        totalPoints: raw.total_points_scored ?? raw.total_points ?? null,
+    };
 }

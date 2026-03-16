@@ -1,3 +1,5 @@
+import { PaginationInfo } from '@/types/pagination';
+
 export interface UserRank {
     position: number;
     user_id: number;
@@ -7,7 +9,10 @@ export interface UserRank {
 
 export interface Ranking {
     data: UserRank[];
-    total_count: number;
-    page: number;
-    limit: number;
+    pagination_info: PaginationInfo;
+}
+
+export interface NormalizedUserRanking {
+    place: number | null;
+    totalPoints: number | null;
 }

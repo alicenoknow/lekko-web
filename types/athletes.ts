@@ -1,3 +1,5 @@
+import { PaginationInfo } from '@/types/pagination';
+
 export type Athlete = {
     id: number;
     first_name: string | null;
@@ -9,9 +11,7 @@ export type Athlete = {
 
 export interface Athletes {
     data: Athlete[];
-    total_count: number;
-    page: number;
-    limit: number;
+    pagination_info: PaginationInfo;
 }
 
 export type AthletesParams = {

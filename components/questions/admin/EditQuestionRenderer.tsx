@@ -1,24 +1,23 @@
 'use client';
 
-import {
-    Question,
-    AthleteQuestion,
-    AthleteRankingQuestion,
-    CountryQuestion,
-    CountryRankingQuestion,
-    NumericValueQuestion,
-} from '@/types/questions';
-import { AnswerContentMap } from '@/types/answers';
-
+import { Question, QuestionType, EditQuestionComponentProps } from '@/types/questions';
+import { AnswerContent } from '@/types/answers';
 import EditAthleteQuestion from './EditAthleteQuestion';
 import EditAthleteRankingQuestion from './EditAthleteRankingQuestion';
 import EditCountryQuestion from './EditCountryQuestion';
 import EditCountryRankingQuestion from './EditCountryRankingQuestion';
 import EditNumericValueQuestion from './EditNumericValueQuestion';
-
 import { useCallback, useMemo, useState } from 'react';
 import EditQuestionHeader from './common/EditQuestionHeader';
 import QuestionFooterButtons from './common/QuestionFooterButtons';
+
+const EDIT_QUESTION_COMPONENT_MAP = {
+    athlete: EditAthleteQuestion,
+    athletes_three: EditAthleteRankingQuestion,
+    country: EditCountryQuestion,
+    countries_three: EditCountryRankingQuestion,
+    numeric_value: EditNumericValueQuestion,
+} as Record<QuestionType, React.ComponentType<EditQuestionComponentProps>>;
 
 interface Props {
     question: Question;
@@ -41,12 +40,11 @@ export default function EditQuestionRenderer({
     );
 
     const [correctAnswerPayload, setCorrectAnswerPayload] =
-        useState<AnswerContentMap[typeof question.type]>();
+        useState<AnswerContent>();
 
     const handleSubmit = useCallback(() => {
         if (isFormInvalid) return;
         setIsSubmitting(true);
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         onSubmit({
             ...question,
             content: content.trim(),
@@ -69,49 +67,7 @@ export default function EditQuestionRenderer({
         setIsSubmitting(false);
     }, [onDelete, question.id]);
 
-    const sharedProps = { onAnswerChanged: setCorrectAnswerPayload };
-
-    const renderQuestionComponent = () => {
-        switch (question.type) {
-            case 'athlete':
-                return (
-                    <EditAthleteQuestion
-                        question={question as AthleteQuestion}
-                        {...sharedProps}
-                    />
-                );
-            case 'athletes_three':
-                return (
-                    <EditAthleteRankingQuestion
-                        question={question as AthleteRankingQuestion}
-                        {...sharedProps}
-                    />
-                );
-            case 'country':
-                return (
-                    <EditCountryQuestion
-                        question={question as CountryQuestion}
-                        {...sharedProps}
-                    />
-                );
-            case 'countries_three':
-                return (
-                    <EditCountryRankingQuestion
-                        question={question as CountryRankingQuestion}
-                        {...sharedProps}
-                    />
-                );
-            case 'numeric_value':
-                return (
-                    <EditNumericValueQuestion
-                        question={question as NumericValueQuestion}
-                        {...sharedProps}
-                    />
-                );
-            default:
-                return null;
-        }
-    };
+    const EditComponent = EDIT_QUESTION_COMPONENT_MAP[question.type] ?? null;
 
     return (
         <div className='relative flex w-full flex-col pr-4 pt-4'>
@@ -121,7 +77,12 @@ export default function EditQuestionRenderer({
                 onContentChange={setContent}
                 onPointsChange={setPoints}
             />
-            {question.id >= 0 && renderQuestionComponent()}
+            {question.id >= 0 && EditComponent && (
+                <EditComponent
+                    question={question}
+                    onAnswerChanged={setCorrectAnswerPayload}
+                />
+            )}
             <QuestionFooterButtons
                 disableSubmit={isFormInvalid}
                 isLoading={isSubmitting}

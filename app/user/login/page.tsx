@@ -11,11 +11,13 @@ import { txt } from '@/nls/texts';
 import FormField from '@/components/forms/FormField';
 import ActionButton from '@/components/buttons/ActionButton';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
+import { AuthFormLayout } from '@/components/auth/AuthFormLayout';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [submitAttempted, setSubmitAttempted] = useState(false);
 
     const router = useRouter();
     const { setUserFromToken } = useUserStore();
@@ -27,60 +29,82 @@ function LoginPage() {
 
     const { mutate: login, isPending: isSubmitting } = useMutation({
         mutationFn: () => loginUser(email, password),
-        onSuccess: (data: LoginData) => {
-            setUserFromToken(data.access_token, data.refresh_token);
-            router.replace('/typer');
+        onSuccess: async (data: LoginData) => {
+            const authenticated = await setUserFromToken(
+                data.access_token,
+                data.refresh_token
+            );
+            if (authenticated) {
+                router.replace('/typer');
+            } else {
+                setErrorMessage(txt.errors.badAuth);
+            }
         },
-        onError: () => setErrorMessage(txt.login.error),
+        onError: (err) =>
+            setErrorMessage(typeof err === 'string' ? err : txt.login.error),
     });
 
-    const handleLogin = useCallback(() => {
-        if (!isFormInvalid) login();
-    }, [login, isFormInvalid]);
+    const handleSubmit = useCallback(
+        (e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            setSubmitAttempted(true);
+            if (!isFormInvalid) login();
+        },
+        [isFormInvalid, login]
+    );
 
     const handleRegisterRedirect = useCallback(() => {
         router.replace('/user/register');
     }, [router]);
 
+    const validationMessage = submitAttempted && isFormInvalid
+        ? txt.forms.fillAllInfo
+        : '';
+
     return (
-        <div className='bg-primary-light flex flex-1 items-center justify-center px-4 py-8 md:px-6 md:py-12'>
-            <div className='w-full max-w-4xl'>
-                <div className='flex w-full flex-col space-y-6'>
-                    <h1 className='text-2xl font-bold uppercase tracking-tight text-primary-dark'>
-                        {txt.login.header}
-                    </h1>
-                    <FormField
-                        label={txt.forms.email}
-                        id='email'
-                        type='email'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
+        <AuthFormLayout
+            title={txt.login.header}
+            onSubmit={handleSubmit}
+            actions={
+                <>
+                    <ActionButton
+                        label={txt.forms.login}
+                        type='submit'
+                        loading={isSubmitting}
+                        disabled={isFormInvalid}
                     />
-                    <FormField
-                        label={txt.forms.password}
-                        id='password'
-                        type='password'
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
+                    <ActionButton
+                        label={txt.login.noAccountText}
+                        onClick={handleRegisterRedirect}
+                        type='button'
                     />
-                    <ErrorMessage errorMessage={isFormInvalid ? txt.forms.fillAllInfo : errorMessage} />
-                    <div className='mx-auto flex max-w-xl flex-wrap justify-center gap-4 [&>button]:flex-1 [&>button]:min-w-[240px]'>
-                        <ActionButton
-                            label={txt.forms.login}
-                            onClick={handleLogin}
-                            loading={isSubmitting}
-                            disabled={isFormInvalid}
-                        />
-                        <ActionButton
-                            label={txt.login.noAccountText}
-                            onClick={handleRegisterRedirect}
-                        />
-                    </div>
-                </div>
-            </div>
-        </div>
+                </>
+            }
+        >
+            <FormField
+                label={txt.forms.email}
+                id='email'
+                type='email'
+                value={email}
+                onChange={(e) => {
+                    setEmail(e.target.value);
+                    setErrorMessage('');
+                }}
+                required
+            />
+            <FormField
+                label={txt.forms.password}
+                id='password'
+                type='password'
+                value={password}
+                onChange={(e) => {
+                    setPassword(e.target.value);
+                    setErrorMessage('');
+                }}
+                required
+            />
+            <ErrorMessage errorMessage={validationMessage || errorMessage} />
+        </AuthFormLayout>
     );
 }
 

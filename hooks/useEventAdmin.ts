@@ -1,5 +1,3 @@
-import { useMutation } from '@tanstack/react-query';
-import { logger } from '@/lib/logger';
 import {
     createQuestion,
     deleteQuestion,
@@ -8,18 +6,17 @@ import {
 import { updateEvent } from '@/lib/api/events';
 import { Question } from '@/types/questions';
 import { queryClient } from '@/context/QueryProvider';
-import { useErrorStore } from '@/store/error';
 import { txt } from '@/nls/texts';
+import { useMutationWithError } from '@/hooks/useMutationWithError';
 
 export function useEventAdmin(
     token: string,
     eventId: number,
     setEventModified: (isModified: boolean) => void,
-    onAddSuccess?: (question: Question) => void
+    onAddSuccess?: (question: Question) => void,
+    onQuestionSubmitSuccess?: () => void
 ) {
-    const { showErrorDialog } = useErrorStore();
-
-    const updateEventQuery = useMutation({
+    const updateEventQuery = useMutationWithError({
         mutationFn: (form: {
             name: string;
             description: string;
@@ -38,14 +35,12 @@ export function useEventAdmin(
             queryClient.invalidateQueries({ queryKey: ['event', eventId] });
             setEventModified(false);
         },
-        onError: () => {
-            logger.error('Cannot update event.');
-            showErrorDialog(txt.errors.eventUpdate);
-            setEventModified(true);
-        },
+        onError: () => setEventModified(true),
+        errorMessage: txt.errors.eventUpdate,
+        errorLogMessage: 'Cannot update event.',
     });
 
-    const addQuestionQuery = useMutation({
+    const addQuestionQuery = useMutationWithError({
         mutationFn: ({
             type,
             content,
@@ -60,14 +55,13 @@ export function useEventAdmin(
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
             onAddSuccess?.(data);
+            onQuestionSubmitSuccess?.();
         },
-        onError: () => {
-            logger.error('Cannot add question.');
-            showErrorDialog(txt.errors.questionAdd);
-        },
+        errorMessage: txt.errors.questionAdd,
+        errorLogMessage: 'Cannot add question.',
     });
 
-    const modifyQuestionQuery = useMutation({
+    const modifyQuestionQuery = useMutationWithError({
         mutationFn: (question: Question) => {
             return updateQuestion(
                 token,
@@ -81,22 +75,19 @@ export function useEventAdmin(
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
+            onQuestionSubmitSuccess?.();
         },
-        onError: () => {
-            logger.error('Cannot update question.');
-            showErrorDialog(txt.errors.questionUpdate);
-        },
+        errorMessage: txt.errors.questionUpdate,
+        errorLogMessage: 'Cannot update question.',
     });
 
-    const deleteQuestionQuery = useMutation({
+    const deleteQuestionQuery = useMutationWithError({
         mutationFn: (id: number) => deleteQuestion(token, id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['questions', eventId] });
         },
-        onError: () => {
-            logger.error('Cannot remove question.');
-            showErrorDialog(txt.errors.questionDelete);
-        },
+        errorMessage: txt.errors.questionDelete,
+        errorLogMessage: 'Cannot remove question.',
     });
 
     return {

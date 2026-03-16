@@ -5,7 +5,8 @@ interface ActionButtonProps {
     label: string | React.ReactNode;
     disabled?: boolean;
     loading?: boolean;
-    onClick: () => void;
+    onClick?: () => void;
+    type?: 'button' | 'submit' | 'reset';
     className?: string;
 }
 
@@ -14,6 +15,7 @@ const ActionButton = React.memo<ActionButtonProps>(function ActionButton({
     loading,
     label,
     onClick,
+    type = 'button',
     className,
 }) {
     const hoverClass = disabled
@@ -22,6 +24,7 @@ const ActionButton = React.memo<ActionButtonProps>(function ActionButton({
 
     return (
         <button
+            type={type}
             disabled={disabled || loading}
             className={`bg-accent-dark text-primary-light rounded-lg p-3 font-extrabold uppercase select-none hover:cursor-pointer sm:px-6 sm:text-lg md:px-8 md:text-xl ${hoverClass} ${className ?? ''}`}
             onClick={onClick}
