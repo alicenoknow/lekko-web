@@ -15,7 +15,8 @@ export default function Pagination({
     pagination,
     changePage,
 }: PaginationProps) {
-    const { total_pages, current_page, is_first_page, is_last_page } = pagination;
+    const { total_pages, current_page, is_first_page, is_last_page } =
+        pagination;
 
     const onPagePrev = useCallback(() => {
         changePage(current_page - 1);
@@ -37,8 +38,7 @@ export default function Pagination({
                 />
             )}
             <span className='px-4 py-2'>
-                {txt.events.page} {current_page} {txt.events.from}{' '}
-                {total_pages}
+                {txt.events.page} {current_page} {txt.events.from} {total_pages}
             </span>
             {!is_last_page && (
                 <ActionIcon

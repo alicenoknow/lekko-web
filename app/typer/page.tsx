@@ -64,8 +64,8 @@ export default function EventsPage() {
         errorMessage: txt.errors.eventStatusUpdate,
     });
 
-    const deleteConfirm = useConfirmationDialog<number>(
-        (id) => deleteEventMutation(id)
+    const deleteConfirm = useConfirmationDialog<number>((id) =>
+        deleteEventMutation(id)
     );
 
     const toggleConfirm = useConfirmationDialog<{
@@ -109,9 +109,7 @@ export default function EventsPage() {
                     <EventCard
                         key={event.id}
                         event={event}
-                        onEdit={() =>
-                            router.push(`/typer/event/${event.id}`)
-                        }
+                        onEdit={() => router.push(`/typer/event/${event.id}`)}
                         onAdminEdit={() =>
                             router.push(`/typer/event/${event.id}/admin`)
                         }
@@ -133,7 +131,10 @@ export default function EventsPage() {
                 <ErrorMessage errorMessage={txt.events.notFound} />
             )}
             {events && !events.pagination_info.is_last_page && (
-                <Pagination pagination={events.pagination_info} changePage={setPage} />
+                <Pagination
+                    pagination={events.pagination_info}
+                    changePage={setPage}
+                />
             )}
             <ConfirmationDialog
                 isOpen={deleteConfirm.isOpen}

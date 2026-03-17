@@ -1,6 +1,10 @@
 'use client';
 
-import { FaArrowLeft, FaArrowRight, FaExclamationTriangle } from 'react-icons/fa';
+import {
+    FaArrowLeft,
+    FaArrowRight,
+    FaExclamationTriangle,
+} from 'react-icons/fa';
 import ActionIcon from '@/components/buttons/ActionIcon';
 import { txt } from '@/nls/texts';
 
@@ -22,7 +26,7 @@ export function QuestionNavigationBar({
     return (
         <div className='relative mb-3 flex h-12 items-center justify-center'>
             {showWarning && (
-                <div className='inline-flex items-center gap-3 rounded-full bg-light-yellow px-6 py-3 text-base font-semibold text-primary-dark'>
+                <div className='bg-light-yellow text-primary-dark inline-flex items-center gap-3 rounded-full px-6 py-3 text-base font-semibold'>
                     <FaExclamationTriangle size={18} />
                     {txt.questions.unanswered}
                 </div>

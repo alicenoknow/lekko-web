@@ -31,10 +31,13 @@ class SecureTokenStorage {
             );
         }
 
-        this.cachedKey = await crypto.subtle.importKey('raw', keyMaterial.buffer as ArrayBuffer, 'AES-GCM', false, [
-            'encrypt',
-            'decrypt',
-        ]);
+        this.cachedKey = await crypto.subtle.importKey(
+            'raw',
+            keyMaterial.buffer as ArrayBuffer,
+            'AES-GCM',
+            false,
+            ['encrypt', 'decrypt']
+        );
         return this.cachedKey;
     }
 
@@ -76,7 +79,9 @@ class SecureTokenStorage {
 
             return new TextDecoder().decode(plaintext);
         } catch {
-            logger.error('Failed to decrypt token — data may have been tampered with');
+            logger.error(
+                'Failed to decrypt token — data may have been tampered with'
+            );
             return null;
         }
     }

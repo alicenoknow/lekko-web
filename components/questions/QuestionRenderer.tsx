@@ -10,7 +10,11 @@ import CountryRankingQuestion from './CountryRankingQuestion';
 import NumericValueQuestion from './NumericValueQuestion';
 
 import { Answer, AnswerContent } from '@/types/answers';
-import { Question, QuestionComponentProps, QuestionType } from '@/types/questions';
+import {
+    Question,
+    QuestionComponentProps,
+    QuestionType,
+} from '@/types/questions';
 import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import { useAnswerSubmit } from '@/hooks/useAnswerSubmit';
 

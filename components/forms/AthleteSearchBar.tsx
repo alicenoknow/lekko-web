@@ -61,35 +61,30 @@ export default function AthleteSearchBar({
     const hasActiveCriteria =
         !!debouncedSearch || disciplines.length > 0 || !!country || !!gender;
 
-    const {
-        data,
-        isError,
-        isFetchingNextPage,
-        hasNextPage,
-        fetchNextPage,
-    } = useInfiniteQuery({
-        queryKey: [
-            'athletes',
-            debouncedSearch,
-            disciplines,
-            country,
-            gender,
-        ],
-        queryFn: ({ pageParam }) =>
-            fetchAthletes(
+    const { data, isError, isFetchingNextPage, hasNextPage, fetchNextPage } =
+        useInfiniteQuery({
+            queryKey: [
+                'athletes',
                 debouncedSearch,
-                token,
                 disciplines,
                 country,
                 gender,
-                pageParam
-            ),
-        initialPageParam: 1,
-        getNextPageParam: (lastPage) =>
-            lastPage.pagination_info.next_page ?? undefined,
-        enabled: !!token && hasActiveCriteria,
-        staleTime: 60 * 60 * 1000,
-    });
+            ],
+            queryFn: ({ pageParam }) =>
+                fetchAthletes(
+                    debouncedSearch,
+                    token,
+                    disciplines,
+                    country,
+                    gender,
+                    pageParam
+                ),
+            initialPageParam: 1,
+            getNextPageParam: (lastPage) =>
+                lastPage.pagination_info.next_page ?? undefined,
+            enabled: !!token && hasActiveCriteria,
+            staleTime: 60 * 60 * 1000,
+        });
     const athletes = useMemo(
         () => data?.pages.flatMap((p) => p.data) ?? [],
         [data]
@@ -119,7 +114,9 @@ export default function AthleteSearchBar({
                     {label}:
                 </p>
             )}
-            <div className={`w-full${disabled ? ' pointer-events-none opacity-50' : ''}`}>
+            <div
+                className={`w-full${disabled ? 'pointer-events-none opacity-50' : ''}`}
+            >
                 <AthleteSearchFilter
                     disciplines={disciplines}
                     country={country}
@@ -144,35 +141,47 @@ export default function AthleteSearchBar({
                         placeholder={txt.searchText}
                         emoji={emoji}
                     />
-                    {isOpen && hasActiveCriteria && visibleAthletes.length > 0 && (
-                        <div
-                            className='absolute left-0 right-0 z-50 max-h-60 overflow-y-auto rounded-lg border bg-white shadow-lg'
-                            onScroll={(e) => {
-                                if (!hasNextPage || isFetchingNextPage) return;
-                                const el = e.currentTarget;
-                                if (el.scrollTop + el.clientHeight >= el.scrollHeight - 40) {
-                                    void fetchNextPage();
-                                }
-                            }}
-                        >
-                            {visibleAthletes.map((athlete) => (
-                                <button
-                                    key={athlete.id}
-                                    type='button'
-                                    className='hover:bg-primary-light/40 w-full px-4 py-2 text-left'
-                                    onMouseDown={(e) => e.preventDefault()}
-                                    onClick={() => handleAthleteSelect(athlete.id)}
-                                >
-                                    <InnerAthleteLabel athlete={athlete} />
-                                </button>
-                            ))}
-                            {isFetchingNextPage && (
-                                <p className='text-grey px-4 py-2 text-sm'>{txt.loading}</p>
-                            )}
-                        </div>
-                    )}
+                    {isOpen &&
+                        hasActiveCriteria &&
+                        visibleAthletes.length > 0 && (
+                            <div
+                                className='absolute right-0 left-0 z-50 max-h-60 overflow-y-auto rounded-lg border bg-white shadow-lg'
+                                onScroll={(e) => {
+                                    if (!hasNextPage || isFetchingNextPage)
+                                        return;
+                                    const el = e.currentTarget;
+                                    if (
+                                        el.scrollTop + el.clientHeight >=
+                                        el.scrollHeight - 40
+                                    ) {
+                                        void fetchNextPage();
+                                    }
+                                }}
+                            >
+                                {visibleAthletes.map((athlete) => (
+                                    <button
+                                        key={athlete.id}
+                                        type='button'
+                                        className='hover:bg-primary-light/40 w-full px-4 py-2 text-left'
+                                        onMouseDown={(e) => e.preventDefault()}
+                                        onClick={() =>
+                                            handleAthleteSelect(athlete.id)
+                                        }
+                                    >
+                                        <InnerAthleteLabel athlete={athlete} />
+                                    </button>
+                                ))}
+                                {isFetchingNextPage && (
+                                    <p className='text-grey px-4 py-2 text-sm'>
+                                        {txt.loading}
+                                    </p>
+                                )}
+                            </div>
+                        )}
                     {isError && (
-                        <p className='text-dark-red mt-1 text-xs'>{txt.fetchErrorText}</p>
+                        <p className='text-dark-red mt-1 text-xs'>
+                            {txt.fetchErrorText}
+                        </p>
                     )}
                 </div>
             </div>

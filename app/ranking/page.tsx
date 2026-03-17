@@ -3,7 +3,11 @@
 import { Suspense } from 'react';
 import { useCallback, useMemo } from 'react';
 import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
-import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import {
+    keepPreviousData,
+    useInfiniteQuery,
+    useQuery,
+} from '@tanstack/react-query';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { fetchRanking } from '@/lib/api/ranking';
 import { fetchCurrentUserRanking } from '@/lib/api/users';
@@ -23,10 +27,14 @@ function parsePositiveInt(value: string | null): number | undefined {
     return Number.isNaN(parsed) || parsed <= 0 ? undefined : parsed;
 }
 
-function buildRankingUrl(params: { page?: number; eventId?: number | undefined }) {
+function buildRankingUrl(params: {
+    page?: number;
+    eventId?: number | undefined;
+}) {
     const p = new URLSearchParams();
     if (params.eventId !== undefined) p.set('eventId', String(params.eventId));
-    if (params.page !== undefined && params.page > 1) p.set('page', String(params.page));
+    if (params.page !== undefined && params.page > 1)
+        p.set('page', String(params.page));
     const qs = p.toString();
     return qs ? `/ranking?${qs}` : '/ranking';
 }
@@ -43,10 +51,7 @@ function RankingContent() {
         () => parsePositiveInt(eventIdParam),
         [eventIdParam]
     );
-    const page = useMemo(
-        () => parsePositiveInt(pageParam) ?? 1,
-        [pageParam]
-    );
+    const page = useMemo(() => parsePositiveInt(pageParam) ?? 1, [pageParam]);
 
     const handleEventSelect = useCallback(
         (val: string | null) => {

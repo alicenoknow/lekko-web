@@ -82,11 +82,15 @@ function MultipleDropdownPillFilter({
                                                 );
                                             }}
                                             onKeyDown={(e) => {
-                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                if (
+                                                    e.key === 'Enter' ||
+                                                    e.key === ' '
+                                                ) {
                                                     e.stopPropagation();
                                                     onSelect(
                                                         selected.filter(
-                                                            (v) => v !== opt.value
+                                                            (v) =>
+                                                                v !== opt.value
                                                         )
                                                     );
                                                 }

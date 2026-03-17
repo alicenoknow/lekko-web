@@ -18,7 +18,10 @@ export default function ErrorDialog() {
         >
             <div className='bg-primary-light px-4 pt-5 pb-4 sm:p-6 sm:pb-4'>
                 <div className='flex flex-col items-center gap-4'>
-                    <FaExclamationTriangle size={40} className='text-dark-red' />
+                    <FaExclamationTriangle
+                        size={40}
+                        className='text-dark-red'
+                    />
                     <DialogTitle
                         as='h3'
                         className='text-primary-dark text-center text-lg font-semibold'

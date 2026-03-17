@@ -18,7 +18,7 @@ function ErrorBlock({
 }) {
     return (
         <>
-            <p className='text-lg font-semibold text-red-600 uppercase mb-12'>
+            <p className='mb-12 text-lg font-semibold text-red-600 uppercase'>
                 {message}
             </p>
             <div className='mx-auto w-full max-w-xl'>

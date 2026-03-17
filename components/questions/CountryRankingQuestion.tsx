@@ -97,7 +97,11 @@ export default function CountryRankingQuestion({
                                         key={i}
                                         code={country}
                                         emoji={RANKING[i] ?? ''}
-                                        label={i === 0 ? txt.forms.yourAnswer : undefined}
+                                        label={
+                                            i === 0
+                                                ? txt.forms.yourAnswer
+                                                : undefined
+                                        }
                                         isLarge
                                     />
                                 ) : null

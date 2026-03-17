@@ -17,8 +17,7 @@ export function DeadlineDisplay({
         <div className='flex items-center gap-3'>
             <FaClock size={size} className={colorClass} />
             <p className={`text-sm font-semibold uppercase ${colorClass}`}>
-                {txt.events.deadline}:{' '}
-                {deadline.toLocaleDateString('pl-PL')}{' '}
+                {txt.events.deadline}: {deadline.toLocaleDateString('pl-PL')}{' '}
                 {deadline.toLocaleTimeString('pl-PL', {
                     hour: '2-digit',
                     minute: '2-digit',

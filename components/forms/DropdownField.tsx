@@ -88,7 +88,8 @@ function DropdownField({
 
             const target = event.currentTarget;
             const nearBottom =
-                target.scrollTop + target.clientHeight >= target.scrollHeight - 24;
+                target.scrollTop + target.clientHeight >=
+                target.scrollHeight - 24;
 
             if (nearBottom) {
                 pagination.fetchNextPage();
@@ -157,19 +158,24 @@ function DropdownField({
                                 )}
                             </ListboxOption>
                         ))}
-                        {pagination?.showLoadMoreAction && pagination.hasNextPage && (
-                            <button
-                                type='button'
-                                className='text-primary-dark hover:bg-primary-light/40 w-full cursor-pointer px-4 py-2 text-left text-sm font-semibold'
-                                onMouseDown={(event) => event.preventDefault()}
-                                onClick={() => pagination.fetchNextPage()}
-                                disabled={pagination.isFetchingNextPage}
-                            >
-                                {pagination.isFetchingNextPage
-                                    ? pagination.loadingMoreLabel ?? txt.loading
-                                    : pagination.loadMoreLabel ?? txt.loadMore}
-                            </button>
-                        )}
+                        {pagination?.showLoadMoreAction &&
+                            pagination.hasNextPage && (
+                                <button
+                                    type='button'
+                                    className='text-primary-dark hover:bg-primary-light/40 w-full cursor-pointer px-4 py-2 text-left text-sm font-semibold'
+                                    onMouseDown={(event) =>
+                                        event.preventDefault()
+                                    }
+                                    onClick={() => pagination.fetchNextPage()}
+                                    disabled={pagination.isFetchingNextPage}
+                                >
+                                    {pagination.isFetchingNextPage
+                                        ? (pagination.loadingMoreLabel ??
+                                          txt.loading)
+                                        : (pagination.loadMoreLabel ??
+                                          txt.loadMore)}
+                                </button>
+                            )}
                     </ListboxOptions>
                 </div>
             </Listbox>

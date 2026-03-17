@@ -7,8 +7,10 @@ interface UserStatsProps {
 
 export default function UserStats({ place, points }: UserStatsProps) {
     const hasData =
-        place !== undefined && place !== null &&
-        points !== undefined && points !== null;
+        place !== undefined &&
+        place !== null &&
+        points !== undefined &&
+        points !== null;
 
     if (!hasData) return null;
 
