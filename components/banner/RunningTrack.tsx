@@ -356,42 +356,36 @@ export default function OlympicRingsMorph() {
           </filter>
         </defs> */}
 
-                {/* Rings 0, 1, 3, 4 — each wrapped in its glow filter. */}
                 {([0, 1, 3, 4] as const).map((i) => (
-                    <g key={i} filter={`url(#f${i})`}>
-                        <path
-                            ref={(el) => {
-                                pathRefs.current[i] = el;
-                            }}
-                            stroke={COLORS[i]}
-                            strokeWidth={STROKE}
-                            fill='none'
-                            strokeLinecap='round'
-                        />
-                    </g>
-                ))}
-                {/* Ring 2 (black/center): white glow layer drawn first, then the black stroke on top. */}
-                <g filter='url(#f2glow)'>
                     <path
-                        ref={glowRef}
-                        stroke='#888888'
-                        strokeWidth={STROKE}
-                        fill='none'
-                        strokeLinecap='round'
-                        opacity={0.4}
-                    />
-                </g>
-                <g filter='url(#f2)'>
-                    <path
+                        key={i}
                         ref={(el) => {
-                            pathRefs.current[2] = el;
+                            pathRefs.current[i] = el;
                         }}
-                        stroke={COLORS[2]}
+                        stroke={COLORS[i]}
                         strokeWidth={STROKE}
                         fill='none'
                         strokeLinecap='round'
                     />
-                </g>
+                ))}
+                {/* Ring 2 (black/center): grey glow layer drawn first, then black stroke on top. */}
+                <path
+                    ref={glowRef}
+                    stroke='#888888'
+                    strokeWidth={STROKE}
+                    fill='none'
+                    strokeLinecap='round'
+                    opacity={0.4}
+                />
+                <path
+                    ref={(el) => {
+                        pathRefs.current[2] = el;
+                    }}
+                    stroke={COLORS[2]}
+                    strokeWidth={STROKE}
+                    fill='none'
+                    strokeLinecap='round'
+                />
             </svg>
         </div>
     );
