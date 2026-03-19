@@ -12,7 +12,8 @@ const Logo = memo(() => (
                 alt='Lekkoatletawka icon'
                 width={12}
                 height={12}
-                className='block size-14 pl-4 md:hidden'
+                className='block size-14 pl-4 sm:hidden'
+                unoptimized
             />
             <span className='hidden text-2xl font-bold tracking-tight uppercase sm:inline'>
                 {txt.title}
@@ -23,7 +24,7 @@ const Logo = memo(() => (
 Logo.displayName = 'Logo';
 
 const NavBar = () => (
-    <nav className='bg-accent-light relative z-[4] flex flex-wrap items-center justify-evenly border-b px-0 py-2 md:px-12 md:py-4'>
+    <nav className='bg-accent-light relative z-[4] flex flex-wrap items-center justify-evenly border-b px-0 py-2 sm:px-4 md:px-12 sm:py-4'>
         <Logo />
         <NavBarMenu />
     </nav>
