@@ -12,7 +12,7 @@ HOST_PORT=3000
 
 # === BUILD IMAGE ===
 echo "🔧 Building image with docker..."
-docker build --platform linux/amd64 -t $IMAGE_NAME .
+docker build --memory=20g --memory-swap=25g --platform linux/amd64 -t $IMAGE_NAME .
 
 # === STREAM IMAGE & DEPLOY ON REMOTE ===
 echo "🚀 Sending image to server and starting container..."
