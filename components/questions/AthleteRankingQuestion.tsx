@@ -191,7 +191,7 @@ export default function AthleteRankingQuestion({
                                                 <FaArrowDown size={16} />
                                             </button>
                                         </div>
-                                        <div className='flex-1'>
+                                        <div className='min-w-0 flex-1'>
                                             <AthleteLabel
                                                 selected={id}
                                                 emoji={RANKING[index]!}

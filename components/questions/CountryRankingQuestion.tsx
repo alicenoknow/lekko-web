@@ -103,6 +103,7 @@ export default function CountryRankingQuestion({
                                                 : undefined
                                         }
                                         isLarge
+                                        forceFullName
                                     />
                                 ) : null
                             )}
@@ -149,6 +150,7 @@ export default function CountryRankingQuestion({
                                     emoji={RANKING[i]!}
                                     code={country}
                                     isLarge
+                                    forceFullName
                                 />
                             ) : null
                         )}

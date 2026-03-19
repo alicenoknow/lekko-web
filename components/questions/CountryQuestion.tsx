@@ -42,6 +42,7 @@ export default function CountryQuestion({
                             code={selectedCountry ?? ''}
                             label={txt.forms.yourAnswer}
                             isLarge
+                            forceFullName
                         />
                     ) : (
                         <p className='text-grey text-sm'>
@@ -63,6 +64,7 @@ export default function CountryQuestion({
                     <CountryLabel
                         code={question.correct_answer.country}
                         isLarge
+                        forceFullName
                     />
                 </CorrectAnswer>
             )}

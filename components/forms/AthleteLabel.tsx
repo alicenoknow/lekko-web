@@ -51,7 +51,7 @@ export function InnerAthleteLabel({
     emoji?: string;
 }) {
     return (
-        <div className='flex items-center gap-2 text-lg uppercase'>
+        <div className='flex flex-wrap items-center gap-2 text-lg uppercase'>
             {emoji && <span className='text-3xl'>{emoji}</span>}
             <strong>
                 {athlete.first_name} {athlete.last_name}

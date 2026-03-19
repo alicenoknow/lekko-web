@@ -1,0 +1,13 @@
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+  <!-- Ring 0 — blue   | cx=199.8  cy=184.4 -->
+  <circle cx="199.8" cy="184.4" r="70" stroke="#0081C8" stroke-width="13" fill="none"/>
+  <!-- Ring 1 — yellow | cx=299.9  cy=265.6 -->
+  <circle cx="299.9" cy="265.6" r="70" stroke="#FCB131" stroke-width="13" fill="none"/>
+  <!-- Ring 2 — black  | cx=400    cy=184.4 (glow layer + black stroke) -->
+  <circle cx="400" cy="184.4" r="70" stroke="#888888" stroke-width="13" fill="none" opacity="0.4"/>
+  <circle cx="400" cy="184.4" r="70" stroke="#111111" stroke-width="13" fill="none"/>
+  <!-- Ring 3 — green  | cx=500.1  cy=265.6 -->
+  <circle cx="500.1" cy="265.6" r="70" stroke="#00A651" stroke-width="13" fill="none"/>
+  <!-- Ring 4 — red    | cx=600.2  cy=184.4 -->
+  <circle cx="600.2" cy="184.4" r="70" stroke="#EE334E" stroke-width="13" fill="none"/>
+</svg>

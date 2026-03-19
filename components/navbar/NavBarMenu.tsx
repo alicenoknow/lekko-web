@@ -38,7 +38,7 @@ export function NavBarMenu() {
 
     return (
         <>
-            <div ref={buttonRef} className='z-[4] ml-auto block md:hidden'>
+            <div ref={buttonRef} className='z-[4] ml-auto block pr-4 md:hidden'>
                 <button
                     onClick={() => setIsOpen(!isOpen)}
                     className='border-primary-dark text-primary-dark hover:border-grey hover:text-grey z-[4] flex items-center rounded border-2 px-2 py-2'
@@ -50,7 +50,7 @@ export function NavBarMenu() {
                 ref={dropdownRef}
                 className={`${isOpen ? 'block' : 'hidden'} bg-accent-light absolute top-full right-0 left-0 z-[5] border-b md:relative md:top-auto md:flex md:w-auto md:flex-grow md:items-center md:border-b-0 md:bg-transparent`}
             >
-                <div className='text-primary-dark ml-auto flex flex-col items-center gap-10 text-lg font-semibold uppercase md:flex-row md:items-center md:gap-6'>
+                <div className='text-primary-dark ml-auto flex flex-col items-center gap-10 pb-6 text-lg font-semibold uppercase md:flex-row md:items-center md:gap-6 md:pb-0'>
                     <NavButton title={txt.typer} link='/typer' />
                     <NavButton title={txt.ranking.title} link='/ranking' />
                     <UserNav />

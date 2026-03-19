@@ -16,7 +16,7 @@ const Banner: React.FC = () => {
                 <RunningTrack />
             </div>
             <div className='flex flex-col items-center space-y-6 pb-12'>
-                <span className='text-primary-dark max-w-4xl text-5xl font-bold tracking-widest uppercase md:text-7xl'>
+                <span className='text-primary-dark max-w-4xl text-4xl font-bold tracking-widest uppercase md:text-7xl'>
                     {txt.home.title}
                 </span>
                 <ExternalLinkButton

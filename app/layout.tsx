@@ -24,10 +24,10 @@ export default function RootLayout({
             <body className={font.className}>
                 <ErrorBoundary>
                     <QueryProvider>
-                        <div className='flex min-h-screen flex-col'>
+                        <div className='flex h-screen flex-col overflow-hidden'>
                             <HydrateUser />
                             <NavBar />
-                            <main className='flex flex-1 flex-col'>
+                            <main className='flex flex-1 flex-col overflow-y-auto'>
                                 {children}
                             </main>
                             <Footer />

@@ -59,7 +59,7 @@ function DropdownPillFilter({
                 {({ open }) => (
                     <div className='relative inline-block w-full text-left'>
                         <ListboxButton
-                            className={`flex min-h-12 w-full items-center justify-between rounded-lg border px-4 py-2 text-sm shadow-sm focus:outline-none ${
+                            className={`flex min-h-12 w-full items-center justify-between rounded-lg border px-2 py-2 text-sm shadow-sm focus:outline-none ${
                                 disabled
                                     ? 'text-grey cursor-not-allowed bg-gray-100'
                                     : 'bg-white'

@@ -1,0 +1,17 @@
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+  <!-- Lane 0 — green  | hw=135.00  r=72  -->
+  <path d="M 265 153 L 535 153 A 72 72 0 1 1 535 297 L 265 297 A 72 72 0 1 1 265 153"
+        stroke="#00A651" stroke-width="13" fill="none" stroke-linecap="round"/>
+  <!-- Lane 1 — yellow | hw=147.65  r=95  -->
+  <path d="M 252.35 130 L 547.65 130 A 95 95 0 1 1 547.65 320 L 252.35 320 A 95 95 0 1 1 252.35 130"
+        stroke="#FCB131" stroke-width="13" fill="none" stroke-linecap="round"/>
+  <!-- Lane 2 — red    | hw=160.30  r=118 -->
+  <path d="M 239.7 107 L 560.3 107 A 118 118 0 1 1 560.3 343 L 239.7 343 A 118 118 0 1 1 239.7 107"
+        stroke="#EE334E" stroke-width="13" fill="none" stroke-linecap="round"/>
+  <!-- Lane 3 — blue   | hw=172.95  r=141 -->
+  <path d="M 227.05 84 L 572.95 84 A 141 141 0 1 1 572.95 366 L 227.05 366 A 141 141 0 1 1 227.05 84"
+        stroke="#0081C8" stroke-width="13" fill="none" stroke-linecap="round"/>
+  <!-- Lane 4 — black  | hw=185.60  r=164 -->
+  <path d="M 214.4 61 L 585.6 61 A 164 164 0 1 1 585.6 389 L 214.4 389 A 164 164 0 1 1 214.4 61"
+        stroke="#111111" stroke-width="13" fill="none" stroke-linecap="round"/>
+</svg>

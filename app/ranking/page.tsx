@@ -184,7 +184,7 @@ function RankingContent() {
                 </p>
             ) : (
                 <div
-                    className={`transition-opacity duration-200 ${isFetching ? 'pointer-events-none opacity-50' : ''}`}
+                    className={`flex flex-col gap-2 transition-opacity duration-200 ${isFetching ? 'pointer-events-none opacity-50' : ''}`}
                 >
                     {ranking.data.map((rank, i) => (
                         <UserRank

@@ -145,7 +145,7 @@ export default function QuestionsSideNav({
 
     return (
         <>
-            <div className='bg-primary-light sticky top-0 z-10 md:hidden'>
+            <div className='bg-primary-light sticky top-0 z-[3] md:hidden'>
                 <div
                     ref={mobileScrollRef}
                     className='flex gap-2 overflow-x-auto px-6 py-2'
