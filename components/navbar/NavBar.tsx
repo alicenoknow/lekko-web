@@ -12,7 +12,7 @@ const Logo = memo(() => (
                 alt='Lekkoatletawka icon'
                 width={12}
                 height={12}
-                className='block pl-4 size-14 md:hidden'
+                className='block size-14 pl-4 md:hidden'
             />
             <span className='hidden text-2xl font-bold tracking-tight uppercase sm:inline'>
                 {txt.title}

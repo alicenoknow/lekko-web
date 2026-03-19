@@ -10,7 +10,13 @@ interface Props {
     forceFullName?: boolean;
 }
 
-function CountryLabel({ code, emoji, isLarge = false, label, forceFullName = false }: Props) {
+function CountryLabel({
+    code,
+    emoji,
+    isLarge = false,
+    label,
+    forceFullName = false,
+}: Props) {
     const countryName = COUNTRIES[code] ?? code;
     return (
         <div className='flex flex-col gap-2'>
@@ -31,7 +37,9 @@ function CountryLabel({ code, emoji, isLarge = false, label, forceFullName = fal
                     ) : (
                         <>
                             <span className='sm:hidden'>{code}</span>
-                            <span className='hidden sm:inline'>{countryName}</span>
+                            <span className='hidden sm:inline'>
+                                {countryName}
+                            </span>
                         </>
                     )}
                 </span>
