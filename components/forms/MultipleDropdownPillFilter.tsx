@@ -95,7 +95,7 @@ function MultipleDropdownPillFilter({
                                                     );
                                                 }
                                             }}
-                                            className='hover:text-dark-red ml-1 cursor-pointer'
+                                            className='hover:text-dark-red ml-1 cursor-pointer p-1.5'
                                         >
                                             <FaTimes className='h-3 w-3' />
                                         </span>
