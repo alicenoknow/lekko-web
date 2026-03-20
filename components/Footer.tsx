@@ -11,7 +11,7 @@ const creators = [
 ];
 
 const Footer = () => (
-    <footer className='bg-accent-light z-[3] flex flex-col items-center justify-center gap-2 border-t p-4 text-xs uppercase md:flex-row md:justify-evenly md:text-base'>
+    <footer className='bg-accent-light z-[3] flex flex-col items-center justify-center gap-2 p-4 text-xs uppercase shadow-[0_-2px_16px_rgba(0,0,0,0.12)] md:flex-row md:justify-evenly md:text-base'>
         <div className='text-center md:text-left'>
             <p>{founder.name}</p>
             <p>

@@ -21,7 +21,7 @@ const ExternalLinkButton: React.FC<ExternalLinkButtonProps> = ({
             href={link}
             target='_blank'
             rel='noopener noreferrer'
-            className={`inline-block rounded-xl p-4 text-lg font-extrabold uppercase select-none hover:cursor-pointer md:px-10 md:text-3xl ${disabled ? 'cursor-not-allowed opacity-50' : ''} ${className}`}
+            className={`inline-block rounded-xl p-6 text-lg font-extrabold uppercase select-none hover:cursor-pointer md:px-10 md:text-3xl ${disabled ? 'cursor-not-allowed opacity-50' : ''} ${className}`}
         >
             {loading ? <Spinner /> : <p className='text-wrap'>{label}</p>}
         </a>
