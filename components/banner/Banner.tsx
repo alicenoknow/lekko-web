@@ -16,8 +16,10 @@ const Banner: React.FC = () => {
                 <RunningTrack />
             </div>
             <div className='flex flex-col items-center space-y-6 pb-12'>
-                <span className='px-4 text-primary-dark max-w-4xl text-center text-4xl font-bold tracking-widest uppercase md:text-7xl'>
-                    Lekko<wbr />atletawka
+                <span className='text-primary-dark max-w-4xl px-4 text-center text-4xl font-bold tracking-widest uppercase md:text-7xl'>
+                    Lekko
+                    <wbr />
+                    atletawka
                 </span>
                 <ExternalLinkButton
                     label={txt.home.joinFb}
