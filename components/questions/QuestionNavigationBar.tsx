@@ -24,16 +24,14 @@ export function QuestionNavigationBar({
     showWarning,
 }: QuestionNavigationBarProps) {
     return (
-        <div className='mb-3 flex items-center justify-between gap-4'>
-            {showWarning ? (
-                <div className='bg-light-yellow text-primary-dark inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold sm:gap-3 sm:px-6 sm:py-3 sm:text-base'>
+        <div className='relative mb-3 flex items-center justify-between gap-4'>
+            {showWarning && (
+                <div className='bg-light-yellow text-primary-dark inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold md:absolute md:left-1/2 md:-translate-x-1/2 sm:gap-3 sm:px-6 sm:py-3 sm:text-base'>
                     <FaExclamationTriangle size={18} />
                     {txt.questions.unanswered}
                 </div>
-            ) : (
-                <div />
             )}
-            <div className='flex items-center gap-4'>
+            <div className='ml-auto flex items-center gap-4'>
                 {currentIndex > 0 && (
                     <ActionIcon
                         label={<FaArrowLeft className='text-primary-light' />}
