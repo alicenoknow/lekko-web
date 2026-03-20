@@ -1,14 +1,13 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { FaArrowLeft, FaArrowRight, FaExclamationTriangle } from 'react-icons/fa';
 import { useAuthenticatedUser } from '@/hooks/useAuthenticatedUser';
 import Spinner from '@/components/Spinner';
 import { ErrorMessage } from '@/components/error/ErrorMessage';
 import { txt } from '@/nls/texts';
-import ActionIcon from '@/components/buttons/ActionIcon';
 import QuestionRenderer from '@/components/questions/QuestionRenderer';
 import QuestionsSideNav from '@/components/questions/QuestionsSideNav';
+import { QuestionNavigationBar } from '@/components/questions/QuestionNavigationBar';
 import { Answer } from '@/types/answers';
 import { useEventDetails } from '@/hooks/useEventDetails';
 import { useQuestionNavigation } from '@/hooks/useQuestionNavigation';
@@ -83,31 +82,13 @@ export default function EventDetailPage() {
                         currentQuestionId={currentQuestionId}
                         onNavigate={setCurrentQuestionId}
                     />
-                    <div className='relative mb-3 flex h-12 items-center justify-center'>
-                        {isCurrentQuestionUnanswered && (
-                            <div className='inline-flex items-center gap-3 rounded-full bg-light-yellow px-6 py-3 text-base font-semibold text-primary-dark'>
-                                <FaExclamationTriangle size={18} />
-                                {txt.questions.unanswered}
-                            </div>
-                        )}
-                        <div className='absolute right-0 flex items-center gap-4'>
-                            {currentIndex > 0 && (
-                                <ActionIcon
-                                    label={<FaArrowLeft className='text-primary-light' />}
-                                    onClick={handlePrev}
-                                />
-                            )}
-                            <span className='px-2'>
-                                {currentIndex + 1} / {questions.length}
-                            </span>
-                            {currentIndex < questions.length - 1 && (
-                                <ActionIcon
-                                    label={<FaArrowRight className='text-primary-light' />}
-                                    onClick={handleNext}
-                                />
-                            )}
-                        </div>
-                    </div>
+                    <QuestionNavigationBar
+                        currentIndex={currentIndex}
+                        total={questions.length}
+                        onPrev={handlePrev}
+                        onNext={handleNext}
+                        showWarning={isCurrentQuestionUnanswered}
+                    />
                     {currentQuestion && (
                         <QuestionRenderer
                             key={currentQuestion.id}

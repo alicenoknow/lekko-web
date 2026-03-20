@@ -54,7 +54,7 @@ export default function AthleteSearchFilter({
     );
 
     return (
-        <div className='mb-4 flex flex-row gap-2'>
+        <div className='mb-4 flex flex-col gap-2 sm:flex-row'>
             {allDisciplines?.data && (
                 <MultipleDropdownPillFilter
                     label={txt.forms.discipline}
